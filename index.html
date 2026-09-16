@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reuben Stone - Product Engineer</title>
+  <meta name="description" content="Senior Product Engineer building software products across frontend systems, AI-enabled applications, and interactive web experiences.">
+  <meta property="og:title" content="Reuben Stone - Product Engineer">
+  <meta property="og:description" content="I build software products, and the systems behind them.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0f11;
+      --bg-raised: #151618;
+      --border: #2a2b30;
+      --border-strong: #3a3b42;
+      --text: #e0ddd5;
+      --text-secondary: #a8a5a0;
+      --text-muted: #6b6862;
+      --accent: #8b5cf6;
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'Inter', -apple-system, system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'SF Mono', monospace;
+      --content-width: 1280px;
+      --prose-width: 720px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: var(--content-width); margin: 0 auto; padding: 0 32px; }
+    .prose { max-width: var(--prose-width); }
+    .prose p { color: var(--text-secondary); margin-bottom: 24px; line-height: 1.75; }
+
+    /* ── Header ──────────────────────────────────────── */
+    .header {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .header .container { display: flex; align-items: center; justify-content: space-between; }
+    .header-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .header-links { display: flex; gap: 20px; list-style: none; }
+    .header-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .header-links a:hover { color: var(--text); }
+
+    /* ── Hero ────────────────────────────────────────── */
+    .hero { padding: 120px 0 100px; }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 600;
+      line-height: 1.15;
+      max-width: 760px;
+      margin-bottom: 32px;
+    }
+    .hero-intro {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+      margin-bottom: 20px;
+    }
+    .hero-current {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: var(--prose-width);
+      margin-bottom: 32px;
+    }
+    .hero-links { display: flex; gap: 20px; align-items: center; }
+    .hero-links a {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .hero-links a:hover { color: var(--text); }
+    .hero-links .arrow { color: var(--text-secondary); }
+    .hero-meta {
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ── Sections ────────────────────────────────────── */
+    .section { padding: 100px 0; border-top: 1px solid var(--border); }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+    }
+
+    /* ── Project entries ─────────────────────────────── */
+    .project { margin-bottom: 80px; }
+    .project:last-child { margin-bottom: 0; }
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+    .project-index {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+    .project-year {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .project-title {
+      font-family: var(--serif);
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .project-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 16px;
+      line-height: 1.65;
+    }
+    .project-meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .project-link {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: var(--border-strong);
+      transition: color 0.15s, text-decoration-color 0.15s;
+    }
+    .project-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+    .project-image {
+      margin-top: 32px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .project-image img { width: 100%; display: block; }
+    .project-image-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      background: var(--bg-raised);
+    }
+
+    /* ── Experience ──────────────────────────────────── */
+    .exp-row {
+      display: flex;
+      gap: 24px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: baseline;
+    }
+    .exp-row:last-child { border-bottom: none; }
+    .exp-year {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+    .exp-company {
+      font-size: 14px;
+      color: var(--text);
+      min-width: 200px;
+      flex-shrink: 0;
+    }
+    .exp-role {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .exp-cv {
+      margin-top: 24px;
+    }
+    .exp-cv a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: var(--border-strong);
+      transition: color 0.15s;
+    }
+    .exp-cv a:hover { color: var(--text); }
+
+    /* ── About ───────────────────────────────────────── */
+    .about-text {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+    }
+    .about-text p { margin-bottom: 24px; }
+    .about-closing {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* ── Contact ─────────────────────────────────────── */
+    .contact-text {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+      margin-bottom: 24px;
+    }
+    .contact-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .contact-links a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: var(--border-strong);
+      transition: color 0.15s;
+    }
+    .contact-links a:hover { color: var(--text); }
+
+    /* ── Footer ──────────────────────────────────────── */
+    .footer {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ── Focus / motion / responsive ─────────────────── */
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .hero { padding: 80px 0 60px; }
+      .section { padding: 64px 0; }
+      .exp-row { flex-direction: column; gap: 4px; }
+      .exp-company { min-width: 0; }
+      .project-header { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="sr-only" style="position:absolute;left:-9999px;top:0;padding:8px;background:var(--accent);color:#fff;z-index:100;">Skip to content</a>
+
+  <header class="header">
+    <div class="container">
+      <div class="header-name">Reuben Stone</div>
+      <nav>
+        <ul class="header-links">
+          <li><a href="#work">Work</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="https://github.com/reuben-stone" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-eyebrow">Reuben Stone / Product Engineer</div>
+        <h1>I build software products, and the systems behind them.</h1>
+        <p class="hero-intro">
+          I'm a senior product engineer with more than a decade of experience building digital products for technology companies, agencies and global brands. My work spans product architecture, React and TypeScript applications, backend services, AI-enabled systems and interactive web experiences.
+        </p>
+        <p class="hero-current">
+          Recently I've been exploring the engineering around persistent AI systems: context, tools, workflow state, recovery, verification and human control.
+        </p>
+        <div class="hero-links">
+          <a href="#work" class="arrow">Selected work &darr;</a>
+          <a href="mailto:reubenastone@gmail.com">Email</a>
+          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="hero-meta">
+          Based between Portugal and the UK
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Work -->
+    <section class="section" id="work">
+      <div class="container">
+        <div class="section-label">Selected Work</div>
+
+        <!-- 01 Artemis Lite -->
+        <div class="project">
+          <div class="project-header">
+            <span class="project-index">01</span>
+            <span class="project-year">2026</span>
+          </div>
+          <h2 class="project-title">Artemis Lite</h2>
+          <p class="project-desc">
+            A reconstruction of an AI repository operations system around explicit workflow state, selective context, constrained capabilities, recovery and measurable reliability.
+          </p>
+          <div class="project-meta">
+            AI Systems / Electron / TypeScript / React / SQLite / Workflow Architecture
+          </div>
+          <a href="work/artemis/" class="project-link">Read the engineering case study &rarr;</a>
+          <div class="project-image">
+            <div class="project-image-placeholder">artemis-lite-01-workflow.png</div>
+          </div>
+        </div>
+
+        <!-- 02 GenAI Mindset / TST -->
+        <div class="project">
+          <div class="project-header">
+            <span class="project-index">02</span>
+            <span class="project-year">2026</span>
+          </div>
+          <h2 class="project-title">GenAI Mindset / The Smarty Train</h2>
+          <p class="project-desc">
+            Product engineering for an AI-enabled learning platform designed around how people work critically and effectively with generative AI.
+          </p>
+          <div class="project-meta">
+            Product Engineering / Full Stack / JavaScript / AI-Enabled Product
+          </div>
+        </div>
+
+        <!-- 03 Powster / Universal -->
+        <div class="project">
+          <div class="project-header">
+            <span class="project-index">03</span>
+            <span class="project-year">2024 &ndash; 2026</span>
+          </div>
+          <h2 class="project-title">Powster / Universal Pictures</h2>
+          <p class="project-desc">
+            Product engineering across global entertainment experiences, internal tools and a custom AWS-backed publishing platform. Built a Three.js photosphere viewer adopted across multiple productions.
+          </p>
+          <div class="project-meta">
+            React / TypeScript / Three.js / AWS / CMS Architecture
+          </div>
+        </div>
+
+        <!-- 04 Lumi / Livana -->
+        <div class="project">
+          <div class="project-header">
+            <span class="project-index">04</span>
+            <span class="project-year">2024 &ndash; Present</span>
+          </div>
+          <h2 class="project-title">Lumi / Livana</h2>
+          <p class="project-desc">
+            Building accessibility software around a practical audit, remediation and verification workflow for product teams.
+          </p>
+          <div class="project-meta">
+            Product Ownership / Next.js / TypeScript / Accessibility / WCAG
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Currently -->
+    <section class="section" id="currently">
+      <div class="container">
+        <div class="section-label">Currently</div>
+        <div class="prose">
+          <p>
+            I'm particularly interested in what happens when language models become components inside persistent software systems rather than isolated chat interfaces.
+          </p>
+          <p>
+            My current work explores workflow orchestration, selective context, constrained tools, durable state, failure recovery, observability and human approval boundaries.
+          </p>
+          <p>
+            <a href="work/artemis/" class="project-link">Current experiment: Artemis Lite &rarr;</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="section-label">Experience</div>
+        <div class="exp-row">
+          <span class="exp-year">2026</span>
+          <span class="exp-company">The Smarty Train</span>
+          <span class="exp-role">Product Engineer (Full Stack, AI Systems)</span>
+        </div>
+        <div class="exp-row">
+          <span class="exp-year">2024 &ndash; 26</span>
+          <span class="exp-company">Powster</span>
+          <span class="exp-role">Product Engineer (React, TypeScript)</span>
+        </div>
+        <div class="exp-row">
+          <span class="exp-year">2025 &ndash; 26</span>
+          <span class="exp-company">Candyspace</span>
+          <span class="exp-role">Frontend Developer (React, TypeScript)</span>
+        </div>
+        <div class="exp-row">
+          <span class="exp-year">2024</span>
+          <span class="exp-company">Diageo</span>
+          <span class="exp-role">Frontend Developer (React, Next.js)</span>
+        </div>
+        <div class="exp-row">
+          <span class="exp-year">2023 &ndash; 24</span>
+          <span class="exp-company">Arc Digital</span>
+          <span class="exp-role">Full-Stack Developer (Three.js, React, Vercel)</span>
+        </div>
+        <div class="exp-row">
+          <span class="exp-year">2021 &ndash; 23</span>
+          <span class="exp-company">TotalJobs (StepStone)</span>
+          <span class="exp-role">Full-Stack Developer (Vue.js, Node, PowerBI)</span>
+        </div>
+        <div class="exp-row">
+          <span class="exp-year">Earlier</span>
+          <span class="exp-company">IKEA / Unilever / WiTH Collective</span>
+          <span class="exp-role">Frontend &amp; full-stack product work</span>
+        </div>
+        <div class="exp-cv">
+          <a href="#">Download CV &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-label">About</div>
+        <div class="about-text">
+          <p>
+            I'm a product engineer with more than ten years of experience building software across agencies, product teams and technology companies.
+          </p>
+          <p>
+            I started deep in the frontend, where I developed a strong interest in interaction, product quality and the details users actually experience. Over time my work expanded into architecture, backend services, infrastructure, internal tooling and product ownership.
+          </p>
+          <p>
+            More recently I've been working with AI-enabled products and exploring the systems required to make model-driven software useful beyond a chat interface: persistent state, context selection, tools, recovery, verification and human control.
+          </p>
+          <p>
+            I still care about the interface. I just increasingly care about everything that has to work behind it too.
+          </p>
+        </div>
+        <div class="about-closing">
+          Based between Portugal and the UK. Building independently and with product teams.
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-label">Contact</div>
+        <p class="contact-text">
+          For product engineering work, collaboration or technical conversations:
+        </p>
+        <div class="contact-links">
+          <a href="mailto:reubenastone@gmail.com">reubenastone@gmail.com</a>
+          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      Reuben Stone &middot; 2026
+    </div>
+  </footer>
+
+</body>
+</html>

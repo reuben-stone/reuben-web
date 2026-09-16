@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artemis to Artemis Lite - Rebuilding autonomous engineering operations | Reuben Stone</title>
+  <meta name="description" content="An engineering case study on rebuilding a multi-repo AI operations system around explicit workflows, selective context, durable recovery and measurable execution.">
+  <meta property="og:title" content="Artemis to Artemis Lite - Engineering Case Study">
+  <meta property="og:description" content="Rebuilding an autonomous engineering operations system around reliable workflows.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── Tokens ──────────────────────────────────────────── */
+    :root {
+      --bg: #0e0f11;
+      --bg-raised: #151618;
+      --bg-card: #1a1b1e;
+      --border: #2a2b30;
+      --border-strong: #3a3b42;
+      --text: #e0ddd5;
+      --text-secondary: #a8a5a0;
+      --text-muted: #6b6862;
+      --accent: #8b5cf6;
+      --accent-dim: rgba(139, 92, 246, 0.12);
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'Inter', -apple-system, system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'SF Mono', monospace;
+      --content-width: 1280px;
+      --prose-width: 720px;
+    }
+
+    /* ── Reset ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ──────────────────────────────────────────── */
+    .container { max-width: var(--content-width); margin: 0 auto; padding: 0 32px; }
+    .prose { max-width: var(--prose-width); }
+    .prose p { color: var(--text-secondary); margin-bottom: 28px; line-height: 1.75; }
+
+    /* ── Nav ─────────────────────────────────────────────── */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(14, 15, 17, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+    }
+    .nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-github {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .nav-github:hover { color: var(--text); }
+    .inline-link {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: var(--accent);
+      transition: color 0.15s, text-decoration-color 0.15s;
+    }
+    .inline-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────── */
+    .hero { padding: 120px 0 80px; }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.15;
+      max-width: 840px;
+      margin-bottom: 28px;
+    }
+    .hero-standfirst {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+      margin-bottom: 32px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { border-color: var(--border-strong); color: var(--text); }
+
+    /* ── Screenshot ──────────────────────────────────────── */
+    .screenshot {
+      margin: 48px 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+    .screenshot-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .screenshot-caption {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* ── Sections ────────────────────────────────────────── */
+    .section { padding: 100px 0; border-top: 1px solid var(--border); }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .section h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 600;
+      line-height: 1.25;
+      max-width: 700px;
+      margin-bottom: 24px;
+    }
+    .section p {
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+      margin-bottom: 28px;
+    }
+
+    /* ── Pull quote ──────────────────────────────────────── */
+    .pull-quote {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-weight: 400;
+      line-height: 1.45;
+      color: var(--text);
+      border-left: 3px solid var(--accent);
+      padding-left: 24px;
+      margin: 48px 0;
+      max-width: 680px;
+    }
+
+    /* ── Capability strip ────────────────────────────────── */
+    .cap-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin: 40px 0;
+      overflow: hidden;
+    }
+    .cap-item {
+      background: var(--bg-raised);
+      padding: 20px;
+    }
+    .cap-item-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .cap-item-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Evidence block ──────────────────────────────────── */
+    .evidence-block {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 28px;
+      margin: 40px 0;
+    }
+    .evidence-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .evidence-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .evidence-row:last-child { border-bottom: none; }
+    .evidence-label { color: var(--text-muted); }
+    .evidence-value { color: var(--text-secondary); text-align: right; max-width: 60%; }
+
+    /* ── Comparison ──────────────────────────────────────── */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin: 48px 0;
+      overflow: hidden;
+    }
+    .comparison-col { background: var(--bg-raised); padding: 28px; }
+    .comparison-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .comparison-item { font-size: 14px; color: var(--text-secondary); padding: 4px 0; }
+
+    /* ── Decision list ───────────────────────────────────── */
+    .decisions { margin: 40px 0; }
+    .decision {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .decision:last-child { border-bottom: none; }
+    .decision-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .decision-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .decision-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* ── Workflow steps ──────────────────────────────────── */
+    .workflow-steps {
+      margin: 40px 0;
+      padding-left: 24px;
+      border-left: 1px solid var(--border);
+    }
+    .wf-step {
+      position: relative;
+      padding: 4px 0 4px 16px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .wf-step::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 10px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      background: var(--bg);
+    }
+    .wf-step-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 18px;
+    }
+    .wf-step-text { font-size: 14px; color: var(--text-secondary); }
+
+    /* ── Trace example ───────────────────────────────────── */
+    .trace-example {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 24px;
+      margin: 40px 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--text-muted);
+      overflow-x: auto;
+    }
+    .trace-example .trace-event { color: var(--text-secondary); }
+    .trace-example .trace-fault { color: #ef4444; }
+    .trace-example .trace-success { color: #22c55e; }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .footer {
+      padding: 80px 0 48px;
+      border-top: 1px solid var(--border);
+    }
+    .footer h2 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .footer p {
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+      margin-bottom: 28px;
+    }
+    .footer-links { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ── Focus / motion ──────────────────────────────────── */
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .hero { padding: 80px 0 60px; }
+      .section { padding: 64px 0; }
+      .comparison { grid-template-columns: 1fr; }
+      .cap-strip { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav-brand">Artemis <span>/</span> Case Study</div>
+      <ul class="nav-links">
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#workflow">Workflows</a></li>
+        <li><a href="#reliability">Reliability</a></li>
+        <li><a href="#evaluation">Evaluation</a></li>
+      </ul>
+      <a href="https://github.com/reuben-stone/artemis-lite" class="nav-github" target="_blank" rel="noopener">GitHub &#8599;</a>
+    </div>
+  </nav>
+
+  <!-- Hero — leads with Artemis v1 -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Engineering Case Study</div>
+      <h1>I built an AI system to tend my repositories. Then I rebuilt it.</h1>
+      <div class="prose">
+        <p class="hero-standfirst">
+          I built <a href="https://github.com/reuben-stone/artemis" target="_blank" rel="noopener" class="inline-link">Artemis</a> as a desktop AI operations layer for the software projects I was working across. Rather than treating Claude as a chat interface, I wanted to see what happened when it became part of a persistent system that could understand multiple repositories, monitor their state, dispatch engineering work into isolated worktrees, and return gated pull requests for me to review.
+        </p>
+        <p class="hero-standfirst">
+          It worked. But building and using it exposed a more interesting engineering problem: giving a model capabilities was relatively straightforward. Controlling the context, state, side effects and recovery around those capabilities was harder.
+        </p>
+        <p class="hero-standfirst">
+          Artemis Lite is my attempt to rebuild the same idea around that problem.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Artemis v1 — the hero is the original product -->
+  <section id="artemis" style="padding-bottom: 100px;">
+    <div class="container">
+      <div class="screenshot">
+        <img src="../../assets/artemis-01-workspace.png" alt="Artemis v1 desktop window showing the central 3D orb, operations panels including PR Review, Tickets and Tasks on the left rail, chat interface on the right, and project switcher in the title bar." style="width: 100%; display: block;">
+      </div>
+      <p class="screenshot-caption">Artemis: a persistent desktop AI operations layer sitting above multiple repositories.</p>
+
+      <div class="prose" style="margin-top: 48px; font-size: 16px;">
+        <p>
+          <span style="color: var(--text)"><strong>A.R.T.E.M.I.S.</strong> stands for <em>Autonomous Repository-Tending Engineering, Monitoring &amp; Intelligence System</em>.</span> It is an Electron desktop application built on Claude that sits above an ecosystem of repositories rather than inside a single project.
+        </p>
+        <p>
+          It can register and switch between projects, produce cross-repository morning reviews combining git activity with live Google Analytics data, maintain restart-survivable conversation and memory, and give the model application-owned tools for operating across the whole environment.
+        </p>
+        <p>
+          The most useful capability is delegated engineering. Artemis can dispatch a worker agent into an isolated git worktree, let it implement and test a change on a new branch, then open a pull request. The worker never pushes directly to main. Completed work returns to a PR Review Queue for human review.
+        </p>
+        <p>
+          It also has voice input and output, a reactive Three.js presence, persistent markdown memory, swappable model providers, and a permission gate around every write and shell command. It is ambitious. It works. And building it taught me something I had not expected.
+        </p>
+      </div>
+
+      <div class="cap-strip">
+        <div class="cap-item">
+          <div class="cap-item-label">Multi-repo</div>
+          <div class="cap-item-text">Project ecosystem oversight</div>
+        </div>
+        <div class="cap-item">
+          <div class="cap-item-label">Monitoring</div>
+          <div class="cap-item-text">Git + live analytics</div>
+        </div>
+        <div class="cap-item">
+          <div class="cap-item-label">Engineering</div>
+          <div class="cap-item-text">Isolated worker agents</div>
+        </div>
+        <div class="cap-item">
+          <div class="cap-item-label">Safety</div>
+          <div class="cap-item-text">Gated pull requests</div>
+        </div>
+        <div class="cap-item">
+          <div class="cap-item-label">Persistence</div>
+          <div class="cap-item-text">SQLite + memory + recovery</div>
+        </div>
+      </div>
+
+      <div class="screenshot" style="margin-top: 48px;">
+        <div class="screenshot-placeholder">artemis-04-pr-review-queue.png</div>
+      </div>
+      <p class="screenshot-caption">Workers returned gated pull requests to a review queue, allowing several tasks to run without granting them direct authority over main.</p>
+
+      <div class="hero-meta" style="margin-top: 40px;">
+        <span class="hero-tag">Electron</span>
+        <span class="hero-tag">TypeScript</span>
+        <span class="hero-tag">React</span>
+        <span class="hero-tag">Three.js</span>
+        <span class="hero-tag">SQLite</span>
+        <span class="hero-tag">Anthropic</span>
+        <span class="hero-tag">GitHub</span>
+        <span class="hero-tag">Google Analytics</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 / THE PROBLEM -->
+  <section class="section" id="problem">
+    <div class="container">
+      <div class="section-label">02 / The Problem</div>
+      <h2>Capability was not the difficult part. Control was.</h2>
+      <div class="prose">
+        <p>
+          Giving a model more tools quickly made Artemis more capable. It also made the engineering around those tools more important.
+        </p>
+        <p>
+          The original agent loop assembled broad project, memory and conversation context, exposed a large capability surface, and allowed the model to move through tool calls until the turn completed. That worked, but it made several questions increasingly difficult to answer precisely:
+        </p>
+        <p>
+          What context did this step actually need? What state must survive a process restart? When is a failed action safe to retry? How do you know whether an external side effect already happened? Which decisions belong to the model, and which belong to deterministic application logic? How do you measure whether a more selective architecture is actually better?
+        </p>
+      </div>
+
+      <div class="evidence-block">
+        <div class="evidence-title">Original Artemis</div>
+        <div class="evidence-row">
+          <span class="evidence-label">Context</span>
+          <span class="evidence-value">Broad prompt assembly, including full memory</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Tools</span>
+          <span class="evidence-value">35 tools in the main agent layer</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Lifecycle</span>
+          <span class="evidence-value">Open-ended model/tool loop</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Recovery</span>
+          <span class="evidence-value">Turn-level checkpoint/recovery</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Usage</span>
+          <span class="evidence-value">Per-call estimation, not persistent</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Evaluation</span>
+          <span class="evidence-value">Smoke/unit tests, no workflow eval harness</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 / HYPOTHESIS -->
+  <section class="section" id="hypothesis">
+    <div class="container">
+      <div class="section-label">03 / Hypothesis</div>
+      <h2>Use less agentic architecture, but keep the useful capability.</h2>
+
+      <div class="pull-quote">
+        Use the minimum amount of agentic behaviour required to reliably complete the task.
+      </div>
+
+      <div class="prose">
+        <p>
+          Artemis Lite started with a different division of responsibility. The application would own workflow lifecycle, persistence, approvals, retries, timeouts, recovery, context budgets and tracing. The model would own the decisions that genuinely required reasoning.
+        </p>
+        <p>
+          I wanted to test whether the repository-tending mission of Artemis could survive that constraint: not by reducing the final task to a toy example, but by rebuilding toward the same meaningful workflows.
+        </p>
+      </div>
+
+      <div class="pull-quote" style="border-left-color: var(--text-muted);">
+        Deterministic shell. Probabilistic core.
+      </div>
+
+      <div class="prose">
+        <p>
+          The model can decide what evidence matters or how to approach a bug. It should not be responsible for remembering whether a side effect was already committed after the process restarts.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 / ARTEMIS LITE -->
+  <section class="section" id="architecture">
+    <div class="container">
+      <div class="section-label">04 / Artemis Lite</div>
+      <h2>The workflow becomes the primary object.</h2>
+      <div class="prose">
+        <p>
+          In Lite, a user goal becomes a persisted workflow with explicit steps and valid transitions. Every consequential operation sits behind typed boundaries. Approvals are records, not transient UI state. Usage is persisted. Trace events are append-only. Recovery starts from durable state rather than trying to recreate an in-memory conversation loop.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <div class="screenshot-placeholder">Lite architecture diagram</div>
+      </div>
+
+      <div class="decisions">
+        <div class="decision">
+          <div class="decision-num">01</div>
+          <div class="decision-title">Explicit workflow state</div>
+          <div class="decision-desc">Workflow transitions are application-owned and persisted.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-num">02</div>
+          <div class="decision-title">Typed capabilities</div>
+          <div class="decision-desc">Inputs and outputs are validated at the boundary.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-num">03</div>
+          <div class="decision-title">Approval as state</div>
+          <div class="decision-desc">Consequential writes pause on a persisted approval record.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-num">04</div>
+          <div class="decision-title">Durable recovery</div>
+          <div class="decision-desc">Restarting the Electron process does not mean restarting the job.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-num">05</div>
+          <div class="decision-title">Tool-specific reconciliation</div>
+          <div class="decision-desc">Ambiguous side effects are reconciled against external reality where possible rather than blindly retried.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-num">06</div>
+          <div class="decision-title">Observable model usage</div>
+          <div class="decision-desc">Model calls, token usage, duration and cost estimates are persisted against the workflow.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-num">07</div>
+          <div class="decision-title">Selective context</div>
+          <div class="decision-desc">Each step receives relevant evidence instead of automatically inheriting the whole application state.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 / CAPABILITY -->
+  <section class="section" id="capability">
+    <div class="container">
+      <div class="section-label">05 / Capability</div>
+      <h2>Lite is smaller architecture, not a smaller ambition.</h2>
+      <div class="prose">
+        <p>
+          The target is still the original Artemis mission: oversee repositories, investigate engineering work, delegate implementation and return reviewable changes. The difference is that each stage now has an explicit contract and can be inspected independently.
+        </p>
+      </div>
+
+      <div class="comparison">
+        <div class="comparison-col">
+          <div class="comparison-title">Artemis</div>
+          <div class="comparison-item">Assistant-centred workspace</div>
+          <div class="comparison-item">Broad context</div>
+          <div class="comparison-item">Large tool surface</div>
+          <div class="comparison-item">Implicit turn lifecycle</div>
+          <div class="comparison-item">Worker &rarr; PR</div>
+          <div class="comparison-item">Persistent conversation</div>
+        </div>
+        <div class="comparison-col">
+          <div class="comparison-title">Artemis Lite</div>
+          <div class="comparison-item">Workflow-centred control plane</div>
+          <div class="comparison-item">Step-specific context</div>
+          <div class="comparison-item">Selected capabilities</div>
+          <div class="comparison-item">Explicit lifecycle</div>
+          <div class="comparison-item">Worker &rarr; verification &rarr; gated PR</div>
+          <div class="comparison-item">Persistent workflow evidence</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 / WORKFLOW -->
+  <section class="section" id="workflow">
+    <div class="container">
+      <div class="section-label">06 / Workflow</div>
+      <h2>From issue to Ready for Review.</h2>
+      <div class="prose">
+        <p>
+          The finished Lite workflow should demonstrate the architecture on a real engineering task rather than a synthetic agent loop.
+        </p>
+      </div>
+
+      <div class="workflow-steps">
+        <div class="wf-step"><span class="wf-step-num">01</span> <span class="wf-step-text">Retrieve issue</span></div>
+        <div class="wf-step"><span class="wf-step-num">02</span> <span class="wf-step-text">Retrieve relevant repository evidence</span></div>
+        <div class="wf-step"><span class="wf-step-num">03</span> <span class="wf-step-text">Build explicit plan</span></div>
+        <div class="wf-step"><span class="wf-step-num">04</span> <span class="wf-step-text">Create isolated worktree</span></div>
+        <div class="wf-step"><span class="wf-step-num">05</span> <span class="wf-step-text">Dispatch bounded worker</span></div>
+        <div class="wf-step"><span class="wf-step-num">06</span> <span class="wf-step-text">Run repository checks</span></div>
+        <div class="wf-step"><span class="wf-step-num">07</span> <span class="wf-step-text">Inspect diff</span></div>
+        <div class="wf-step"><span class="wf-step-num">08</span> <span class="wf-step-text">Verify result</span></div>
+        <div class="wf-step"><span class="wf-step-num">09</span> <span class="wf-step-text">Request publication approval</span></div>
+        <div class="wf-step"><span class="wf-step-num">10</span> <span class="wf-step-text">Create pull request</span></div>
+        <div class="wf-step"><span class="wf-step-num">11</span> <span class="wf-step-text">Add to Ready for Review</span></div>
+      </div>
+
+      <div class="prose">
+        <p>
+          The worker is deliberately not the authority. It receives a bounded task and environment, returns an implementation result, and the parent workflow resumes control for checks and verification.
+        </p>
+        <p>
+          Publication is another boundary. Artemis can do substantial work autonomously, but creating the external review artifact remains an explicit, persisted side effect.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <div class="screenshot-placeholder">artemis-lite-04-approval.png</div>
+      </div>
+      <p class="screenshot-caption">Substantial work can proceed automatically while publication remains an explicit persisted approval boundary.</p>
+    </div>
+  </section>
+
+  <!-- 07 / CONTEXT -->
+  <section class="section" id="context">
+    <div class="container">
+      <div class="section-label">07 / Context</div>
+      <h2>What did the model actually see?</h2>
+      <div class="prose">
+        <p>
+          One of the main experiments in Lite is treating context as a measurable input rather than invisible prompt plumbing.
+        </p>
+        <p>
+          For each reasoning step, the Context Builder can assemble the goal, current workflow state, selected repository evidence, GitHub evidence, prior tool results and relevant memory within an explicit budget. The inspector exposes that composition to the engineer.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <div class="screenshot-placeholder">artemis-lite-02-context.png</div>
+      </div>
+      <p class="screenshot-caption">Context becomes an inspectable input: which evidence was selected, what was excluded, and how much of the model budget each source consumed.</p>
+    </div>
+  </section>
+
+  <!-- 08 / RELIABILITY -->
+  <section class="section" id="reliability">
+    <div class="container">
+      <div class="section-label">08 / Reliability</div>
+      <h2>The interesting test is what happens halfway through.</h2>
+      <div class="prose">
+        <p>
+          A successful happy-path agent demo proves very little about a long-running workflow. Lite includes deterministic fault injection so the same workflow can be exercised under model timeouts, provider failures, tool failures and process interruption.
+        </p>
+        <p>
+          Recovery is based on persisted workflow state. Completed steps can be skipped, pending approvals can be reconstructed, and known side effects can be reused. Where the external outcome is ambiguous, the tool can reconcile against reality before deciding whether another execution is safe.
+        </p>
+      </div>
+
+      <div class="trace-example">
+        <div class="trace-event">tool side effect completed</div>
+        <div class="trace-fault">process interrupted before ledger completion</div>
+        <div class="trace-event">application restarts</div>
+        <div class="trace-event">workflow discovered from persisted state</div>
+        <div class="trace-success">external artifact reconciled</div>
+        <div class="trace-success">completed step reused</div>
+        <div class="trace-event">verification resumes</div>
+        <div class="trace-success">Ready for Review</div>
+      </div>
+
+      <div class="prose">
+        <p>
+          This is not a claim of generic exactly-once execution. Reconciliation is capability-specific. The point is to make ambiguity explicit instead of hiding it behind a retry loop.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <div class="screenshot-placeholder">artemis-lite-06-recovery.png</div>
+      </div>
+      <p class="screenshot-caption">Workflow state survives the Electron process. Recovery resumes from persisted evidence rather than restarting the agent conversation.</p>
+    </div>
+  </section>
+
+  <!-- 09 / REPOSITORY TENDING -->
+  <section class="section" id="tending">
+    <div class="container">
+      <div class="section-label">09 / Repository Tending</div>
+      <h2>The system is designed for an ecosystem, not a single repo.</h2>
+      <div class="prose">
+        <p>
+          Original Artemis could review several projects at once, combining repository activity with connected operational data. Lite retains that direction, but the briefing is built from explicit evidence sources and context selection.
+        </p>
+        <p>
+          A morning review should be able to surface changed repositories, failing checks, new issues, requested reviews, work already prepared by Artemis and workflows that need approval or recovery.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <div class="screenshot-placeholder">artemis-lite-08-morning-review.png</div>
+      </div>
+      <p class="screenshot-caption">Lite retains Artemis's multi-project oversight while building the briefing from explicit evidence sources.</p>
+    </div>
+  </section>
+
+  <!-- 10 / EVALUATION -->
+  <section class="section" id="evaluation">
+    <div class="container">
+      <div class="section-label">10 / Evaluation</div>
+      <h2>Measure the architecture, not the demo.</h2>
+      <div class="prose">
+        <p>
+          The purpose of Lite is not to claim that smaller prompts or explicit workflows are automatically better. The architecture is instrumented so those assumptions can be tested.
+        </p>
+      </div>
+
+      <!-- Evaluation data will come from real runs -->
+      <div class="evidence-block">
+        <div class="evidence-title">Evaluation dimensions</div>
+        <div class="evidence-row">
+          <span class="evidence-label">Context</span>
+          <span class="evidence-value">Completion, tokens, latency and cost by strategy</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Capability selection</span>
+          <span class="evidence-value">Tool-definition tokens and incorrect selections</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Recovery</span>
+          <span class="evidence-value">Completion rate, retries, duplicate side effects by injected fault</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Human control</span>
+          <span class="evidence-value">Approval behaviour across workflow types</span>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p style="font-size: 14px; color: var(--text-muted);">
+          Quantitative results will be published from real evaluation runs. No placeholder metrics are presented as measurements.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 / LESSONS -->
+  <section class="section" id="lessons">
+    <div class="container">
+      <div class="section-label">11 / Lessons</div>
+      <h2>The model is only one component of an agentic product.</h2>
+      <div class="prose">
+        <p>
+          Building Artemis changed how I think about AI product engineering. The first challenge was capability: connecting a model to repositories, tools, memory, monitoring and workers. The harder challenge appeared once those capabilities started doing real work.
+        </p>
+        <p>
+          Long-running agentic systems need ordinary software-engineering properties around the model: explicit state, durable persistence, narrow interfaces, permission boundaries, recovery semantics, observability and tests. They also need a clear answer to a less obvious question: what should the model <em>not</em> be responsible for?
+        </p>
+        <p>
+          Artemis Lite is my attempt to make that boundary visible. The model reasons. The application remembers what happened.
+        </p>
+      </div>
+
+      <div class="pull-quote">
+        Giving a model tools is relatively easy. Engineering a reliable system around those tools is the harder problem.
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer / Source -->
+  <footer class="footer" id="source">
+    <div class="container">
+      <h2>Source, architecture and implementation notes</h2>
+      <p>
+        Artemis Lite is being built as an inspectable engineering project. The repository includes architecture decisions, implementation notes, recovery semantics and the evaluation work behind the case study.
+      </p>
+      <div class="footer-links">
+        <a href="https://github.com/reuben-stone/artemis-lite" class="btn-primary" target="_blank" rel="noopener">View Artemis Lite on GitHub</a>
+        <a href="https://github.com/reuben-stone/artemis" class="btn-secondary" target="_blank" rel="noopener">View original Artemis</a>
+      </div>
+      <p style="margin-top: 48px; font-size: 13px; color: var(--text-muted);">
+        Built by Reuben Stone &middot; 2026
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
