@@ -526,7 +526,7 @@
           Giving a model more tools quickly made Artemis more capable. It also made the engineering around those tools more important.
         </p>
         <p>
-          The original agent loop assembled broad project, memory and conversation context, exposed a large capability surface, and allowed the model to move through tool calls until the turn completed. That worked, but it made several questions increasingly difficult to answer precisely:
+          The original agent loop assembled broad project, memory and conversation context, gave the model a large set of tools, and allowed the model to move through tool calls until the turn completed. That worked, but it made several questions increasingly difficult to answer precisely:
         </p>
         <p>
           What context did this step actually need? What state must survive a process restart? When is a failed action safe to retry? How do you know whether an external side effect already happened? Which decisions belong to the model, and which belong to deterministic application logic? How do you measure whether a more selective architecture is actually better?
@@ -567,14 +567,14 @@
   <section class="section" id="hypothesis">
     <div class="container">
       <div class="section-label">03 / Hypothesis</div>
-      <h2>Use less agentic architecture, but keep the useful capability.</h2>
+      <h2>Give the model less responsibility, without making Artemis less useful.</h2>
 
       <div class="prose">
         <p>
-          Artemis Lite started with a different division of responsibility. The application would own workflow lifecycle, persistence, approvals, retries, timeouts, recovery, context budgets and tracing. The model would own the decisions that genuinely required reasoning.
+          Artemis Lite started with a different division of responsibility. The application would keep track of the workflow, what had already happened, what needed approval and how failures should be handled. The model would own the decisions that genuinely required reasoning.
         </p>
         <p>
-          I wanted to test whether the repository-tending mission of Artemis could survive that constraint: not by reducing the final task to a toy example, but by rebuilding toward the same meaningful workflows.
+          I wanted to see whether Artemis could still do useful repository work under that constraint. The point was not to reduce it to a toy agent demo, but to rebuild toward the same kind of real engineering tasks.
         </p>
       </div>
 
@@ -584,7 +584,7 @@
 
       <div class="prose">
         <p>
-          The model can decide what evidence matters or how to approach a bug. It should not be responsible for remembering whether a side effect was already committed after the process restarts.
+          The model can decide what evidence matters or how to approach a bug. It should not have to remember whether an external action already happened before the process restarted.
         </p>
       </div>
     </div>
@@ -600,7 +600,7 @@
           Artemis Lite is not intended to be a better interface for running AI workflows manually.
         </p>
         <p>
-          The system I am building is a persistent engineering operations layer across the software projects I maintain. It will observe repository and production state, decide when investigation is warranted, create durable workflows around that work, and leave verified results waiting for human review.
+          The system I am building is intended to keep working across the software projects I maintain even when I am not there. It will watch repository and production activity, decide when something is worth investigating, carry that investigation through a recoverable workflow, and leave the result waiting for me to review.
         </p>
       </div>
 
@@ -610,13 +610,16 @@
 
       <div class="prose">
         <p>
-          Three dimensions are required. First, external operational signals: Sentry for production errors, GitHub for engineering state, Google Analytics for product context. A production error is evidence, not an instruction. The system normalises, deduplicates and applies policy before deciding whether investigation is warranted.
+          Getting there requires three things. First, Artemis needs signals from the systems I already use: Sentry for production errors, GitHub for engineering activity and Google Analytics for product usage.
         </p>
         <p>
-          Second, persistent execution. Artemis will run investigation and implementation workflows overnight without requiring the desktop application to stay open. Closing the Electron window should not terminate work in progress.
+          A production error is evidence, not an instruction. Artemis should first work out which project it belongs to, whether it has already seen the problem and whether it is worth investigating.
         </p>
         <p>
-          Third, bounded delegation. Artemis is not intended to compete with Claude Code or Codex. Those systems become execution engines inside Artemis. Artemis owns the layer around them: project scope, context selection, workflow state, policy, persistence, recovery, verification, Results and human review.
+          Second, the work has to survive the desktop app. Artemis should be able to investigate and work on a problem overnight without the Electron window staying open. Closing the application should not mean losing a workflow that is already in progress.
+        </p>
+        <p>
+          Third, Artemis does not need to replace tools such as Claude Code or Codex. They can do the implementation work. Artemis is responsible for everything around that work: deciding what they are allowed to work on, giving them the right context, keeping track of progress, checking the result and deciding when I need to step in.
         </p>
       </div>
 
@@ -644,6 +647,13 @@
           <div style="width: 1px; height: 12px; background: var(--border); margin-left: 24px;"></div>
           <div style="padding: 8px 16px; border: 1px solid var(--accent); border-radius: 4px; font-size: 13px; color: var(--accent); width: 100%; font-weight: 500;">Morning Review / PR Review</div>
         </div>
+      </div>
+
+      <!-- Morning Review bridge -->
+      <div style="margin: 64px 0 40px; max-width: 720px;">
+        <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;">The Morning Review</div>
+        <h3 style="font-family: var(--serif); font-size: 32px; font-weight: 400; color: var(--text); line-height: 1.3; margin-bottom: 16px;">What should be waiting for me when I wake up?</h3>
+        <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.7;">The goal is not a stream of agent activity. It is a concise record of what changed, what Artemis investigated, and what actually needs my attention.</p>
       </div>
 
       <!-- Morning Review -->
@@ -764,7 +774,7 @@
           That changes the engineering problem.
         </p>
         <p>
-          A system operating unattended across multiple repositories cannot rely on an ever-growing prompt and a collection of loosely controlled tools. It needs explicit state, bounded context, recoverable workflows, constrained side effects, verification and an audit trail.
+          A system working unattended across several repositories cannot rely on an ever-growing prompt and a loose collection of tools. It has to know what it was doing before a restart, control what information reaches the model, recover safely from failures and keep a record of what actually happened.
         </p>
         <p>
           Those requirements became the architecture of Artemis Lite.
@@ -780,7 +790,10 @@
       <h2>The workflow becomes the primary object.</h2>
       <div class="prose">
         <p>
-          In Lite, a user goal becomes a persisted workflow with explicit steps and valid transitions. Every consequential operation sits behind typed boundaries. Approvals are records, not transient UI state. Usage is persisted. Trace events are append-only. Recovery starts from durable state rather than trying to recreate an in-memory conversation loop.
+          In Lite, a user goal becomes a workflow that is saved as it moves through planning, execution, approval and verification. Important actions sit behind clear boundaries, and approvals, usage and execution history are stored as part of the workflow rather than existing only in the interface.
+        </p>
+        <p>
+          This means that if Artemis is interrupted, it can recover from what actually happened rather than trying to reconstruct an in-memory conversation.
         </p>
       </div>
 
@@ -900,12 +913,12 @@
         <div class="decision">
           <div class="decision-num">05</div>
           <div class="decision-title">Tool-specific reconciliation</div>
-          <div class="decision-desc">Ambiguous side effects are reconciled against external reality where possible rather than blindly retried.</div>
+          <div class="decision-desc">If Artemis is unsure whether an external action succeeded, it checks the external system where possible rather than blindly running the action again.</div>
         </div>
         <div class="decision">
           <div class="decision-num">06</div>
           <div class="decision-title">Observable model usage</div>
-          <div class="decision-desc">Model calls, token usage, duration and cost estimates are persisted against the workflow.</div>
+          <div class="decision-desc">Each workflow keeps a record of its model calls, token usage, duration and estimated cost.</div>
         </div>
         <div class="decision">
           <div class="decision-num">07</div>
@@ -923,7 +936,7 @@
       <h2>From issue to Ready for Review.</h2>
       <div class="prose">
         <p>
-          The Lite workflow demonstrates the architecture on a real engineering task rather than a synthetic agent loop.
+          I wanted to test the architecture on a real engineering task rather than another agent demo.
         </p>
       </div>
 
@@ -943,17 +956,17 @@
 
       <div class="prose">
         <p>
-          The worker is deliberately not the authority. It receives a bounded task and environment, returns an implementation result, and the parent workflow resumes control for checks and verification.
+          The worker deliberately has a narrow job. It receives a specific task in an isolated environment, makes the change, then hands control back to Artemis for checks and verification.
         </p>
         <p>
-          Publication is another boundary. Artemis can do substantial work autonomously, but creating the external review artifact remains an explicit, persisted side effect.
+          Publishing the work is a separate decision. Artemis can investigate, make changes and run checks on its own, but creating the pull request still requires an approval that survives a restart.
         </p>
       </div>
 
       <div class="screenshot">
         <img src="../../assets/artemis-lite-04-approval.png" alt="Artemis Lite approval gate showing create_work_item awaiting human approval with Reject and Approve buttons" style="width: 100%; display: block;">
       </div>
-      <p class="screenshot-caption">Substantial work can proceed automatically while publication remains an explicit persisted approval boundary.</p>
+      <p class="screenshot-caption">Artemis can do most of the work automatically, while publishing it remains a deliberate human decision.</p>
     </div>
   </section>
 
@@ -967,14 +980,17 @@
           As Artemis grew, context became an architectural problem. Giving a model access to a repository didn't mean it needed the entire repository on every call.
         </p>
         <p>
-          In Lite, context is an explicit, measurable input. For each reasoning step, the Context Builder assembles a bounded packet of workflow state, selected repository evidence and prior tool results. The inspector records what was selected, why it was selected, what was excluded and how much of the available budget was consumed.
+          In Lite, context is something I can inspect and measure. For each reasoning step, the Context Builder selects the workflow information, repository evidence and previous tool results the model is likely to need, within a fixed budget.
+        </p>
+        <p>
+          The inspector shows what was included, why it was chosen, what was left out and how much of the available context it used.
         </p>
       </div>
 
       <div class="screenshot">
         <img src="../../assets/artemis-lite-02-context.png" alt="Artemis Lite Context Inspector showing budget bar, included repository evidence with token estimates, and excluded files with reasons" style="width: 100%; display: block;">
       </div>
-      <p class="screenshot-caption">Context becomes an inspectable input: which evidence was selected, what was excluded, and how much of the model budget each source consumed.</p>
+      <p class="screenshot-caption">The Context inspector shows what the model received, what was left out and how much of the available budget each source used.</p>
     </div>
   </section>
 
@@ -985,10 +1001,13 @@
       <h2>The interesting test is what happens halfway through.</h2>
       <div class="prose">
         <p>
-          A successful happy-path agent demo proves very little about a long-running workflow. Lite includes deterministic fault injection so the same workflow can be exercised under model timeouts, provider failures, tool failures and process interruption.
+          A successful happy-path demo tells me very little about whether I can trust a long-running workflow. Lite lets me deliberately introduce model timeouts, provider failures, tool failures and process interruptions, then run the same workflow through them again.
         </p>
         <p>
-          Recovery is based on persisted workflow state. Completed steps can be skipped, pending approvals can be reconstructed, and known side effects can be reused. Where the external outcome is ambiguous, the tool can reconcile against reality before deciding whether another execution is safe.
+          Recovery starts from the workflow record in SQLite. Artemis can see which steps already finished, restore an approval that was still waiting and avoid repeating work it knows succeeded.
+        </p>
+        <p>
+          The harder case is when an external action may have happened just before the interruption. Where possible, Artemis checks the external system first before deciding whether it is safe to try again.
         </p>
       </div>
 
@@ -1005,14 +1024,14 @@
 
       <div class="prose">
         <p>
-          This is not a claim of generic exactly-once execution. Reconciliation is capability-specific. The point is to make ambiguity explicit instead of hiding it behind a retry loop.
+          I am not claiming generic exactly-once execution here. Reconciliation has to be designed for the individual capability. The important part is that Artemis treats an uncertain outcome as uncertain instead of hiding it behind another retry.
         </p>
       </div>
 
       <div class="screenshot">
         <img src="../../assets/artemis-lite-06-recovery.png" alt="Artemis Lite trace showing workflow interruption, recovery from SQLite state, skipped completed steps, and resumed verification" style="width: 100%; display: block;">
       </div>
-      <p class="screenshot-caption">Workflow state survives the Electron process. Recovery resumes from persisted evidence rather than restarting the agent conversation.</p>
+      <p class="screenshot-caption">The workflow survives the Electron process. After a restart, Artemis continues from the work already recorded rather than starting the agent conversation again.</p>
     </div>
   </section>
 
@@ -1023,7 +1042,7 @@
       <h2>Measure the architecture, not the demo.</h2>
       <div class="prose">
         <p>
-          The purpose of Lite is not to claim that smaller prompts or explicit workflows are automatically better. The architecture is instrumented so those assumptions can be tested.
+          I am not assuming that smaller prompts or more structured workflows are automatically better. Lite records enough about each run for me to test whether the changes actually improve anything.
         </p>
       </div>
 
@@ -1050,7 +1069,7 @@
 
       <div class="prose">
         <p style="font-size: 14px; color: var(--text-muted);">
-          Quantitative results will be published from real evaluation runs. No placeholder metrics are presented as measurements.
+          This section will be updated with measurements from real evaluation runs. Until then, I would rather leave the numbers blank than present invented benchmarks.
         </p>
       </div>
     </div>
@@ -1060,13 +1079,16 @@
   <section class="section" id="lessons">
     <div class="container">
       <div class="section-label">10 / Lessons</div>
-      <h2>The model is only one component of an agentic product.</h2>
+      <h2>The model is only one part of the system.</h2>
       <div class="prose">
         <p>
           Building Artemis changed how I think about AI product engineering. The first challenge was capability: connecting a model to repositories, tools, memory, monitoring and workers. The harder challenge appeared once those capabilities started doing real work.
         </p>
         <p>
-          Long-running agentic systems need ordinary software-engineering properties around the model: explicit state, durable persistence, narrow interfaces, permission boundaries, recovery semantics, observability and tests. They also need a clear answer to a less obvious question: what should the model <em>not</em> be responsible for?
+          Once an AI system starts doing work that lasts longer than a single conversation, a lot of ordinary software engineering becomes important again. It needs to remember what happened, survive restarts, control what the model is allowed to do, recover from failures and leave enough evidence to understand why something went wrong.
+        </p>
+        <p>
+          It also needs a clear answer to a less obvious question: what should the model <em>not</em> be responsible for?
         </p>
         <p>
           Artemis Lite is my attempt to make that boundary visible. The model reasons. The application remembers what happened.
@@ -1084,7 +1106,7 @@
     <div class="container">
       <h2>Source, architecture and implementation notes</h2>
       <p>
-        Artemis Lite is being built as an inspectable engineering project. The repository includes architecture decisions, implementation notes, recovery semantics and the evaluation work behind the case study.
+        Artemis Lite is being built in public as an engineering project rather than just a portfolio demo. The repository includes the architecture decisions, implementation notes, recovery design and evaluation work behind this case study.
       </p>
       <div class="footer-links">
         <a href="https://github.com/reuben-stone/artemis-lite" class="btn-primary" target="_blank" rel="noopener">View Artemis Lite on GitHub</a>
