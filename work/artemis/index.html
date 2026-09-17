@@ -462,7 +462,10 @@
   <section id="artemis" style="padding-bottom: 100px;">
     <div class="container">
       <div class="screenshot">
-        <img src="../../assets/artemis-01-workspace.png" alt="Artemis v1 desktop window showing the central 3D orb, operations panels including PR Review, Tickets and Tasks on the left rail, chat interface on the right, and project switcher in the title bar." style="width: 100%; display: block;">
+        <video class="lazy-video" loop muted playsinline style="width: 100%; display: block;" poster="../../assets/artemis-01-workspace.png">
+          <source src="../../assets/artemis-v1-clip.mp4" type="video/mp4">
+          <img src="../../assets/artemis-01-workspace.png" alt="Artemis v1 desktop application" style="width: 100%; display: block;">
+        </video>
       </div>
       <p class="screenshot-caption">Artemis: a persistent desktop AI operations layer sitting above multiple repositories.</p>
 
@@ -890,5 +893,19 @@
     </div>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.play();
+          } else {
+            entry.target.pause();
+          }
+        });
+      }, { threshold: 0.25 });
+      document.querySelectorAll('.lazy-video').forEach(function(v) { observer.observe(v); });
+    });
+  </script>
 </body>
 </html>

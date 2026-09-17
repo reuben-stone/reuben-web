@@ -391,7 +391,10 @@
           </div>
           <a href="work/artemis/index.html" class="project-link">Read the engineering case study &rarr;</a>
           <div class="project-image">
-            <img src="assets/artemis-01-workspace.png" alt="Artemis desktop application showing the 3D orb, operations panels, PR review queue and chat interface." width="1440" height="900" loading="lazy" style="width:100%;height:auto;display:block;">
+            <video class="lazy-video" loop muted playsinline style="width:100%;display:block;" poster="assets/artemis-01-workspace.png">
+              <source src="assets/artemis-v1-clip.mp4" type="video/mp4">
+              <img src="assets/artemis-01-workspace.png" alt="Artemis desktop application" width="1440" height="900" loading="lazy" style="width:100%;height:auto;display:block;">
+            </video>
           </div>
         </div>
 
@@ -569,5 +572,19 @@
     </div>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.play();
+          } else {
+            entry.target.pause();
+          }
+        });
+      }, { threshold: 0.25 });
+      document.querySelectorAll('.lazy-video').forEach(function(v) { observer.observe(v); });
+    });
+  </script>
 </body>
 </html>
