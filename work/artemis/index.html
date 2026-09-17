@@ -420,6 +420,7 @@
       <ul class="nav-links">
         <li><a href="../../index.html">&larr; Portfolio</a></li>
         <li><a href="#problem">Problem</a></li>
+        <li><a href="#direction">Direction</a></li>
         <li><a href="#architecture">Architecture</a></li>
         <li><a href="#workflow">Workflows</a></li>
         <li><a href="#reliability">Reliability</a></li>
@@ -452,7 +453,10 @@
   <section id="artemis" style="padding-bottom: 100px;">
     <div class="container">
       <div class="screenshot">
-        <img src="../../assets/artemis-01-workspace.png" alt="Artemis v1 desktop application" style="width: 100%; display: block;">
+        <video class="lazy-video" loop muted playsinline style="width: 100%; display: block;" poster="../../assets/artemis-01-workspace.png">
+          <source src="../../assets/artemis-v1-clip.mp4" type="video/mp4">
+          <img src="../../assets/artemis-01-workspace.png" alt="Artemis v1 desktop application" style="width: 100%; display: block;">
+        </video>
       </div>
       <p class="screenshot-caption">Artemis: a persistent desktop AI operations layer sitting above multiple repositories.</p>
 
@@ -464,10 +468,7 @@
           It can register and switch between projects, produce cross-repository morning reviews combining git activity with live Google Analytics data, maintain restart-survivable conversation and memory, and give the model application-owned tools for operating across the whole environment.
         </p>
         <p>
-          The most useful capability is delegated engineering. Artemis can dispatch a worker agent into an isolated git worktree, let it implement and test a change on a new branch, then open a pull request. The worker never pushes directly to main. Completed work returns to a PR Review Queue for human review.
-        </p>
-        <p>
-          It also has voice input and output, a reactive Three.js presence, persistent markdown memory, swappable model providers, and a permission gate around every write and shell command. It is ambitious. It works. And building it taught me something I had not expected.
+          The most useful capability is delegated engineering. Artemis dispatches worker agents into isolated git worktrees to implement and test changes, then returns gated pull requests to a review queue.
         </p>
       </div>
 
@@ -565,10 +566,6 @@
       <div class="section-label">03 / Hypothesis</div>
       <h2>Use less agentic architecture, but keep the useful capability.</h2>
 
-      <div class="pull-quote">
-        Use the minimum amount of agentic behaviour required to reliably complete the task.
-      </div>
-
       <div class="prose">
         <p>
           Artemis Lite started with a different division of responsibility. The application would own workflow lifecycle, persistence, approvals, retries, timeouts, recovery, context budgets and tracing. The model would own the decisions that genuinely required reasoning.
@@ -597,10 +594,10 @@
       <h2>An engineering system that keeps working when I'm not there.</h2>
       <div class="prose">
         <p>
-          Artemis Lite is not a better interface for running AI workflows manually.
+          Artemis Lite is not intended to be a better interface for running AI workflows manually.
         </p>
         <p>
-          It is a persistent engineering operations layer across the software projects I maintain. It observes repository and production state, decides when investigation is warranted, creates durable workflows around that work, and leaves verified results waiting for human review.
+          The system I am building is a persistent engineering operations layer across the software projects I maintain. It will observe repository and production state, decide when investigation is warranted, create durable workflows around that work, and leave verified results waiting for human review.
         </p>
       </div>
 
@@ -610,13 +607,13 @@
 
       <div class="prose">
         <p>
-          Three dimensions make this possible. First, external operational signals: Sentry for production errors, GitHub for engineering state, Google Analytics for product context. A production error is evidence, not an instruction. The system normalises it, maps it to a project, deduplicates repeated occurrences, and applies policy before deciding whether investigation is warranted.
+          Three dimensions are required. First, external operational signals: Sentry for production errors, GitHub for engineering state, Google Analytics for product context. A production error is evidence, not an instruction. The system normalises, deduplicates and applies policy before deciding whether investigation is warranted.
         </p>
         <p>
-          Second, persistent execution. Artemis runs investigation and implementation workflows overnight without requiring the desktop application to stay open. Closing the Electron window does not terminate work in progress.
+          Second, persistent execution. Artemis will run investigation and implementation workflows overnight without requiring the desktop application to stay open. Closing the Electron window should not terminate work in progress.
         </p>
         <p>
-          Third, bounded delegation. Artemis does not compete with Claude Code or Codex. Those systems are execution engines inside Artemis. Artemis owns the layer around them: project scope, context selection, workflow state, policy, persistence, recovery, verification, Results and human review.
+          Third, bounded delegation. Artemis is not intended to compete with Claude Code or Codex. Those systems become execution engines inside Artemis. Artemis owns the layer around them: project scope, context selection, workflow state, policy, persistence, recovery, verification, Results and human review.
         </p>
       </div>
 
@@ -647,7 +644,7 @@
       </div>
 
       <!-- Morning Review -->
-      <div style="margin: 56px 0; padding: 32px 36px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; max-width: 820px;">
+      <div style="margin: 56px 0; padding: 32px 36px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; max-width: 960px;">
 
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px;">
@@ -916,48 +913,14 @@
     </div>
   </section>
 
-  <!-- 06 / CAPABILITY -->
-  <section class="section" id="capability">
-    <div class="container">
-      <div class="section-label">06 / Capability</div>
-      <h2>Lite is smaller architecture, not a smaller ambition.</h2>
-      <div class="prose">
-        <p>
-          The difference from the original is that each stage now has an explicit contract and can be inspected independently.
-        </p>
-      </div>
-
-      <div class="comparison">
-        <div class="comparison-col">
-          <div class="comparison-title">Artemis</div>
-          <div class="comparison-item">Assistant-centred workspace</div>
-          <div class="comparison-item">Broad context</div>
-          <div class="comparison-item">Large tool surface</div>
-          <div class="comparison-item">Implicit turn lifecycle</div>
-          <div class="comparison-item">Worker &rarr; PR</div>
-          <div class="comparison-item">Persistent conversation</div>
-        </div>
-        <div class="comparison-col">
-          <div class="comparison-title">Artemis Lite</div>
-          <div class="comparison-item">Workflow-centred control plane</div>
-          <div class="comparison-item">Step-specific context</div>
-          <div class="comparison-item">Selected capabilities</div>
-          <div class="comparison-item">Explicit lifecycle</div>
-          <div class="comparison-item">Worker &rarr; verification &rarr; gated PR</div>
-          <div class="comparison-item">Persistent workflow evidence</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 07 / WORKFLOW -->
+  <!-- 06 / WORKFLOW -->
   <section class="section" id="workflow">
     <div class="container">
-      <div class="section-label">07 / Workflow</div>
+      <div class="section-label">06 / Workflow</div>
       <h2>From issue to Ready for Review.</h2>
       <div class="prose">
         <p>
-          The finished Lite workflow should demonstrate the architecture on a real engineering task rather than a synthetic agent loop.
+          The Lite workflow demonstrates the architecture on a real engineering task rather than a synthetic agent loop.
         </p>
       </div>
 
@@ -991,10 +954,10 @@
     </div>
   </section>
 
-  <!-- 08 / CONTEXT -->
+  <!-- 07 / CONTEXT -->
   <section class="section" id="context">
     <div class="container">
-      <div class="section-label">08 / Context</div>
+      <div class="section-label">07 / Context</div>
       <h2>What did the model actually see?</h2>
       <div class="prose">
         <p>
@@ -1012,10 +975,10 @@
     </div>
   </section>
 
-  <!-- 09 / RELIABILITY -->
+  <!-- 08 / RELIABILITY -->
   <section class="section" id="reliability">
     <div class="container">
-      <div class="section-label">09 / Reliability</div>
+      <div class="section-label">08 / Reliability</div>
       <h2>The interesting test is what happens halfway through.</h2>
       <div class="prose">
         <p>
@@ -1050,28 +1013,10 @@
     </div>
   </section>
 
-  <!-- 10 / REPOSITORY TENDING -->
-  <section class="section" id="tending">
-    <div class="container">
-      <div class="section-label">10 / Repository Tending</div>
-      <h2>The system is designed for an ecosystem, not a single repo.</h2>
-      <div class="prose">
-        <p>
-          Original Artemis could review several projects at once, combining repository activity with connected operational data. Lite retains that direction, but the briefing is built from explicit evidence sources and context selection.
-        </p>
-        <p>
-          A morning review should be able to surface changed repositories, failing checks, new issues, requested reviews, work already prepared by Artemis and workflows that need approval or recovery.
-        </p>
-      </div>
-
-      <p class="screenshot-caption" style="margin-top: 0;">The morning review concept shown in Section 04 describes how this architecture is intended to aggregate results across the portfolio.</p>
-    </div>
-  </section>
-
-  <!-- 11 / EVALUATION -->
+  <!-- 09 / EVALUATION -->
   <section class="section" id="evaluation">
     <div class="container">
-      <div class="section-label">11 / Evaluation</div>
+      <div class="section-label">09 / Evaluation</div>
       <h2>Measure the architecture, not the demo.</h2>
       <div class="prose">
         <p>
@@ -1108,10 +1053,10 @@
     </div>
   </section>
 
-  <!-- 12 / LESSONS -->
+  <!-- 10 / LESSONS -->
   <section class="section" id="lessons">
     <div class="container">
-      <div class="section-label">12 / Lessons</div>
+      <div class="section-label">10 / Lessons</div>
       <h2>The model is only one component of an agentic product.</h2>
       <div class="prose">
         <p>
