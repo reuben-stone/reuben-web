@@ -815,10 +815,10 @@
       <h2>What did the model actually see?</h2>
       <div class="prose">
         <p>
-          One of the main experiments in Lite is treating context as a measurable input rather than invisible prompt plumbing.
+          As Artemis grew, context became an architectural problem. Giving a model access to a repository didn't mean it needed the entire repository on every call.
         </p>
         <p>
-          For each reasoning step, the Context Builder can assemble the goal, current workflow state, selected repository evidence, GitHub evidence, prior tool results and relevant memory within an explicit budget. The inspector exposes that composition to the engineer.
+          In Lite, context is an explicit, measurable input. For each reasoning step, the Context Builder assembles a bounded packet of workflow state, selected repository evidence and prior tool results. The inspector records what was selected, why it was selected, what was excluded and how much of the available budget was consumed.
         </p>
       </div>
 
