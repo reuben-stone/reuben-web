@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://reubenstone.co.uk/sitemap.xml

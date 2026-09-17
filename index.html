@@ -3,11 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reuben Stone - Product Engineer</title>
+  <title>Reuben Stone — Senior Product Engineer</title>
   <meta name="description" content="Senior Product Engineer building software products across frontend systems, AI-enabled applications, and interactive web experiences.">
-  <meta property="og:title" content="Reuben Stone - Product Engineer">
-  <meta property="og:description" content="I build software products, and the systems behind them.">
+  <link rel="canonical" href="https://reubenstone.co.uk/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230e0f11'/><text x='6' y='23' font-family='serif' font-size='22' fill='%238b5cf6'>R</text></svg>">
+  <meta property="og:title" content="Reuben Stone — Senior Product Engineer">
+  <meta property="og:description" content="Senior Product Engineer building software products across frontend systems, AI-enabled applications, and interactive web experiences.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://reubenstone.co.uk/">
+  <meta property="og:image" content="https://reubenstone.co.uk/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reuben Stone — Senior Product Engineer">
+  <meta name="twitter:description" content="Senior Product Engineer building software products across frontend systems, AI-enabled applications, and interactive web experiences.">
+  <meta name="twitter:image" content="https://reubenstone.co.uk/assets/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Reuben Stone",
+    "jobTitle": "Senior Product Engineer",
+    "url": "https://reubenstone.co.uk",
+    "sameAs": [
+      "https://github.com/reuben-stone",
+      "https://linkedin.com/in/reubenstone"
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -19,7 +40,7 @@
       --border-strong: #3a3b42;
       --text: #e0ddd5;
       --text-secondary: #a8a5a0;
-      --text-muted: #6b6862;
+      --text-muted: #8a8780;
       --accent: #8b5cf6;
       --serif: 'Source Serif 4', Georgia, serif;
       --sans: 'Inter', -apple-system, system-ui, sans-serif;
@@ -63,6 +84,7 @@
       color: var(--text-muted);
       text-decoration: none;
       transition: color 0.15s;
+      padding: 8px 4px;
     }
     .header-links a:hover { color: var(--text); }
 
@@ -270,8 +292,25 @@
     }
 
     /* ── Focus / motion / responsive ─────────────────── */
+    /* ── Skip link ────────────────────────────────── */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      padding: 8px 16px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      z-index: 100;
+      text-decoration: none;
+    }
+    .skip-link:focus { left: 8px; top: 8px; }
+
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
     @media (max-width: 768px) {
       .container { padding: 0 20px; }
       .hero { padding: 80px 0 60px; }
@@ -284,17 +323,17 @@
 </head>
 <body>
 
-  <a href="#main" class="sr-only" style="position:absolute;left:-9999px;top:0;padding:8px;background:var(--accent);color:#fff;z-index:100;">Skip to content</a>
+  <a href="#main" class="skip-link">Skip to content</a>
 
   <header class="header">
     <div class="container">
       <div class="header-name">Reuben Stone</div>
-      <nav>
+      <nav aria-label="Main navigation">
         <ul class="header-links">
           <li><a href="#work">Work</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="https://github.com/reuben-stone" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
         </ul>
       </nav>
     </div>
@@ -316,8 +355,8 @@
         <div class="hero-links">
           <a href="#work" class="arrow">Selected work &darr;</a>
           <a href="mailto:reubenastone@gmail.com">Email</a>
-          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </div>
         <div class="hero-meta">
           Based between Portugal and the UK
@@ -328,7 +367,7 @@
     <!-- Selected Work -->
     <section class="section" id="work">
       <div class="container">
-        <div class="section-label">Selected Work</div>
+        <h2 class="section-label">Selected Work</h2>
 
         <!-- 01 Artemis -->
         <div class="project">
@@ -336,7 +375,7 @@
             <span class="project-index">01</span>
             <span class="project-year">2026</span>
           </div>
-          <h2 class="project-title">Artemis</h2>
+          <h3 class="project-title">Artemis</h3>
           <p class="project-desc">
             A desktop AI operations system for tending a portfolio of software repositories. Artemis can monitor multiple projects, dispatch engineering work into isolated worktrees, and return gated pull requests for review. The case study explores how I evolved its architecture around explicit workflow state, selective context, recovery and measurable reliability.
           </p>
@@ -345,7 +384,7 @@
           </div>
           <a href="work/artemis/index.html" class="project-link">Read the engineering case study &rarr;</a>
           <div class="project-image">
-            <img src="assets/artemis-01-workspace.png" alt="Artemis desktop application showing the 3D orb, operations panels, PR review queue and chat interface." style="width:100%;display:block;">
+            <img src="assets/artemis-01-workspace.png" alt="Artemis desktop application showing the 3D orb, operations panels, PR review queue and chat interface." width="1440" height="900" loading="lazy" style="width:100%;height:auto;display:block;">
           </div>
         </div>
 
@@ -355,7 +394,7 @@
             <span class="project-index">02</span>
             <span class="project-year">2026</span>
           </div>
-          <h2 class="project-title">GenAI Mindset / The Smarty Train</h2>
+          <h3 class="project-title">GenAI Mindset / The Smarty Train</h3>
           <p class="project-desc">
             Product engineering for an AI-enabled learning platform designed around how people work critically and effectively with generative AI.
           </p>
@@ -370,9 +409,9 @@
             <span class="project-index">03</span>
             <span class="project-year">2024 &ndash; 2026</span>
           </div>
-          <h2 class="project-title">Powster / Universal Pictures</h2>
+          <h3 class="project-title">Powster / Universal Pictures</h3>
           <p class="project-desc">
-            Product engineering across global entertainment experiences, internal tools and a custom AWS-backed publishing platform. Built a Three.js photosphere viewer adopted across multiple productions.
+            Product engineering across global entertainment experiences, internal tools and a custom AWS-backed publishing platform.
           </p>
           <div class="project-meta">
             React / TypeScript / Three.js / AWS / CMS Architecture
@@ -385,7 +424,7 @@
             <span class="project-index">04</span>
             <span class="project-year">2024 &ndash; Present</span>
           </div>
-          <h2 class="project-title">Lumi / Livana</h2>
+          <h3 class="project-title">Lumi / Livana</h3>
           <p class="project-desc">
             Building accessibility software around a practical audit, remediation and verification workflow for product teams.
           </p>
@@ -400,7 +439,7 @@
     <!-- Currently -->
     <section class="section" id="currently">
       <div class="container">
-        <div class="section-label">Currently</div>
+        <h2 class="section-label">Currently</h2>
         <div class="prose">
           <p>
             I'm particularly interested in what happens when language models become components inside persistent software systems rather than isolated chat interfaces.
@@ -418,7 +457,7 @@
     <!-- Experience -->
     <section class="section" id="experience">
       <div class="container">
-        <div class="section-label">Experience</div>
+        <h2 class="section-label">Experience</h2>
         <div class="exp-row">
           <span class="exp-year">2026</span>
           <span class="exp-company">The Smarty Train</span>
@@ -455,7 +494,7 @@
           <span class="exp-role">Frontend &amp; full-stack product work</span>
         </div>
         <div class="exp-cv">
-          <a href="#">Download CV &rarr;</a>
+          <a href="assets/reuben-stone-cv.pdf" target="_blank">Download CV &rarr;</a>
         </div>
       </div>
     </section>
@@ -463,7 +502,7 @@
     <!-- About -->
     <section class="section" id="about">
       <div class="container">
-        <div class="section-label">About</div>
+        <h2 class="section-label">About</h2>
         <div class="about-text">
           <p>
             I'm a product engineer with more than ten years of experience building software across agencies, product teams and technology companies.
@@ -487,14 +526,14 @@
     <!-- Contact -->
     <section class="section" id="contact">
       <div class="container">
-        <div class="section-label">Contact</div>
+        <h2 class="section-label">Contact</h2>
         <p class="contact-text">
           For product engineering work, collaboration or technical conversations:
         </p>
         <div class="contact-links">
           <a href="mailto:reubenastone@gmail.com">reubenastone@gmail.com</a>
-          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </div>
       </div>
     </section>
