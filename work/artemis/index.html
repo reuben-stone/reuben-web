@@ -528,6 +528,9 @@
         <p>
           What context did this step actually need? What state must survive a process restart? When is a failed action safe to retry? How do you know whether an external side effect already happened? Which decisions belong to the model, and which belong to deterministic application logic? How do you measure whether a more selective architecture is actually better?
         </p>
+        <p>
+          As those capabilities accumulated, the harder question became less about what the model could do and more about what the surrounding application should be responsible for.
+        </p>
       </div>
 
       <div class="evidence-block">
@@ -568,7 +571,10 @@
 
       <div class="prose">
         <p>
-          Artemis Lite started with a different division of responsibility. The application would keep track of the workflow, what had already happened, what needed approval and how failures should be handled. The model would own the decisions that genuinely required reasoning.
+          Artemis Lite started with a different division of responsibility. The goal was not to remove model reasoning. It was to move responsibilities such as workflow state, persistence, permissions, recovery, idempotency, budgets and approvals into application code that could make them explicit and inspectable.
+        </p>
+        <p>
+          The model could still reason. It just would not also be responsible for remembering what happened, deciding whether a side effect had already occurred, or reconstructing workflow state after a restart.
         </p>
         <p>
           I wanted to see whether Artemis could still do useful repository work under that constraint. The point was not to reduce it to a toy agent demo, but to rebuild toward the same kind of real engineering tasks.
@@ -953,7 +959,10 @@
 
       <div class="prose">
         <p>
-          The worker deliberately has a narrow job. It receives a specific task in an isolated environment, makes the change, then hands control back to Artemis for checks and verification.
+          A workflow is not the same thing as a model session. Artemis owns the durable lifecycle while individual stages can be deterministic, model-assisted or delegated to a specialised capability.
+        </p>
+        <p>
+          The worker deliberately has a narrow job. It receives a specific task in an isolated environment, makes the change, then hands control back to Artemis for checks and verification. A specialist execution process can exit while the Artemis workflow continues.
         </p>
         <p>
           Publishing the work is a separate decision. Artemis can investigate, make changes and run checks on its own, but creating the pull request still requires an approval that survives a restart.
@@ -1117,10 +1126,32 @@
 
       <div class="prose">
         <p>
-          The first version of the Context Inspector made model input observable. Dogfooding showed that this was only half of the problem. Longer investigations also need a controlled way to acquire new evidence as the hypothesis changes. Artemis now instruments that acquisition: what evidence was requested, why, from which part of the repository, and what was available to the verifier.
+          Progressive discovery improved evidence acquisition. But the investigation plan was still generated upfront, before any evidence existed. Repository investigation is adaptive: discovering one subsystem changes what should be inspected next.
         </p>
         <p>
-          The next question is no longer simply how much context the model received, but whether Artemis found the evidence the task actually needed.
+          I introduced a bounded investigation loop. Artemis retained control of iteration limits, token budgets, persistence, recovery, read-only capabilities and tracing, while the model could choose the next evidence-gathering action and evolve its hypothesis between iterations.
+        </p>
+        <p>
+          Mechanically, the architecture worked. The real investigation still reached its iteration limit without establishing the root cause.
+        </p>
+      </div>
+
+      <div class="prose">
+        <p>
+          That was useful evidence in itself. I had made repository investigation more bounded and observable, but I was also beginning to recreate the execution harness of a specialised coding agent using repeated constrained model calls.
+        </p>
+        <p>
+          The original Artemis idea had always been to coordinate agents and tools across a software ecosystem, not to replace every specialist capability itself. The experiment made that boundary concrete.
+        </p>
+      </div>
+
+      <div class="pull-quote" style="margin: 56px 0;">
+        Artemis did not need to become the coding agent. It needed to know when to use one.
+      </div>
+
+      <div class="prose">
+        <p>
+          For substantial repository engineering, the next iteration delegates the specialist work to an execution engine such as Claude Code. Artemis still owns why the work exists, which product and repository it belongs to, the durable workflow around it, its execution boundaries, the evidence returned, verification, recovery and the human decision that follows.
         </p>
       </div>
     </div>
@@ -1156,7 +1187,7 @@
 
       <div class="prose">
         <p>
-          I am not claiming generic exactly-once execution here. Reconciliation has to be designed for the individual capability. The important part is that Artemis treats an uncertain outcome as uncertain instead of hiding it behind another retry.
+          I am not claiming generic exactly-once execution here. Reconciliation has to be designed for the individual capability. The important part is that Artemis treats an uncertain outcome as uncertain instead of hiding it behind another retry. A specialist execution process can be temporary. The workflow around it cannot be.
         </p>
       </div>
 
@@ -1215,13 +1246,16 @@
           Artemis Lite has given me a smaller environment for testing the parts of the original system that became difficult to reason about: workflow state, context, recovery, verification and human control.
         </p>
         <p>
-          The next step is to stop adding architecture and use it. I want to run the same kinds of engineering tasks repeatedly, deliberately interrupt them, measure what context was actually useful, and compare the results rather than assuming the new approach is better.
+          Dogfooding it against real production work has also helped clarify where the system boundary should sit. Artemis does not need to reproduce every specialist capability it coordinates.
         </p>
         <p>
-          If those findings hold up, the interesting next step is to bring them back into the richer product idea that started this project: the original Artemis interface, but with the more deliberate system underneath it.
+          The next step is a concrete vertical slice: take a real production signal, resolve it to the correct product and repository, delegate repository engineering to a specialised agent, independently verify the result, and leave the consequential action waiting for review.
         </p>
         <p>
-          In that sense, Lite is not the destination. It is where I am working out what Artemis 2.0 should actually be.
+          If that works reliably, the interesting next step is to bring those lessons back into the richer product idea that started this project: the original Artemis interface, with the more deliberate system underneath it.
+        </p>
+        <p>
+          Lite is not the destination. It is where I am working out what Artemis 2.0 should actually be.
         </p>
       </div>
     </div>
@@ -1243,7 +1277,10 @@
           It also needs a clear answer to a less obvious question: what should the model <em>not</em> be responsible for?
         </p>
         <p>
-          Artemis Lite is my attempt to make that boundary visible. The model reasons. The application remembers what happened.
+          Lite also made another boundary clearer. Making a specialist task more bounded and observable does not necessarily mean the surrounding system should implement that specialism itself. Sometimes the better architecture is to retain control of the workflow and delegate the specialist work.
+        </p>
+        <p>
+          Artemis Lite is my attempt to make those boundaries visible. The model reasons. The application remembers what happened.
         </p>
       </div>
 
