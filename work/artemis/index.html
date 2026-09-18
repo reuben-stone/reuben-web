@@ -974,20 +974,155 @@
       <h2>What did the model actually see?</h2>
       <div class="prose">
         <p>
-          As Artemis grew, context became an architectural problem. Giving a model access to a repository didn't mean it needed the entire repository on every call.
+          As Artemis grew, context became an architectural problem. Giving a model access to a repository did not mean it needed the entire repository on every call.
         </p>
         <p>
-          In Lite, context is something I can inspect and measure. For each reasoning step, the Context Builder selects the workflow information, repository evidence and previous tool results the model is likely to need, within a fixed budget.
-        </p>
-        <p>
-          The inspector shows what was included, why it was chosen, what was left out and how much of the available context it used.
+          In Lite, context is something I can inspect and measure. For each reasoning step, the Context Builder selects the workflow information, repository evidence and previous tool results the model is likely to need, within a fixed budget. The inspector shows what was included, why it was chosen, what was left out and how much of the available budget it used.
         </p>
       </div>
 
       <div class="screenshot">
         <img src="../../assets/artemis-lite-02-context.png" alt="Artemis Lite Context Inspector showing budget bar, included repository evidence with token estimates, and excluded files with reasons" style="width: 100%; display: block;">
       </div>
-      <p class="screenshot-caption">The Context inspector shows what the model received, what was left out and how much of the available budget each source used.</p>
+      <p class="screenshot-caption">The Context Inspector shows what the model received, what was left out and how much of the available budget each source used.</p>
+
+      <div class="prose" style="margin-top: 48px;">
+        <p>
+          That turned out to be only half of the problem.
+        </p>
+      </div>
+
+      <!-- The finding -->
+      <div style="margin: 48px 0 40px; max-width: 720px;">
+        <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;">Dogfooding</div>
+        <h3 style="font-family: var(--serif); font-size: 24px; font-weight: 400; color: var(--text); line-height: 1.35; margin-bottom: 16px;">The first real investigation failed.</h3>
+      </div>
+
+      <div class="prose">
+        <p>
+          While dogfooding Artemis Lite, a real Sentry issue appeared in Lumi, one of the projects in the portfolio:
+        </p>
+      </div>
+
+      <div style="margin: 24px 0 32px; padding: 16px 20px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 4px; max-width: 620px; font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--text-secondary);">
+        <span style="color: var(--text-muted);">TypeError:</span><br>
+        Cannot convert argument to a ByteString because the character at index 25 has a value of 8211 which is greater than 255.
+      </div>
+
+      <div class="prose">
+        <p>
+          Artemis created an investigation workflow. The model formed a reasonable hypothesis: a non-ASCII character, likely an em dash at U+2013 (value 8211), was reaching something constrained to ByteString values, probably an HTTP header.
+        </p>
+        <p>
+          The investigation failed verification.
+        </p>
+        <p>
+          The important failure was not that the model got the answer wrong. The repository discovery capability was too blunt. The investigation searched for <code style="font-family: var(--mono); font-size: 13px; color: var(--text-muted);">ByteString</code>, <code style="font-family: var(--mono); font-size: 13px; color: var(--text-muted);">headers</code>, <code style="font-family: var(--mono); font-size: 13px; color: var(--text-muted);">fetch(</code>, <code style="font-family: var(--mono); font-size: 13px; color: var(--text-muted);">X-</code>, <code style="font-family: var(--mono); font-size: 13px; color: var(--text-muted);">worker</code>. Generic terms like "headers" and "fetch(" reached the bounded result limits and produced noisy evidence. The repository is a monorepo. The relevant implementation could exist beyond the evidence returned to the model.
+        </p>
+        <p>
+          The search capability had a 200-file global bound, a 50-match result bound, and no directory scoping. Those bounds are intentional. The problem was that Artemis had no way to progressively narrow the search as its understanding of the problem developed.
+        </p>
+      </div>
+
+      <div class="prose">
+        <p style="color: var(--text);">
+          I could have increased the global search limits. I did not.
+        </p>
+        <p>
+          Instead, I changed the capability layer so Artemis could progressively acquire evidence: understand the repository structure, identify the likely subsystem, search within that subsystem, inspect candidates, follow references, and then form a hypothesis.
+        </p>
+      </div>
+
+      <!-- Comparison diagram: Broad vs Progressive -->
+      <div style="margin: 48px 0; max-width: 680px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;">
+
+          <!-- Left: Broad search -->
+          <div style="background: var(--bg-raised); padding: 28px 24px;">
+            <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;">Broad Search</div>
+
+            <div style="display: flex; flex-direction: column; gap: 0; align-items: flex-start;">
+              <div style="font-size: 13px; color: var(--text-secondary); padding: 4px 0;">Repository</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: var(--text-secondary); padding: 4px 0;">Global search</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: var(--text-muted); padding: 4px 0;">50-match bound</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: var(--text-muted); padding: 4px 0;">Noisy evidence</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: #ef4444; padding: 4px 0;">Investigation stalls</div>
+            </div>
+          </div>
+
+          <!-- Right: Progressive discovery -->
+          <div style="background: var(--bg-raised); padding: 28px 24px;">
+            <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;">Progressive Discovery</div>
+
+            <div style="display: flex; flex-direction: column; gap: 0; align-items: flex-start;">
+              <div style="font-size: 13px; color: var(--text-secondary); padding: 4px 0;">Repository</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: var(--text-secondary); padding: 4px 0;">Identify subsystem</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: var(--text-secondary); padding: 4px 0;">Scoped search</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: var(--text-secondary); padding: 4px 0;">Candidate evidence</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: var(--text-secondary); padding: 4px 0;">Read + follow references</div>
+              <div style="width: 1px; height: 10px; background: var(--border); margin-left: 12px;"></div>
+              <div style="font-size: 13px; color: var(--text); padding: 4px 0;">Verify</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Annotation -->
+        <div style="margin-top: 12px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted);">
+          Global search bound: 200 files - unchanged
+        </div>
+      </div>
+
+      <!-- Regression evidence -->
+      <div class="evidence-block" style="max-width: 420px;">
+        <div class="evidence-title">Monorepo Regression</div>
+        <div class="evidence-row">
+          <span class="evidence-label">Fixture</span>
+          <span class="evidence-value">226 files across 4 packages</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Global search bound</span>
+          <span class="evidence-value">200 files</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Broad search</span>
+          <span class="evidence-value">Target not discovered</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Scoped search</span>
+          <span class="evidence-value">Target discovered</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Global limit</span>
+          <span class="evidence-value">Unchanged</span>
+        </div>
+        <div class="evidence-row" style="border-bottom: none;">
+          <span class="evidence-label">Regression tests</span>
+          <span class="evidence-value">8</span>
+        </div>
+      </div>
+
+      <!-- Pull quote -->
+      <div class="pull-quote" style="margin: 56px 0;">
+        Context is not only what the model receives at the start. It is also the evidence the system allows it to acquire as its understanding of the problem changes.
+      </div>
+
+      <div class="prose">
+        <p>
+          The first version of the Context Inspector made model input observable. Dogfooding showed that this was only half of the problem. Longer investigations also need a controlled way to acquire new evidence as the hypothesis changes. Artemis now instruments that acquisition: what evidence was requested, why, from which part of the repository, and what was available to the verifier.
+        </p>
+        <p>
+          The next question is no longer simply how much context the model received, but whether Artemis found the evidence the task actually needed.
+        </p>
+      </div>
     </div>
   </section>
 
