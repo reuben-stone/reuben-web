@@ -630,7 +630,7 @@
 
       <!-- Target workflow flow -->
       <div style="margin: 56px 0;">
-        <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;">Target Workflow</div>
+        <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;">Workflow</div>
         <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: 400px;">
           <div style="padding: 8px 16px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-secondary); width: 100%; display: flex; align-items: center; gap: 10px;">
             <span style="color: var(--text-muted); font-size: 11px;">Sentry / GitHub / Analytics</span>
@@ -1142,13 +1142,13 @@
           Artemis Lite has given me a smaller environment for testing the parts of the original system that became difficult to reason about: workflow state, context, recovery, verification and human control.
         </p>
         <p>
-          Dogfooding it against real production work has also helped clarify where the system boundary should sit. Artemis does not need to reproduce every specialist capability it coordinates.
+          Dogfooding it against real production work clarified where the system boundary should sit. Artemis does not need to reproduce every specialist capability it coordinates. A real Sentry production issue was investigated, a fix was prepared and independently verified, and the draft PR is waiting for review. The vertical slice works.
         </p>
         <p>
-          The next step is a concrete vertical slice: take a real production signal, resolve it to the correct product and repository, delegate repository engineering to a specialised agent, independently verify the result, and leave the consequential action waiting for review.
+          The next step is to make this operate unattended: Artemis should be able to collect production signals, decide which warrant investigation, delegate the work, verify the result, and surface useful outcomes in the Morning Review without manual intervention.
         </p>
         <p>
-          If that works reliably, the interesting next step is to bring those lessons back into the richer product idea that started this project: the original Artemis interface, with the more deliberate system underneath it.
+          After that, the interesting step is to bring these lessons back into the richer product idea that started this project: the original Artemis interface, with the more deliberate system underneath it.
         </p>
         <p>
           Lite is not the destination. It is where I am working out what Artemis 2.0 should actually be.
