@@ -216,34 +216,6 @@
       background: var(--bg-raised);
     }
 
-    /* ── Expertise ───────────────────────────────────── */
-    .expertise-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: start;
-    }
-    .expertise-prose {
-      max-width: 480px;
-    }
-    .expertise-prose p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.75;
-    }
-    .expertise-areas {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding-top: 4px;
-    }
-    .expertise-item {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text-muted);
-      letter-spacing: 0.04em;
-    }
-
     /* ── Experience ──────────────────────────────────── */
     .exp-row {
       display: flex;
@@ -364,7 +336,6 @@
       .exp-company { min-width: 0; }
       .project-header { flex-direction: column; gap: 4px; }
       .col-2 { grid-template-columns: 1fr; }
-      .expertise-grid { grid-template-columns: 1fr; gap: 24px; }
     }
   </style>
 </head>
@@ -471,6 +442,7 @@
             <a href="https://www.universalpictures.com/" class="project-link" target="_blank" rel="noopener noreferrer">Universal Pictures &#8599;</a>
             <a href="https://www.focusfeatures.com/" class="project-link" target="_blank" rel="noopener noreferrer">Focus Features &#8599;</a>
           </div>
+          <!--
           <div class="col-2">
             <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
               <img src="assets/universal.png" alt="Universal Pictures website showing The Odyssey, now playing in theaters." loading="lazy" style="width: 100%; display: block;">
@@ -478,6 +450,10 @@
             <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
               <img src="assets/focusfeatures.png" alt="Focus Features website showing Werwulf and The Uprising film listings." loading="lazy" style="width: 100%; display: block;">
             </div>
+          </div>
+          -->
+          <div class="project-image">
+            <img src="assets/universal-odyssey.png" alt="Universal Pictures website featuring The Odyssey, now playing in theaters." width="1568" height="746" loading="lazy" style="width:100%;height:auto;display:block;">
           </div>
         </div>
 
@@ -503,40 +479,17 @@
       </div>
     </section>
 
-    <!-- Currently -->
-    <section class="section" id="currently">
+    <!-- Capability -->
+    <section class="section" id="capability">
       <div class="container">
-        <h2 class="section-label">Currently</h2>
+        <h2 class="section-label">Capability</h2>
         <div class="prose">
           <p>
-            I'm particularly interested in what happens when language models become components inside persistent software systems rather than isolated chat interfaces.
+            I work across the full product stack, from interface details through to backend services, infrastructure and the systems that connect them. That includes interactive and WebGL work, accessibility engineering, and the architecture around complex product requirements.
           </p>
           <p>
-            My current work explores workflow orchestration, selective context, constrained tools, durable state, failure recovery, observability and human approval boundaries.
+            Recent work has increasingly involved AI systems, alongside the product engineering needed to make them useful.
           </p>
-          <p>
-            <a href="work/artemis/index.html" class="project-link">Current experiment: Artemis Lite &rarr;</a>
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Expertise -->
-    <section class="section" id="expertise">
-      <div class="container">
-        <h2 class="section-label">Expertise</h2>
-        <div class="expertise-grid">
-          <div class="expertise-prose">
-            <p>
-              I work across the full product stack, from interface details through to backend services, infrastructure and the systems that connect them. Most of my recent work sits at the intersection of product engineering and AI-enabled software.
-            </p>
-          </div>
-          <div class="expertise-areas">
-            <span class="expertise-item">Product engineering</span>
-            <span class="expertise-item">AI systems</span>
-            <span class="expertise-item">Interactive / WebGL</span>
-            <span class="expertise-item">Accessibility</span>
-          </div>
         </div>
       </div>
     </section>
@@ -592,13 +545,7 @@
         <h2 class="section-label">About</h2>
         <div class="about-text">
           <p>
-            I'm a product engineer with more than ten years of experience building software across agencies, product teams and technology companies.
-          </p>
-          <p>
-            I started deep in the frontend, where I developed a strong interest in interaction, product quality and the details users actually experience. Over time my work expanded into architecture, backend services, infrastructure, internal tooling and product ownership.
-          </p>
-          <p>
-            More recently I've been working with AI-enabled products and exploring the systems required to make model-driven software useful beyond a chat interface: persistent state, context selection, tools, recovery, verification and human control.
+            I started deep in the frontend, where I developed a strong interest in interaction, product quality and the details users actually experience. Over time that expanded into architecture, backend services and product ownership across agencies, product teams and technology companies.
           </p>
           <p>
             I still care about the interface. I just increasingly care about everything that has to work behind it too.
