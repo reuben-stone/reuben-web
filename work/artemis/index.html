@@ -1088,9 +1088,9 @@
       </div>
 
       <div class="screenshot">
-        <img src="../../assets/artemis-lite-06-recovery.png" alt="Artemis Lite trace showing workflow interruption, recovery from SQLite state, skipped completed steps, and resumed verification" style="width: 100%; display: block;">
+        <img src="../../assets/artemis-lite-06-recovery.png" alt="Artemis Lite trace showing repeated workflow interruption, recovery and resume cycles with the workflow completing successfully" style="width: 100%; display: block;">
       </div>
-      <p class="screenshot-caption">The workflow survives the Electron process. After a restart, Artemis continues from the work already recorded rather than starting the agent conversation again.</p>
+      <p class="screenshot-caption">The trace shows multiple interruption and recovery cycles. Each time Artemis restarts, it resumes from persisted state rather than starting over. The workflow eventually completes with a verified result.</p>
     </div>
   </section>
 
