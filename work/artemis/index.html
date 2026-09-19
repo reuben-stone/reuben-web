@@ -656,120 +656,14 @@
       <div style="margin: 64px 0 40px; max-width: 720px;">
         <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;">The Morning Review</div>
         <h3 style="font-family: var(--serif); font-size: 32px; font-weight: 400; color: var(--text); line-height: 1.3; margin-bottom: 16px;">What should be waiting for me when I wake up?</h3>
-        <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.7;">The goal is not a stream of agent activity. It is a concise record of what changed, what Artemis investigated, and what actually needs my attention.</p>
+        <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.7;">The Morning Review is not a stream of agent activity. It aggregates production signals, investigation results and prepared fixes across the portfolio into a concise record of what changed and what actually needs my attention.</p>
       </div>
 
-      <!-- Morning Review -->
-      <div style="margin: 56px 0; padding: 32px 36px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; max-width: 960px;">
-
-        <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px;">
-          <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);">Morning Review</div>
-          <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted);">Target Experience</div>
-        </div>
-
-        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Thursday, 17 September</div>
-
-        <!-- Summary - only this line is model-generated prose -->
-        <div style="font-size: 15px; color: var(--text); margin-bottom: 8px;">
-          Good morning, Reuben. Two projects need your attention and one verified fix is ready for review.
-        </div>
-
-        <!-- Structured counts - deterministic -->
-        <div style="display: flex; gap: 24px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 24px;">
-          <span>5 repos checked</span>
-          <span>2 Sentry issues</span>
-          <span>1 fix prepared</span>
-          <span>1 needs attention</span>
-        </div>
-
-        <!-- Ready for Review -->
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
-          <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: #22c55e;">Ready for Review</div>
-          <div style="font-family: var(--mono); font-size: 11px; color: var(--text-muted);">1</div>
-        </div>
-
-        <div style="padding: 16px 20px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 24px;">
-          <div style="font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px;">Lumi</div>
-          <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Scanner timeout after route transition</div>
-          <div style="display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font-size: 12px; margin-bottom: 16px;">
-            <span style="color: var(--text-muted);">Signal</span>
-            <span style="color: var(--text-secondary);">Sentry - 47 occurrences since deploy</span>
-            <span style="color: var(--text-muted);">Branch</span>
-            <span style="font-family: var(--mono); font-size: 11px; color: var(--text-secondary);">artemis/fix-scanner-timeout</span>
-            <span style="color: var(--text-muted);">Tests</span>
-            <span style="color: #22c55e;">38 passed</span>
-            <span style="color: var(--text-muted);">Verification</span>
-            <span style="color: #22c55e;">Passed</span>
-          </div>
-          <div style="display: flex; gap: 8px;">
-            <span style="padding: 5px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; color: var(--text-secondary);">Inspect workflow</span>
-            <span style="padding: 5px 14px; border: 1px solid var(--accent); border-radius: 4px; font-size: 12px; color: var(--accent);">Review changes</span>
-          </div>
-        </div>
-
-        <!-- Needs Attention -->
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
-          <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: #eab308;">Needs Attention</div>
-          <div style="font-family: var(--mono); font-size: 11px; color: var(--text-muted);">1</div>
-        </div>
-
-        <div style="padding: 16px 20px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 24px;">
-          <div style="font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px;">LumiLens</div>
-          <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Authentication errors after deployment</div>
-          <div style="display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font-size: 12px; margin-bottom: 12px;">
-            <span style="color: var(--text-muted);">Signal</span>
-            <span style="color: var(--text-secondary);">Sentry - 2 related issues</span>
-            <span style="color: var(--text-muted);">Investigation</span>
-            <span style="color: #eab308;">Could not reproduce reliably</span>
-          </div>
-          <div style="display: flex; gap: 8px;">
-            <span style="padding: 5px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; color: var(--text-secondary);">Inspect investigation</span>
-          </div>
-        </div>
-
-        <!-- Portfolio -->
-        <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;">Portfolio</div>
-
-        <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-            <thead>
-              <tr style="border-bottom: 1px solid var(--border);">
-                <th style="text-align: left; padding: 6px 0; color: var(--text-muted); font-weight: 400; font-size: 11px;"></th>
-                <th style="text-align: left; padding: 6px 12px; color: var(--text-muted); font-weight: 400; font-size: 11px;">GitHub</th>
-                <th style="text-align: left; padding: 6px 12px; color: var(--text-muted); font-weight: 400; font-size: 11px;">Sentry</th>
-                <th style="text-align: right; padding: 6px 0; color: var(--text-muted); font-weight: 400; font-size: 11px;">Yesterday</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom: 1px solid rgba(42,43,48,0.5);">
-                <td style="padding: 8px 0; color: var(--text); font-weight: 500;">Lumi</td>
-                <td style="padding: 8px 12px; color: var(--text-secondary);">3 commits</td>
-                <td style="padding: 8px 12px; color: #eab308;">1 issue</td>
-                <td style="padding: 8px 0; text-align: right; color: var(--text-secondary);">1,284 sessions <span style="color: #22c55e;">+12%</span></td>
-              </tr>
-              <tr style="border-bottom: 1px solid rgba(42,43,48,0.5);">
-                <td style="padding: 8px 0; color: var(--text); font-weight: 500;">Doshi</td>
-                <td style="padding: 8px 12px; color: var(--text-secondary);">1 commit</td>
-                <td style="padding: 8px 12px; color: var(--text-muted);">Clear</td>
-                <td style="padding: 8px 0; text-align: right; color: var(--text-secondary);">438 sessions <span style="color: #22c55e;">+4%</span></td>
-              </tr>
-              <tr style="border-bottom: 1px solid rgba(42,43,48,0.5);">
-                <td style="padding: 8px 0; color: var(--text); font-weight: 500;">Livana</td>
-                <td style="padding: 8px 12px; color: var(--text-muted);">No changes</td>
-                <td style="padding: 8px 12px; color: var(--text-muted);">Clear</td>
-                <td style="padding: 8px 0; text-align: right; color: var(--text-secondary);">203 sessions <span style="color: var(--text-muted);">-2%</span></td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; color: var(--text); font-weight: 500;">Artemis Lite</td>
-                <td style="padding: 8px 12px; color: var(--text-secondary);">7 commits</td>
-                <td style="padding: 8px 12px; color: var(--text-muted);">Clear</td>
-                <td style="padding: 8px 0; text-align: right; color: var(--text-muted);">-</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- Morning Review - real screenshot -->
+      <div class="screenshot" style="margin: 56px 0;">
+        <img src="../../assets/artemis-lite-07-morning-review.png" alt="Artemis Lite Morning Review showing portfolio summary, Sentry issues with PR status, and structured review cards with signal, branch and verification metadata" style="width: 100%; display: block;">
       </div>
+      <p class="screenshot-caption">The Morning Review aggregates production signals, investigation results and prepared fixes across the portfolio into a single operational summary.</p>
 
       <!-- Bridge to architecture -->
       <div class="prose" style="margin-top: 48px;">
