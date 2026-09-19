@@ -1116,7 +1116,7 @@
           Artemis carried that production signal through the operational system: resolved the product and repository, constructed the workflow context, delegated the investigation to Claude Code running in an isolated worktree, independently observed what changed, ran verification, persisted the Result, and published a draft pull request to the PR Queue.
         </p>
         <p>
-          The important thing is not the bug itself. It is that real production context travelled through durable workflows, specialist delegation, deterministic verification and human-gated publication without any of that being improvised in a model conversation.
+          The important thing is not the bug itself. It is that real production context travelled through durable workflows, specialist delegation, deterministic verification and a reviewable pull request without any of that being improvised in a model conversation.
         </p>
       </div>
 
@@ -1146,7 +1146,7 @@
 
       <div class="prose">
         <p style="font-size: 14px; color: var(--text-muted);">
-          Artemis records the cost, duration, token usage, trace, verification result and publication state of every workflow it runs. Cost and usage instrumentation exists but requires multiple workflows before it becomes meaningful evaluation evidence.
+          Artemis records cost, duration, token usage, trace, verification results and publication state as part of the workflow record. Cost and usage instrumentation exists but requires multiple workflows before it becomes meaningful evaluation evidence.
         </p>
         <p>
           One important distinction emerged clearly during dogfooding: investigation succeeded does not mean fix verified. The workflow goal was to investigate the issue and identify the likely cause. Claude Code identified the root cause and prepared a one-line fix. Artemis independently confirmed the repository change. But repository-level test and typecheck verification was not clean for that project configuration. The model verifier correctly accepted the investigation result while the deterministic checks reported their actual state. A draft PR is a proposal for human review, not a claim that the fix is production-ready.
