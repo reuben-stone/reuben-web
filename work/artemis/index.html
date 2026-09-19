@@ -1047,7 +1047,7 @@
 
       <div class="prose">
         <p>
-          For substantial repository engineering, the next iteration delegates the specialist work to an execution engine such as Claude Code. Artemis still owns why the work exists, which product and repository it belongs to, the durable workflow around it, its execution boundaries, the evidence returned, verification, recovery and the human decision that follows.
+          For substantial repository engineering, Artemis now delegates the specialist work to an execution engine such as Claude Code. Artemis still owns why the work exists, which product and repository it belongs to, the durable workflow around it, its execution boundaries, the evidence returned, verification, recovery and the human decision that follows.
         </p>
       </div>
     </div>
@@ -1094,58 +1094,81 @@
     </div>
   </section>
 
-  <!-- 09 / EVALUATION - commented out until real measurements exist
+  <!-- 09 / EVALUATION -->
   <section class="section" id="evaluation">
     <div class="container">
       <div class="section-label">09 / Evaluation</div>
-      <h2>Measure the architecture, not the demo.</h2>
+      <h2>The complete loop now works.</h2>
       <div class="prose">
         <p>
-          I am not assuming that smaller prompts or more structured workflows are automatically better. Lite records enough about each run for me to test whether the changes actually improve anything.
+          The architecture has now been exercised end to end against real engineering work. Not a synthetic benchmark, but a genuine Lumi production issue that appeared in Sentry:
         </p>
       </div>
+
+      <div style="margin: 24px 0 32px; padding: 16px 20px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 4px; max-width: 620px; font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--text-secondary);">
+        <span style="color: var(--text-muted);">TypeError:</span><br>
+        Cannot convert argument to a ByteString because the character at index 25 has a value of 8211 which is greater than 255.
+        <div style="margin-top: 8px; font-size: 11px; color: var(--text-muted);">4 events observed</div>
+      </div>
+
+      <div class="prose">
+        <p>
+          Artemis carried that production signal through the operational system: resolved the product and repository, constructed the workflow context, delegated the investigation to Claude Code running in an isolated worktree, independently observed what changed, ran verification, persisted the Result, and published a draft pull request to the PR Queue.
+        </p>
+        <p>
+          The important thing is not the bug itself. It is that real production context travelled through durable workflows, specialist delegation, deterministic verification and human-gated publication without any of that being improvised in a model conversation.
+        </p>
+      </div>
+
       <div class="evidence-block">
-        <div class="evidence-title">Evaluation dimensions</div>
+        <div class="evidence-title">Observed workflow evidence</div>
         <div class="evidence-row">
-          <span class="evidence-label">Context</span>
-          <span class="evidence-value">Completion, tokens, latency and cost by strategy</span>
+          <span class="evidence-label">Signal</span>
+          <span class="evidence-value">Sentry production issue, 4 events</span>
         </div>
         <div class="evidence-row">
-          <span class="evidence-label">Capability selection</span>
-          <span class="evidence-value">Tool-definition tokens and incorrect selections</span>
+          <span class="evidence-label">Specialist execution</span>
+          <span class="evidence-value">~273 seconds</span>
         </div>
         <div class="evidence-row">
-          <span class="evidence-label">Recovery</span>
-          <span class="evidence-value">Completion rate, retries, duplicate side effects by injected fault</span>
+          <span class="evidence-label">Trace events</span>
+          <span class="evidence-value">18</span>
         </div>
         <div class="evidence-row">
-          <span class="evidence-label">Human control</span>
-          <span class="evidence-value">Approval behaviour across workflow types</span>
+          <span class="evidence-label">Repository change</span>
+          <span class="evidence-value">1 file, +1 -1</span>
+        </div>
+        <div class="evidence-row" style="border-bottom: none;">
+          <span class="evidence-label">Publication</span>
+          <span class="evidence-value">Draft PR created</span>
         </div>
       </div>
+
       <div class="prose">
         <p style="font-size: 14px; color: var(--text-muted);">
-          This section will be updated with measurements from real evaluation runs. Until then, I would rather leave the numbers blank than present invented benchmarks.
+          Artemis records the cost, duration, token usage, trace, verification result and publication state of every workflow it runs. Cost and usage instrumentation exists but requires multiple workflows before it becomes meaningful evaluation evidence.
+        </p>
+        <p>
+          One important distinction emerged clearly during dogfooding: investigation succeeded does not mean fix verified. The workflow goal was to investigate the issue and identify the likely cause. Claude Code identified the root cause and prepared a one-line fix. Artemis independently confirmed the repository change. But repository-level test and typecheck verification was not clean for that project configuration. The model verifier correctly accepted the investigation result while the deterministic checks reported their actual state. A draft PR is a proposal for human review, not a claim that the fix is production-ready.
         </p>
       </div>
     </div>
   </section>
-  -->
 
-  <!-- 09 / WHAT NEXT -->
+  <!-- 10 / WHAT NEXT -->
   <section class="section" id="next">
     <div class="container">
-      <div class="section-label">09 / What Next</div>
-      <h2>From experiment back to product.</h2>
+      <div class="section-label">10 / What Next</div>
+      <h2>Can Artemis start the work without me?</h2>
       <div class="prose">
         <p>
-          Artemis Lite has given me a smaller environment for testing the parts of the original system that became difficult to reason about: workflow state, context, recovery, verification and human control.
+          The manually initiated loop now works. Artemis can take production context, create a durable workflow, delegate specialist repository work to Claude Code, observe what happened, verify the outcome and carry proposed engineering work through to a reviewable pull request.
         </p>
         <p>
-          Dogfooding it against real production work clarified where the system boundary should sit. Artemis does not need to reproduce every specialist capability it coordinates. A real Sentry production issue was investigated, a fix was prepared and independently verified, and the draft PR is waiting for review. The vertical slice works.
+          The next experiment is to remove me from the beginning of that process. Artemis should monitor production signals, correlate repeated issues, apply project-level policy, automatically investigate problems worth acting on, and leave useful Results and draft PRs waiting in Morning Review.
         </p>
         <p>
-          The next step is to make this operate unattended: Artemis should be able to collect production signals, decide which warrant investigation, delegate the work, verify the result, and surface useful outcomes in the Morning Review without manual intervention.
+          The central test becomes: can I leave my projects overnight and wake up to useful engineering work that I would otherwise have had to discover, initiate and supervise myself?
         </p>
         <p>
           After that, the interesting step is to bring these lessons back into the richer product idea that started this project: the original Artemis interface, with the more deliberate system underneath it.
@@ -1157,10 +1180,10 @@
     </div>
   </section>
 
-  <!-- 10 / LESSONS -->
+  <!-- 11 / LESSONS -->
   <section class="section" id="lessons">
     <div class="container">
-      <div class="section-label">10 / Lessons</div>
+      <div class="section-label">11 / Lessons</div>
       <h2>The model is only one part of the system.</h2>
       <div class="prose">
         <p>
