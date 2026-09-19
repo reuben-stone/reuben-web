@@ -216,6 +216,34 @@
       background: var(--bg-raised);
     }
 
+    /* ── Expertise ───────────────────────────────────── */
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .expertise-prose {
+      max-width: 480px;
+    }
+    .expertise-prose p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+    .expertise-areas {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 4px;
+    }
+    .expertise-item {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
     /* ── Experience ──────────────────────────────────── */
     .exp-row {
       display: flex;
@@ -336,6 +364,7 @@
       .exp-company { min-width: 0; }
       .project-header { flex-direction: column; gap: 4px; }
       .col-2 { grid-template-columns: 1fr; }
+      .expertise-grid { grid-template-columns: 1fr; gap: 24px; }
     }
   </style>
 </head>
@@ -465,6 +494,10 @@
           <div class="project-meta">
             Product Ownership / Next.js / TypeScript / Accessibility / WCAG
           </div>
+          <div style="display: flex; gap: 16px;">
+            <a href="https://livana.io" class="project-link" target="_blank" rel="noopener noreferrer">Visit Livana &#8599;</a>
+            <a href="https://lumi.livana.io" class="project-link" target="_blank" rel="noopener noreferrer">Try Lumi &#8599;</a>
+          </div>
         </div>
 
       </div>
@@ -484,6 +517,26 @@
           <p>
             <a href="work/artemis/index.html" class="project-link">Current experiment: Artemis Lite &rarr;</a>
           </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Expertise -->
+    <section class="section" id="expertise">
+      <div class="container">
+        <h2 class="section-label">Expertise</h2>
+        <div class="expertise-grid">
+          <div class="expertise-prose">
+            <p>
+              I work across the full product stack, from interface details through to backend services, infrastructure and the systems that connect them. Most of my recent work sits at the intersection of product engineering and AI-enabled software.
+            </p>
+          </div>
+          <div class="expertise-areas">
+            <span class="expertise-item">Product engineering</span>
+            <span class="expertise-item">AI systems</span>
+            <span class="expertise-item">Interactive / WebGL</span>
+            <span class="expertise-item">Accessibility</span>
+          </div>
         </div>
       </div>
     </section>
