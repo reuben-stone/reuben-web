@@ -1,0 +1,8 @@
+{
+  "name": "reuben-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node tests/html-validation.test.js"
+  }
+}
