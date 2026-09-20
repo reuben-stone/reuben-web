@@ -20,7 +20,9 @@ Articles are authored as Markdown with YAML frontmatter in `content/writing/`.
 ```yaml
 ---
 title: "Article title"
-description: "Short description for SEO and social cards."
+question: "The central question the article explores (required for published articles)"
+description: "Concise factual description for SEO and social metadata."
+excerpt: "Optional short editorial preview for the Writing index."
 slug: "article-slug"
 datePublished: "2026-09-20"
 dateModified: "2026-09-20"
@@ -34,6 +36,14 @@ relatedWork:
     label: "AI Systems Engineering Case Study"
 ---
 ```
+
+**Important distinctions:**
+- `title` - memorable editorial idea
+- `question` - the human hook, rendered as standfirst on the article page and on the Writing index (required)
+- `description` - factual SEO description for meta tags and social cards
+- `excerpt` - optional editorial preview shown on the Writing index beneath the question
+
+Do not make these identical. Each has a distinct purpose.
 
 2. Write the article body in Markdown. Supports: headings (h2, h3), paragraphs, lists, blockquotes, inline code, code blocks, links, images, horizontal rules.
 

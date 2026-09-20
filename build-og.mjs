@@ -99,12 +99,29 @@ async function generateOG(article) {
                 fontWeight: 600,
                 lineHeight: 1.2,
                 color: '#e0ddd5',
-                marginBottom: '28px',
+                marginBottom: '20px',
                 maxWidth: '960px',
               },
               children: article.title,
             },
           },
+          // Question - subordinate to title, readable at thumbnail
+          article.question
+            ? {
+                type: 'div',
+                props: {
+                  style: {
+                    fontFamily: 'Inter',
+                    fontSize: '20px',
+                    lineHeight: 1.5,
+                    color: '#8a8780',
+                    marginBottom: '24px',
+                    maxWidth: '800px',
+                  },
+                  children: article.question,
+                },
+              }
+            : null,
           // Topics
           topics
             ? {
@@ -112,9 +129,9 @@ async function generateOG(article) {
                 props: {
                   style: {
                     fontFamily: 'JetBrains Mono',
-                    fontSize: '14px',
+                    fontSize: '12px',
                     letterSpacing: '0.1em',
-                    color: '#77746e',
+                    color: '#5a5754',
                     marginBottom: '24px',
                   },
                   children: topics,

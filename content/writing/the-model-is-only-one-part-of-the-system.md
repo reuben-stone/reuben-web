@@ -1,6 +1,8 @@
 ---
 title: "The model is only one part of the system"
-description: "What rebuilding Artemis taught me about context, tools, state, recovery and where probabilistic reasoning should stop."
+question: "What does it actually take to turn AI into dependable software?"
+description: "What rebuilding Artemis taught me about context, tools, state, recovery and where AI reasoning should stop."
+excerpt: "Rebuilding Artemis changed the question from what the model could do to what the software around it needed to control."
 slug: "the-model-is-only-one-part-of-the-system"
 datePublished: "2026-09-20"
 dateModified: "2026-09-20"

@@ -38,6 +38,10 @@ function loadArticles() {
       console.warn(`Skipping ${file}: missing slug or title`)
       continue
     }
+    if (!data.question) {
+      console.warn(`Skipping ${file}: missing question (required for published articles)`)
+      continue
+    }
 
     articles.push({
       ...data,
@@ -403,7 +407,7 @@ function renderArticle(article) {
         <header class="article-header">
           <div class="article-eyebrow"><a href="/writing/">Writing</a>${topicsMeta ? ' / ' + topicsMeta : ''}</div>
           <h1 class="article-title">${article.title}</h1>
-          <p class="article-standfirst">${article.description}</p>
+          <p class="article-standfirst">${article.question}</p>
           <div class="article-meta">${formatDate(article.datePublished)}</div>
         </header>
 
@@ -432,7 +436,8 @@ function renderIndex(articles) {
           <div class="writing-entry-date">${formatDateShort(a.datePublished)}</div>
           <div class="writing-entry-body">
             <h3 class="writing-entry-title">${a.title}</h3>
-            <p class="writing-entry-desc">${a.description}</p>
+            <p class="writing-entry-question">${a.question}</p>
+            ${a.excerpt ? `<p class="writing-entry-excerpt">${a.excerpt}</p>` : ''}
             ${a.topics?.length ? `<div class="writing-entry-topics">${a.topics.join(' / ')}</div>` : ''}
           </div>
         </a>`
@@ -521,10 +526,17 @@ function renderIndex(articles) {
       line-height: 1.3;
       margin-bottom: 8px;
     }
-    .writing-entry-desc {
-      font-size: 15px;
-      line-height: 1.65;
+    .writing-entry-question {
+      font-size: 16px;
+      line-height: 1.6;
       color: var(--text-secondary);
+      max-width: 580px;
+      margin-bottom: 8px;
+    }
+    .writing-entry-excerpt {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
       max-width: 580px;
       margin-bottom: 8px;
     }
