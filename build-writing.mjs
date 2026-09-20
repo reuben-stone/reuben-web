@@ -322,6 +322,7 @@ function nav(activeSection) {
       </ul>
       <div class="mobile-nav-bottom">
         <div class="mobile-nav-external">
+          <a href="mailto:reubenastone@gmail.com">Email</a>
           <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
           <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn &#8599;</a>
         </div>
@@ -334,7 +335,18 @@ const FOOTER = `<footer class="footer">
     <div class="container">
       &copy; <script>document.write(new Date().getFullYear())</script> Reuben Stone
     </div>
-  </footer>`
+  </footer>
+  <script>
+    var mq = window.matchMedia('(min-width: 769px)');
+    mq.addEventListener('change', function(e) {
+      if (e.matches) {
+        document.getElementById('mobile-nav').classList.remove('open');
+        document.body.classList.remove('nav-open');
+        var btn = document.querySelector('.mobile-toggle');
+        if (btn) { btn.textContent = 'Menu'; btn.setAttribute('aria-expanded', 'false'); }
+      }
+    });
+  </script>`
 
 // ── Escape for JSON ──────────────────────────────────────────────
 
