@@ -210,6 +210,7 @@ const SHARED_CSS = `
       display: flex;
       flex-direction: column;
       justify-content: center;
+      margin-top: -12vh;
     }
     .mobile-nav-links li {
       display: flex;
