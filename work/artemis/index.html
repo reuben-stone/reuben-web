@@ -422,13 +422,15 @@
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 
     /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .nav-links { display: none; }
+    }
     @media (max-width: 768px) {
       .container { padding: 0 20px; }
       .hero { padding: 80px 0 60px; }
       .section { padding: 64px 0; }
       .comparison { grid-template-columns: 1fr; }
       .cap-strip { grid-template-columns: 1fr 1fr; }
-      .nav-links { display: none; }
       .arch-diagram { overflow-x: auto; padding: 24px 16px; }
       .arch-diagram .arch-grid-2 { grid-template-columns: 1fr; }
       .arch-diagram .arch-grid-3 { grid-template-columns: 1fr; }
