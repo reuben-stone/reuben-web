@@ -80,10 +80,10 @@ async function generateOG(article) {
             props: {
               style: {
                 fontFamily: 'JetBrains Mono',
-                fontSize: '14px',
+                fontSize: '15px',
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                color: '#6b6862',
+                color: '#8a8780',
                 marginBottom: '28px',
               },
               children: 'Reuben Stone / Writing',
@@ -112,9 +112,9 @@ async function generateOG(article) {
                 props: {
                   style: {
                     fontFamily: 'JetBrains Mono',
-                    fontSize: '13px',
+                    fontSize: '14px',
                     letterSpacing: '0.1em',
-                    color: '#6b6862',
+                    color: '#77746e',
                     marginBottom: '24px',
                   },
                   children: topics,
@@ -127,7 +127,7 @@ async function generateOG(article) {
             props: {
               style: {
                 fontFamily: 'JetBrains Mono',
-                fontSize: '13px',
+                fontSize: '14px',
                 color: '#8b5cf6',
                 letterSpacing: '0.04em',
                 position: 'absolute',
@@ -184,7 +184,7 @@ async function generateIndexOG() {
           {
             type: 'div',
             props: {
-              style: { fontFamily: 'JetBrains Mono', fontSize: '14px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b6862', marginBottom: '28px' },
+              style: { fontFamily: 'JetBrains Mono', fontSize: '15px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8a8780', marginBottom: '28px' },
               children: 'Reuben Stone / Writing',
             },
           },
@@ -198,7 +198,7 @@ async function generateIndexOG() {
           {
             type: 'div',
             props: {
-              style: { fontFamily: 'JetBrains Mono', fontSize: '13px', color: '#8b5cf6', letterSpacing: '0.04em', position: 'absolute', bottom: '40px', left: '80px' },
+              style: { fontFamily: 'JetBrains Mono', fontSize: '14px', color: '#8b5cf6', letterSpacing: '0.04em', position: 'absolute', bottom: '40px', left: '80px' },
               children: 'reubenstone.co.uk',
             },
           },
