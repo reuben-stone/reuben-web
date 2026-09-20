@@ -92,6 +92,8 @@
     .header {
       padding: 24px 0;
       border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 101;
     }
     .header .container { display: flex; align-items: center; justify-content: space-between; }
     .header-name {
@@ -124,37 +126,56 @@
       cursor: pointer;
       padding: 8px 0;
       transition: color 0.15s;
+      position: relative;
+      z-index: 101;
     }
     .mobile-toggle:hover { color: var(--text); }
     .mobile-nav {
       display: none;
-      padding: 48px 0 40px;
-      border-bottom: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100dvh;
       background: var(--bg);
+      z-index: 100;
+      flex-direction: column;
+      padding: 80px 20px 48px;
+    }
+    .mobile-nav.open {
+      display: flex;
       animation: navReveal 0.2s ease-out;
     }
-    .mobile-nav.open { display: block; }
+    body.nav-open { overflow: hidden; }
     @keyframes navReveal {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     .mobile-nav-links {
       list-style: none;
-      margin-bottom: 32px;
     }
     .mobile-nav-links li {
       display: flex;
-      justify-content: space-between;
       align-items: baseline;
+      gap: 16px;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: navItemIn 0.25s ease-out forwards;
+    }
+    .mobile-nav-links li:nth-child(1) { animation-delay: 0.05s; }
+    .mobile-nav-links li:nth-child(2) { animation-delay: 0.1s; }
+    .mobile-nav-links li:nth-child(3) { animation-delay: 0.15s; }
+    @keyframes navItemIn {
+      to { opacity: 1; transform: translateY(0); }
     }
     .mobile-nav-links a {
       font-family: var(--serif);
-      font-size: 32px;
+      font-size: 36px;
       font-weight: 600;
       color: var(--text);
       text-decoration: none;
       display: block;
-      padding: 12px 0;
+      padding: 16px 0;
       transition: color 0.15s;
     }
     .mobile-nav-links a:hover { color: var(--accent); }
@@ -164,11 +185,12 @@
       color: var(--text-muted);
       letter-spacing: 0.06em;
     }
+    .mobile-nav-bottom {
+      margin-top: auto;
+    }
     .mobile-nav-external {
       display: flex;
       gap: 24px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
     }
     .mobile-nav-external a {
       font-size: 13px;
@@ -289,7 +311,7 @@
     <div class="container">
       <a href="/" class="header-name">Reuben Stone</a>
       <nav aria-label="Main navigation">
-        <button class="mobile-toggle" aria-expanded="false" onclick="var n=document.getElementById('mobile-nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button>
+        <button class="mobile-toggle" aria-expanded="false" onclick="var n=document.getElementById('mobile-nav');var o=n.classList.toggle('open');document.body.classList.toggle('nav-open',o);this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button>
         <ul class="header-links">
           <li><a href="/">Work</a></li>
           <li><a href="/writing/" style="color: var(--text);">Writing</a></li>
@@ -300,15 +322,17 @@
       </nav>
     </div>
     <div class="mobile-nav" id="mobile-nav">
-      <div class="container">
+      <div class="container" style="display:flex;flex-direction:column;flex:1;">
         <ul class="mobile-nav-links">
-          <li><a href="/">Work</a><span class="mobile-nav-index">01</span></li>
-          <li><a href="/writing/" style="color: var(--accent);">Writing</a><span class="mobile-nav-index">02</span></li>
-          <li><a href="/#about">About</a><span class="mobile-nav-index">03</span></li>
+          <li><span class="mobile-nav-index">01</span><a href="/">Work</a></li>
+          <li><span class="mobile-nav-index">02</span><a href="/writing/" style="color: var(--accent);">Writing</a></li>
+          <li><span class="mobile-nav-index">03</span><a href="/#about">About</a></li>
         </ul>
-        <div class="mobile-nav-external">
-          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
-          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn &#8599;</a>
+        <div class="mobile-nav-bottom">
+          <div class="mobile-nav-external">
+            <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
+            <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn &#8599;</a>
+          </div>
         </div>
       </div>
     </div>
