@@ -16,7 +16,7 @@ relatedWork:
     label: "AI Systems Engineering Case Study"
 ---
 
-When I first started building Artemis, the exciting part was giving the model things it could actually do.
+When I first started building [Artemis](/work/artemis/), the exciting part was giving the model things it could actually do.
 
 Artemis began as a desktop system that sat above the software projects I was working on. It could understand multiple repositories, inspect their state, remember previous conversations, pull in production information and delegate engineering work to autonomous workers.
 
@@ -47,7 +47,7 @@ Every new tool made the system more useful, but it also made the environment aro
 
 I gradually realised that I was spending less time thinking about what the model could do and more time thinking about everything surrounding it.
 
-That became the starting point for Artemis Lite.
+That became the starting point for [Artemis Lite](/work/artemis/).
 
 ## A smaller system to answer a bigger question
 
@@ -109,7 +109,7 @@ When something goes wrong, I can ask a much more useful question: *Did the model
 
 The most useful lesson came when I stopped testing the architecture with tidy examples.
 
-Lumi, an accessibility product I'm building, reported a real production error through Sentry.
+[Lumi](https://lumi.livana.io), an accessibility product I'm building, reported a real production error through Sentry.
 
 It wasn't particularly dramatic. A browser API was rejecting a string because one of its characters couldn't be represented in the format it expected.
 

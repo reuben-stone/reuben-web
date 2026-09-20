@@ -296,7 +296,7 @@
         </header>
 
         <div class="article-body">
-          <p>When I first started building Artemis, the exciting part was giving the model things it could actually do.</p>
+          <p>When I first started building <a href="/work/artemis/">Artemis</a>, the exciting part was giving the model things it could actually do.</p>
 <p>Artemis began as a desktop system that sat above the software projects I was working on. It could understand multiple repositories, inspect their state, remember previous conversations, pull in production information and delegate engineering work to autonomous workers.</p>
 <p>Those workers operated in isolated copies of a repository, made changes, ran checks and returned pull requests for me to review.</p>
 <p>It felt like a significant step beyond using an AI assistant in a chat window. The model wasn&#39;t just answering questions about my work. It was participating in it.</p>
@@ -316,7 +316,7 @@
 <li>Which decisions should the model actually be allowed to make?</li>
 </ul>
 <p>I gradually realised that I was spending less time thinking about what the model could do and more time thinking about everything surrounding it.</p>
-<p>That became the starting point for Artemis Lite.</p>
+<p>That became the starting point for <a href="/work/artemis/">Artemis Lite</a>.</p>
 <h2>A smaller system to answer a bigger question</h2>
 <p>I didn&#39;t build Lite because the original Artemis had failed.</p>
 <p>I built it because Artemis had become capable enough to expose a more useful question:</p>
@@ -351,7 +351,7 @@
 <p>When something goes wrong, I can ask a much more useful question: <em>Did the model see the right things?</em></p>
 <h2>Then a real bug broke my neat architecture</h2>
 <p>The most useful lesson came when I stopped testing the architecture with tidy examples.</p>
-<p>Lumi, an accessibility product I&#39;m building, reported a real production error through Sentry.</p>
+<p><a href="https://lumi.livana.io">Lumi</a>, an accessibility product I&#39;m building, reported a real production error through Sentry.</p>
 <p>It wasn&#39;t particularly dramatic. A browser API was rejecting a string because one of its characters couldn&#39;t be represented in the format it expected.</p>
 <p>But it was real, which made it useful.</p>
 <p>I gave the problem to Artemis Lite.</p>
