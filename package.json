@@ -1,0 +1,16 @@
+{
+  "name": "reuben-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:writing": "node build-writing.mjs",
+    "build:og": "node build-og.mjs",
+    "build": "node build-writing.mjs && node build-og.mjs"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "gray-matter": "^4.0.3",
+    "marked": "^15.0.12",
+    "satori": "^0.33.4"
+  }
+}
