@@ -23,13 +23,27 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Reuben Stone",
-    "jobTitle": "Senior Product Engineer",
-    "url": "https://www.reubenstone.co.uk",
-    "sameAs": [
-      "https://github.com/reuben-stone",
-      "https://linkedin.com/in/reubenstone"
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://www.reubenstone.co.uk/#person",
+        "name": "Reuben Stone",
+        "jobTitle": "Senior Product Engineer",
+        "url": "https://www.reubenstone.co.uk/",
+        "sameAs": [
+          "https://github.com/reuben-stone",
+          "https://www.linkedin.com/in/reubenstone"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.reubenstone.co.uk/#website",
+        "url": "https://www.reubenstone.co.uk/",
+        "name": "Reuben Stone",
+        "publisher": {
+          "@id": "https://www.reubenstone.co.uk/#person"
+        }
+      }
     ]
   }
   </script>

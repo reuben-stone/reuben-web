@@ -11,7 +11,7 @@
  * hand-authored pages.
  */
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'fs'
-import { join, basename } from 'path'
+import { join } from 'path'
 import matter from 'gray-matter'
 import { marked } from 'marked'
 
@@ -20,6 +20,7 @@ const CONTENT_DIR = join(ROOT, 'content', 'writing')
 const OUTPUT_DIR = join(ROOT, 'writing')
 const SITEMAP_PATH = join(ROOT, 'sitemap.xml')
 const SITE_URL = 'https://www.reubenstone.co.uk'
+const PERSON_ID = `${SITE_URL}/#person`
 
 // ── Load and parse articles ──────────────────────────────────────
 
@@ -28,18 +29,45 @@ function loadArticles() {
 
   const files = readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md'))
   const articles = []
+  const slugs = new Set()
 
   for (const file of files) {
     const raw = readFileSync(join(CONTENT_DIR, file), 'utf-8')
     const { data, content } = matter(raw)
 
     if (!data.published) continue
-    if (!data.slug || !data.title) {
-      console.warn(`Skipping ${file}: missing slug or title`)
+
+    // Validate required fields
+    const missing = []
+    if (!data.title) missing.push('title')
+    if (!data.slug) missing.push('slug')
+    if (!data.description) missing.push('description')
+    if (!data.datePublished) missing.push('datePublished')
+    if (!data.dateModified) missing.push('dateModified')
+    if (!data.question) missing.push('question')
+    if (!data.topics?.length) missing.push('topics')
+
+    if (missing.length > 0) {
+      console.warn(`Skipping ${file}: missing required fields: ${missing.join(', ')}`)
       continue
     }
-    if (!data.question) {
-      console.warn(`Skipping ${file}: missing question (required for published articles)`)
+
+    // Validate slug format
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(data.slug)) {
+      console.warn(`Skipping ${file}: invalid slug format "${data.slug}"`)
+      continue
+    }
+
+    // Validate no duplicate slugs
+    if (slugs.has(data.slug)) {
+      console.warn(`Skipping ${file}: duplicate slug "${data.slug}"`)
+      continue
+    }
+    slugs.add(data.slug)
+
+    // Validate dates
+    if (isNaN(new Date(data.datePublished).getTime())) {
+      console.warn(`Skipping ${file}: invalid datePublished "${data.datePublished}"`)
       continue
     }
 
@@ -53,8 +81,8 @@ function loadArticles() {
 
   // Sort by datePublished descending
   articles.sort((a, b) => {
-    const da = new Date(a.datePublished || '1970-01-01')
-    const db = new Date(b.datePublished || '1970-01-01')
+    const da = new Date(a.datePublished)
+    const db = new Date(b.datePublished)
     return db.getTime() - da.getTime()
   })
 
@@ -185,12 +213,23 @@ const FOOTER = `<footer class="footer">
     </div>
   </footer>`
 
+// ── Escape for JSON ──────────────────────────────────────────────
+
+function jsonEscape(str) {
+  return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n')
+}
+
 // ── Article page template ────────────────────────────────────────
 
 function renderArticle(article) {
   const ogUrl = `${SITE_URL}/writing/${article.slug}/og-image.png`
   const canonicalUrl = `${SITE_URL}/writing/${article.slug}/`
   const topicsMeta = (article.topics || []).join(' / ')
+  const ogImageAlt = `${article.title} - article by Reuben Stone`
+
+  const topicTags = (article.topics || []).map(t =>
+    `  <meta property="article:tag" content="${t}">`
+  ).join('\n')
 
   const relatedHtml = (article.relatedWork || []).map(r =>
     `<a href="${r.url}" style="display:block;padding:12px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;">
@@ -198,6 +237,38 @@ function renderArticle(article) {
         <div style="font-size:12px;color:var(--text-muted);">${r.label}</div>
       </a>`
   ).join('\n          ')
+
+  const jsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": `${canonicalUrl}#article`,
+        "headline": article.title,
+        "description": article.description,
+        "url": canonicalUrl,
+        "image": ogUrl,
+        "datePublished": article.datePublished,
+        "dateModified": article.dateModified || article.datePublished,
+        "author": { "@id": PERSON_ID },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Reuben Stone", "item": SITE_URL + "/" },
+          { "@type": "ListItem", "position": 2, "name": "Writing", "item": SITE_URL + "/writing/" },
+          { "@type": "ListItem", "position": 3, "name": article.title, "item": canonicalUrl }
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": PERSON_ID,
+        "name": "Reuben Stone",
+        "url": SITE_URL + "/"
+      }
+    ]
+  }, null, 2)
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -216,30 +287,19 @@ function renderArticle(article) {
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="${ogImageAlt}">
   <meta property="og:site_name" content="Reuben Stone">
+  <meta property="article:published_time" content="${article.datePublished}">
+  <meta property="article:modified_time" content="${article.dateModified || article.datePublished}">
+  <meta property="article:author" content="${SITE_URL}/">
+${topicTags}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${article.title} | Reuben Stone">
   <meta name="twitter:description" content="${article.description}">
   <meta name="twitter:image" content="${ogUrl}">
+  <meta name="twitter:image:alt" content="${ogImageAlt}">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "${article.title}",
-    "description": "${article.description}",
-    "image": "${ogUrl}",
-    "datePublished": "${article.datePublished}",
-    "dateModified": "${article.dateModified || article.datePublished}",
-    "author": {
-      "@type": "Person",
-      "name": "Reuben Stone",
-      "url": "${SITE_URL}"
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "${canonicalUrl}"
-    }
-  }
+${jsonLd}
   </script>
   ${FONTS}
   <style>
@@ -408,7 +468,7 @@ function renderArticle(article) {
           <div class="article-eyebrow"><a href="/writing/">Writing</a>${topicsMeta ? ' / ' + topicsMeta : ''}</div>
           <h1 class="article-title">${article.title}</h1>
           <p class="article-standfirst">${article.question}</p>
-          <div class="article-meta">${formatDate(article.datePublished)}</div>
+          <div class="article-meta"><time datetime="${article.datePublished}">${formatDate(article.datePublished)}</time> &middot; Reuben Stone</div>
         </header>
 
         <div class="article-body">
@@ -433,15 +493,45 @@ function renderArticle(article) {
 function renderIndex(articles) {
   const listHtml = articles.map(a => `
         <a href="/writing/${a.slug}/" class="writing-entry">
-          <div class="writing-entry-date">${formatDateShort(a.datePublished)}</div>
+          <div class="writing-entry-date"><time datetime="${a.datePublished}">${formatDateShort(a.datePublished)}</time></div>
           <div class="writing-entry-body">
-            <h3 class="writing-entry-title">${a.title}</h3>
+            <h2 class="writing-entry-title">${a.title}</h2>
             <p class="writing-entry-question">${a.question}</p>
             ${a.excerpt ? `<p class="writing-entry-excerpt">${a.excerpt}</p>` : ''}
             ${a.topics?.length ? `<div class="writing-entry-topics">${a.topics.join(' / ')}</div>` : ''}
           </div>
         </a>`
   ).join('\n')
+
+  // CollectionPage + ItemList JSON-LD
+  const indexJsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${SITE_URL}/writing/#page`,
+        "name": "Writing",
+        "description": "Notes on building software, products and AI systems.",
+        "url": `${SITE_URL}/writing/`,
+        "mainEntity": {
+          "@type": "ItemList",
+          "itemListElement": articles.map((a, i) => ({
+            "@type": "ListItem",
+            "position": i + 1,
+            "url": `${SITE_URL}/writing/${a.slug}/`,
+            "name": a.title
+          }))
+        },
+        "author": { "@id": PERSON_ID }
+      },
+      {
+        "@type": "Person",
+        "@id": PERSON_ID,
+        "name": "Reuben Stone",
+        "url": `${SITE_URL}/`
+      }
+    ]
+  }, null, 2)
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -460,12 +550,16 @@ function renderIndex(articles) {
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Writing - Reuben Stone">
   <meta property="og:site_name" content="Reuben Stone">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Writing | Reuben Stone">
   <meta name="twitter:description" content="Notes on building software, products and AI systems.">
   <meta name="twitter:image" content="${SITE_URL}/writing/og-image.png">
-  <meta name="twitter:image" content="${SITE_URL}/og-image.png">
+  <meta name="twitter:image:alt" content="Writing - Reuben Stone">
+  <script type="application/ld+json">
+${indexJsonLd}
+  </script>
   ${FONTS}
   <style>
     ${SHARED_CSS}
@@ -587,34 +681,38 @@ function updateSitemap(articles) {
     existing = readFileSync(SITEMAP_PATH, 'utf-8')
   }
 
-  // Extract non-writing URLs
+  // Extract non-writing URLs (preserve exactly as they are)
   const nonWritingUrls = []
-  const urlRegex = /<url>\s*<loc>(.*?)<\/loc>\s*<lastmod>(.*?)<\/lastmod>\s*<priority>(.*?)<\/priority>\s*<\/url>/g
+  const urlRegex = /<url>\s*<loc>(.*?)<\/loc>\s*<lastmod>(.*?)<\/lastmod>(?:\s*<priority>(.*?)<\/priority>)?\s*<\/url>/g
   let match
   while ((match = urlRegex.exec(existing)) !== null) {
     if (!match[1].includes('/writing')) {
-      nonWritingUrls.push({ loc: match[1], lastmod: match[2], priority: match[3] })
+      nonWritingUrls.push({ loc: match[1], lastmod: match[2] })
     }
   }
 
-  // Add writing index
-  const today = new Date().toISOString().slice(0, 10)
+  // Writing index lastmod = latest article modification
+  const latestMod = articles.length > 0
+    ? articles.reduce((latest, a) => {
+        const d = a.dateModified || a.datePublished
+        return d > latest ? d : latest
+      }, articles[0].dateModified || articles[0].datePublished)
+    : new Date().toISOString().slice(0, 10)
+
   const writingUrls = [
-    { loc: `${SITE_URL}/writing/`, lastmod: today, priority: '0.7' }
+    { loc: `${SITE_URL}/writing/`, lastmod: latestMod }
   ]
 
-  // Add published articles
   for (const a of articles) {
     writingUrls.push({
       loc: `${SITE_URL}/writing/${a.slug}/`,
-      lastmod: a.dateModified || a.datePublished,
-      priority: '0.6'
+      lastmod: a.dateModified || a.datePublished
     })
   }
 
   const allUrls = [...nonWritingUrls, ...writingUrls]
   const urlEntries = allUrls.map(u =>
-    `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <priority>${u.priority}</priority>\n  </url>`
+    `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n  </url>`
   ).join('\n')
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlEntries}\n</urlset>\n`

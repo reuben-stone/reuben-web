@@ -22,14 +22,26 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Artemis - Engineering Case Study",
-    "description": "An engineering case study on rebuilding a multi-repo AI operations system around explicit workflows, selective context, durable recovery and measurable execution.",
-    "author": { "@type": "Person", "name": "Reuben Stone", "url": "https://www.reubenstone.co.uk" },
-    "url": "https://www.reubenstone.co.uk/work/artemis/",
-    "image": "https://www.reubenstone.co.uk/work/artemis/og-image.png",
-    "datePublished": "2026-09-01",
-    "dateModified": "2026-09-20"
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://www.reubenstone.co.uk/work/artemis/#article",
+        "headline": "Artemis - Engineering Case Study",
+        "description": "An engineering case study on rebuilding a multi-repo AI operations system around explicit workflows, selective context, durable recovery and measurable execution.",
+        "author": { "@id": "https://www.reubenstone.co.uk/#person" },
+        "url": "https://www.reubenstone.co.uk/work/artemis/",
+        "image": "https://www.reubenstone.co.uk/work/artemis/og-image.png",
+        "datePublished": "2026-09-01",
+        "dateModified": "2026-09-20",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.reubenstone.co.uk/work/artemis/" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.reubenstone.co.uk/#person",
+        "name": "Reuben Stone",
+        "url": "https://www.reubenstone.co.uk/"
+      }
+    ]
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
