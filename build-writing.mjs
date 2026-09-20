@@ -451,7 +451,7 @@ function renderIndex(articles) {
   <meta property="og:description" content="Notes on building software, products and AI systems.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="${SITE_URL}/writing/">
-  <meta property="og:image" content="${SITE_URL}/og-image.png">
+  <meta property="og:image" content="${SITE_URL}/writing/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
@@ -459,6 +459,7 @@ function renderIndex(articles) {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Writing | Reuben Stone">
   <meta name="twitter:description" content="Notes on building software, products and AI systems.">
+  <meta name="twitter:image" content="${SITE_URL}/writing/og-image.png">
   <meta name="twitter:image" content="${SITE_URL}/og-image.png">
   ${FONTS}
   <style>

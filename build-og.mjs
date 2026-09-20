@@ -157,11 +157,81 @@ async function generateOG(article) {
   return resvg.render().asPng()
 }
 
+// ── Writing index OG ─────────────────────────────────────────────
+
+async function generateIndexOG() {
+  const svg = await satori(
+    {
+      type: 'div',
+      props: {
+        style: {
+          width: '100%',
+          height: '100%',
+          background: '#0e0f11',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '72px 80px',
+          position: 'relative',
+        },
+        children: [
+          {
+            type: 'div',
+            props: {
+              style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '3px', background: '#8b5cf6' },
+            },
+          },
+          {
+            type: 'div',
+            props: {
+              style: { fontFamily: 'JetBrains Mono', fontSize: '14px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b6862', marginBottom: '28px' },
+              children: 'Reuben Stone / Writing',
+            },
+          },
+          {
+            type: 'div',
+            props: {
+              style: { fontFamily: 'Source Serif 4', fontSize: '48px', fontWeight: 600, lineHeight: 1.2, color: '#e0ddd5', marginBottom: '28px', maxWidth: '900px' },
+              children: 'Notes on building software, products and AI systems.',
+            },
+          },
+          {
+            type: 'div',
+            props: {
+              style: { fontFamily: 'JetBrains Mono', fontSize: '13px', color: '#8b5cf6', letterSpacing: '0.04em', position: 'absolute', bottom: '40px', left: '80px' },
+              children: 'reubenstone.co.uk',
+            },
+          },
+        ],
+      },
+    },
+    {
+      width: 1200,
+      height: 630,
+      fonts: [
+        { name: 'Source Serif 4', data: serifFont, weight: 600, style: 'normal' },
+        { name: 'Inter', data: sansFont, weight: 400, style: 'normal' },
+        { name: 'JetBrains Mono', data: monoFont, weight: 400, style: 'normal' },
+      ],
+    }
+  )
+
+  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: 1200 } })
+  return resvg.render().asPng()
+}
+
 // ── Main ─────────────────────────────────────────────────────────
 
 const articles = loadArticles()
-console.log(`Generating OG images for ${articles.length} article(s)`)
+console.log(`Generating OG images for ${articles.length} article(s) + index`)
 
+// Writing index OG
+mkdirSync(OUTPUT_DIR, { recursive: true })
+const indexPng = await generateIndexOG()
+writeFileSync(join(OUTPUT_DIR, 'og-image.png'), indexPng)
+console.log('  writing/og-image.png')
+
+// Article OGs
 for (const article of articles) {
   const dir = join(OUTPUT_DIR, article.slug)
   mkdirSync(dir, { recursive: true })
