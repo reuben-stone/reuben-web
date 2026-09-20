@@ -116,8 +116,60 @@
       text-transform: uppercase;
       cursor: pointer;
       padding: 8px 0;
+      transition: color 0.15s;
     }
     .mobile-toggle:hover { color: var(--text); }
+    .mobile-nav {
+      display: none;
+      padding: 48px 0 40px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      animation: navReveal 0.2s ease-out;
+    }
+    .mobile-nav.open { display: block; }
+    @keyframes navReveal {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .mobile-nav-links {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+    .mobile-nav-links li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .mobile-nav-links a {
+      font-family: var(--serif);
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+      padding: 12px 0;
+      transition: color 0.15s;
+    }
+    .mobile-nav-links a:hover { color: var(--accent); }
+    .mobile-nav-index {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+    .mobile-nav-external {
+      display: flex;
+      gap: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .mobile-nav-external a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .mobile-nav-external a:hover { color: var(--text); }
 
     /* ── Hero ────────────────────────────────────────── */
     .hero { padding: 120px 0 100px; }
@@ -365,23 +417,7 @@
       .project-header { flex-direction: column; gap: 4px; }
       .col-2 { grid-template-columns: 1fr; }
       .mobile-toggle { display: block; }
-      .header-links {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        right: 20px;
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 8px 0;
-        gap: 0;
-        min-width: 160px;
-        z-index: 50;
-      }
-      .header-links.open { display: flex; }
-      .header-links a { padding: 10px 20px; }
-      .header .container { position: relative; }
+      .header-links { display: none; }
     }
   </style>
 </head>
@@ -393,8 +429,8 @@
     <div class="container">
       <div class="header-name">Reuben Stone</div>
       <nav aria-label="Main navigation">
-        <button class="mobile-toggle" aria-expanded="false" aria-controls="main-nav" onclick="var n=document.getElementById('main-nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o)">Menu</button>
-        <ul class="header-links" id="main-nav">
+        <button class="mobile-toggle" aria-expanded="false" onclick="var n=document.getElementById('mobile-nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button>
+        <ul class="header-links">
           <li><a href="#work">Work</a></li>
           <li><a href="/writing/">Writing</a></li>
           <li><a href="#about">About</a></li>
@@ -402,6 +438,19 @@
           <li><a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
         </ul>
       </nav>
+    </div>
+    <div class="mobile-nav" id="mobile-nav">
+      <div class="container">
+        <ul class="mobile-nav-links">
+          <li><a href="#work" onclick="document.getElementById('mobile-nav').classList.remove('open');document.querySelector('.mobile-toggle').textContent='Menu'">Work</a><span class="mobile-nav-index">01</span></li>
+          <li><a href="/writing/">Writing</a><span class="mobile-nav-index">02</span></li>
+          <li><a href="#about" onclick="document.getElementById('mobile-nav').classList.remove('open');document.querySelector('.mobile-toggle').textContent='Menu'">About</a><span class="mobile-nav-index">03</span></li>
+        </ul>
+        <div class="mobile-nav-external">
+          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
+          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn &#8599;</a>
+        </div>
+      </div>
     </div>
   </header>
 
