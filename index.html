@@ -462,7 +462,7 @@
 
   <header class="header">
     <div class="container">
-      <div class="header-name">Reuben Stone</div>
+      <a href="/" class="header-name" onclick="window.scrollTo(0,0);history.replaceState(null,'','/');return false;" style="text-decoration:none;">Reuben Stone</a>
       <nav aria-label="Main navigation">
         <button class="mobile-toggle" aria-expanded="false" onclick="var n=document.getElementById('mobile-nav');var o=n.classList.toggle('open');document.body.classList.toggle('nav-open',o);this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button>
         <ul class="header-links">
