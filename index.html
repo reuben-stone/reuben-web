@@ -133,16 +133,43 @@
       background: var(--bg);
       z-index: 100;
       flex-direction: column;
-      padding: 80px 20px 48px;
     }
-    .mobile-nav.open {
-      display: flex;
-      animation: navReveal 0.2s ease-out;
-    }
+    .mobile-nav.open { display: flex; }
     body.nav-open { overflow: hidden; }
-    @keyframes navReveal {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .mobile-nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-nav-brand {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .mobile-nav-close {
+      background: none;
+      border: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .mobile-nav-close:hover { color: var(--text); }
+    .mobile-nav-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 48px 20px 0;
     }
     .mobile-nav-links {
       list-style: none;
@@ -150,16 +177,23 @@
     .mobile-nav-links li {
       display: flex;
       align-items: baseline;
-      gap: 16px;
+      gap: 20px;
       opacity: 0;
-      transform: translateY(8px);
-      animation: navItemIn 0.25s ease-out forwards;
+      transform: translateY(6px);
+      animation: navItemIn 0.22s ease-out forwards;
     }
-    .mobile-nav-links li:nth-child(1) { animation-delay: 0.05s; }
-    .mobile-nav-links li:nth-child(2) { animation-delay: 0.1s; }
-    .mobile-nav-links li:nth-child(3) { animation-delay: 0.15s; }
+    .mobile-nav-links li:nth-child(1) { animation-delay: 0.04s; }
+    .mobile-nav-links li:nth-child(2) { animation-delay: 0.08s; }
+    .mobile-nav-links li:nth-child(3) { animation-delay: 0.12s; }
     @keyframes navItemIn {
       to { opacity: 1; transform: translateY(0); }
+    }
+    .mobile-nav-index {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      min-width: 24px;
     }
     .mobile-nav-links a {
       font-family: var(--serif);
@@ -168,18 +202,13 @@
       color: var(--text);
       text-decoration: none;
       display: block;
-      padding: 16px 0;
+      padding: 10px 0;
       transition: color 0.15s;
     }
     .mobile-nav-links a:hover { color: var(--accent); }
-    .mobile-nav-index {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-muted);
-      letter-spacing: 0.06em;
-    }
     .mobile-nav-bottom {
       margin-top: auto;
+      padding: 0 20px calc(48px + env(safe-area-inset-bottom));
     }
     .mobile-nav-external {
       display: flex;
@@ -415,7 +444,7 @@
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      * { transition: none !important; }
+      * { transition: none !important; animation: none !important; }
     }
     .col-2 {
       display: grid;
@@ -462,7 +491,11 @@
       </nav>
     </div>
     <div class="mobile-nav" id="mobile-nav">
-      <div class="container" style="display:flex;flex-direction:column;flex:1;">
+      <div class="mobile-nav-header">
+        <a href="/" class="mobile-nav-brand">Reuben Stone</a>
+        <button class="mobile-nav-close" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu';document.querySelector('.mobile-toggle').setAttribute('aria-expanded','false')">Close</button>
+      </div>
+      <div class="mobile-nav-body">
         <ul class="mobile-nav-links">
           <li><span class="mobile-nav-index">01</span><a href="#work" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Work</a></li>
           <li><span class="mobile-nav-index">02</span><a href="/writing/">Writing</a></li>
