@@ -296,26 +296,129 @@
         </header>
 
         <div class="article-body">
-          <p>This is a placeholder article. The real content will be written separately.</p>
-<h2>Section heading</h2>
-<p>Paragraph text to verify the template renders body content, headings, and basic formatting correctly.</p>
+          <p>When I first started building Artemis, the exciting part was giving the model things it could actually do.</p>
+<p>Artemis began as a desktop system that sat above the software projects I was working on. It could understand multiple repositories, inspect their state, remember previous conversations, pull in production information and delegate engineering work to autonomous workers.</p>
+<p>Those workers operated in isolated copies of a repository, made changes, ran checks and returned pull requests for me to review.</p>
+<p>It felt like a significant step beyond using an AI assistant in a chat window. The model wasn&#39;t just answering questions about my work. It was participating in it.</p>
+<p>And it worked.</p>
+<p>That turned out to be the beginning of the interesting part.</p>
+<h2>Capability was surprisingly easy</h2>
+<p>Modern language models are remarkably easy to make look capable.</p>
+<p>Give a model access to a file system and it can read code. Give it a search tool and it can investigate a project. Give it access to Git and it can inspect changes. Connect a few more services and suddenly it appears to understand a meaningful part of your working environment.</p>
+<p>The first version of Artemis accumulated these capabilities quickly.</p>
+<p>Every new tool made the system more useful, but it also made the environment around the model more complicated.</p>
+<p>What information should it see?</p>
+<p>What should it remember?</p>
+<p>What happens if a tool fails halfway through a task?</p>
+<p>What happens if the application closes?</p>
+<p>If the model attempts an external action and the connection disappears, did that action happen or not? Should it simply try again?</p>
+<p>And, perhaps most importantly, which decisions should the model actually be allowed to make?</p>
+<p>I gradually realised that I was spending less time thinking about what the model could do and more time thinking about everything surrounding it.</p>
+<p>That became the starting point for Artemis Lite.</p>
+<h2>A smaller system to answer a bigger question</h2>
+<p>I didn&#39;t build Lite because the original Artemis had failed.</p>
+<p>I built it because Artemis had become capable enough to expose a more useful question:</p>
 <blockquote>
-<p>&quot;The model should reason about the problem. The application should own the consequences.&quot;</p>
+<p>How much of an AI system actually needs to be AI?</p>
 </blockquote>
-<h3>Subsection</h3>
-<ul>
-<li>List item one</li>
-<li>List item two</li>
-<li>List item three</li>
-</ul>
-<p>Some text with <code>inline code</code> and a <a href="/work/artemis/">link to the case study</a>.</p>
-<pre><code class="language-javascript">// Code block to verify styling
-function example() {
-  return &#39;hello&#39;
-}
-</code></pre>
+<p>The easiest architecture is to give a model a collection of tools, provide a large amount of context and let it decide what to do next.</p>
+<p>That can be extremely powerful.</p>
+<p>It&#39;s also inherently unpredictable.</p>
+<p>The same flexibility that makes a language model useful means it isn&#39;t the component I want deciding everything about the lifecycle of a piece of work.</p>
+<p>So Lite started from a deliberately simple principle:</p>
+<blockquote>
+<p>Deterministic shell. Probabilistic core.</p>
+</blockquote>
+<p>In plain English: use the model for the things models are good at, and ordinary software for everything that doesn&#39;t need a model.</p>
+<p>A model can be excellent at interpreting an ambiguous error, understanding unfamiliar code or deciding which piece of evidence is worth investigating next.</p>
+<p>It doesn&#39;t need to decide whether a workflow has been saved correctly.</p>
+<p>It doesn&#39;t need to remember whether an approval has already happened.</p>
+<p>It shouldn&#39;t be responsible for preventing the same production problem from creating five identical pieces of work.</p>
+<p>And it certainly shouldn&#39;t be given unrestricted authority to merge code or deploy software simply because it believes its answer is correct.</p>
+<p>Those are software problems. We already know how to solve them.</p>
+<h2>The context problem</h2>
+<p>One of the first things I looked at was context.</p>
+<p>There is a temptation when building with language models to assume that more information is better. If the model might need something, put it in the prompt.</p>
+<p>Artemis had gradually moved in that direction. Memory, repository information, conversation history and tool results could all accumulate around a task.</p>
+<p>Lite made me treat context more like an engineering resource.</p>
+<p>Instead of asking <em>&quot;What information can I give the model?&quot;</em> I started asking <em>&quot;What is the minimum information it needs to make this particular decision well?&quot;</em></p>
+<p>That sounds like a small distinction, but it changes the architecture.</p>
+<p>A production error doesn&#39;t necessarily require the history of an entire project. A decision about which repository to inspect doesn&#39;t require every file in that repository. A verification step doesn&#39;t need to know everything that happened during the investigation.</p>
+<p>Each stage can receive the information relevant to that stage.</p>
+<p>This makes the system cheaper and easier to understand, but more importantly it makes failures easier to reason about.</p>
+<p>When something goes wrong, I can ask a much more useful question: <em>Did the model see the right things?</em></p>
+<h2>Then a real bug broke my neat architecture</h2>
+<p>The most useful lesson came when I stopped testing the architecture with tidy examples.</p>
+<p>Lumi, an accessibility product I&#39;m building, reported a real production error through Sentry.</p>
+<p>It wasn&#39;t particularly dramatic. A browser API was rejecting a string because one of its characters couldn&#39;t be represented in the format it expected.</p>
+<p>But it was real, which made it useful.</p>
+<p>I gave the problem to Artemis Lite.</p>
+<p>The system gathered a bounded amount of context and attempted to investigate it. It failed.</p>
+<p>So I improved the discovery tools and tried again. It got further, but the fixed investigation plan wasn&#39;t flexible enough.</p>
+<p>I added a bounded adaptive loop so the model could decide what evidence it needed next. That was better. It still failed to establish the root cause before reaching its iteration limit.</p>
+<p>At first this looked like another problem to solve inside Artemis.</p>
+<p>Then I realised what I was actually doing.</p>
+<p>I was slowly building a coding agent.</p>
+<h2>Knowing what not to build</h2>
+<p>This was probably the most valuable architectural decision in the project.</p>
+<p>There are already specialist systems that are extremely good at navigating repositories, understanding code, editing files and iterating on engineering problems.</p>
+<p>Rebuilding all of that inside Artemis wouldn&#39;t make Artemis more sophisticated. It would make it responsible for something it didn&#39;t need to own.</p>
+<p>So I changed the boundary.</p>
+<blockquote>
+<p>Artemis did not need to become the coding agent. It needed to know when to use one.</p>
+</blockquote>
+<p>For substantial repository work, Artemis now delegates the specialist investigation to an execution system such as Claude Code.</p>
+<p>That doesn&#39;t make Artemis redundant. It clarifies its job.</p>
+<p>Artemis knows <em>why</em> the work exists. It knows which product the production signal belongs to. It knows which repository represents that product. It knows whether the same problem has already been investigated. It creates and persists the workflow. It defines the execution boundaries. It records what happened. It independently checks the result. And it decides whether the outcome is ready to become a draft pull request for human review.</p>
+<p>The coding agent can disappear when its task finishes.</p>
+<p>The surrounding system cannot.</p>
+<h2>Failure is part of the product</h2>
+<p>This distinction becomes particularly important when AI systems begin doing work that lasts longer than a single request.</p>
+<p>Imagine Artemis notices a production problem overnight. It creates an investigation, starts a specialist worker and the worker changes some code. Then the application crashes.</p>
+<p>When it starts again, <em>&quot;just ask the model what to do&quot;</em> isn&#39;t a particularly reassuring recovery strategy.</p>
+<p>The system needs to know what had already happened.</p>
+<p>Likewise, imagine an external service times out while Artemis is creating a pull request. There are two possibilities: the request failed before the pull request was created, or the pull request was created but Artemis never received the response.</p>
+<p>Blindly retrying can now create duplicate work.</p>
+<p>This isn&#39;t really an AI problem.</p>
+<p>It&#39;s the same kind of problem engineers have dealt with for years in payment systems, job queues, distributed applications and other software where actions have consequences.</p>
+<p>AI doesn&#39;t remove those problems. If anything, giving models tools makes them more important.</p>
+<blockquote>
+<p>A useful AI product needs to be designed not only around what happens when the model succeeds, but around what happens when everything around it doesn&#39;t.</p>
+</blockquote>
+<h2>A pull request is not proof that the model was right</h2>
+<p>Another distinction emerged during the real Lumi investigation.</p>
+<p>Eventually, the specialist agent correctly identified the likely cause and prepared a very small fix.</p>
+<p>Artemis could independently observe the files that had changed and run the project&#39;s verification steps.</p>
+<p>But some of those repository-level checks were not clean for that project configuration.</p>
+<p>That created an important distinction: the investigation succeeded. That did not automatically mean the fix was verified.</p>
+<p>Those two states shouldn&#39;t be collapsed simply because the model sounds confident.</p>
+<p>The result could still be useful. Artemis could explain what it had found, preserve the proposed change and expose the actual verification results. What it couldn&#39;t legitimately say was: <em>this is definitely ready for production.</em></p>
+<p>That&#39;s why the end of this workflow is a draft pull request. A draft pull request is a proposal. I still make the consequential decision.</p>
+<h2>The complete loop</h2>
+<p>Eventually I ran the original Lumi production issue through the redesigned system again.</p>
+<p>This time the journey looked very different.</p>
+<p>A real production error entered Artemis from Sentry. Artemis worked out which product and repository it belonged to, created a durable workflow and assembled the relevant context. It delegated the repository investigation to Claude Code in an isolated working environment. When that work finished, Artemis independently observed the changes, ran verification, stored the result and carried the proposed work through to a draft pull request for review.</p>
+<p>The interesting part wasn&#39;t the bug.</p>
+<p>The interesting part was everything around the model.</p>
+<p>The production signal, workflow state, specialist delegation, verification and review boundary all existed outside the conversation with the model.</p>
+<blockquote>
+<p>The model was an important component. It wasn&#39;t the system.</p>
+</blockquote>
+<h2>What this changed for me</h2>
+<p>AI development can easily become centred on model capability. Which model is smarter? How large is its context window? Which tools can it call? How autonomous can we make it?</p>
+<p>Those questions matter, but I&#39;ve become much more interested in a different set of questions.</p>
+<p>What should the model be responsible for?</p>
+<p>What should ordinary software be responsible for?</p>
+<p>What happens when either one fails?</p>
+<p>What evidence do we keep?</p>
+<p>Where does human judgement belong?</p>
+<p>And can somebody understand why the system did what it did after the fact?</p>
+<p>These questions aren&#39;t as visually impressive as watching an agent operate a computer.</p>
+<p>But I think they&#39;re much closer to the questions that determine whether an AI feature becomes useful software.</p>
 <hr>
-<p>Final paragraph to verify the full article template renders end-to-end.</p>
+<p>The lesson from rebuilding Artemis wasn&#39;t that models need more tools or more autonomy.</p>
+<p>It was almost the opposite.</p>
+<p>The model is only one part of the system. The interesting engineering begins when you decide what belongs around it.</p>
 
         </div>
 
