@@ -206,6 +206,10 @@ const SHARED_CSS = `
     }
     .mobile-nav-links {
       list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .mobile-nav-links li {
       display: flex;
