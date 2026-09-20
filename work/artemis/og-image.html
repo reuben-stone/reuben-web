@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200, height=630">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1200px;
+      height: 630px;
+      background: #0e0f11;
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: #e0ddd5;
+      overflow: hidden;
+      position: relative;
+    }
+    .accent-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: #8b5cf6;
+    }
+    .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 560px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 72px;
+      z-index: 2;
+    }
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #8b5cf6;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .subtitle {
+      font-size: 18px;
+      line-height: 1.5;
+      color: #a8a5a0;
+      margin-bottom: 32px;
+    }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8a8780;
+    }
+    .screenshot {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: -200px;
+      width: 820px;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #2a2b30;
+      opacity: 0.85;
+      z-index: 1;
+    }
+    .fade {
+      position: absolute;
+      top: 0;
+      left: 480px;
+      width: 200px;
+      height: 100%;
+      background: linear-gradient(to right, #0e0f11, transparent);
+      z-index: 1;
+    }
+    .footer {
+      position: absolute;
+      bottom: 32px;
+      left: 72px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #4a4845;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="accent-line"></div>
+
+  <div class="content">
+    <div class="eyebrow">Artemis</div>
+    <h1>AI engineering operations, rebuilt around reliability.</h1>
+    <div class="tag">Engineering Case Study</div>
+  </div>
+
+  <div class="fade"></div>
+  <img class="screenshot" src="../../assets/artemis-01-workspace.png" alt="">
+
+  <div class="footer">Reuben Stone / Product Engineering &amp; AI Systems</div>
+</body>
+</html>
