@@ -162,45 +162,16 @@
       width: 100%;
       height: 100dvh;
       background: var(--bg);
-      z-index: 100;
+      z-index: 99;
       flex-direction: column;
     }
     .mobile-nav.open { display: flex; }
     body.nav-open { overflow: hidden; }
-    .mobile-nav-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    .mobile-nav-brand {
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-decoration: none;
-    }
-    .mobile-nav-close {
-      background: none;
-      border: none;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 0;
-      transition: color 0.15s;
-    }
-    .mobile-nav-close:hover { color: var(--text); }
     .mobile-nav-body {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 48px 20px 0;
+      padding: 80px 20px 0;
     }
     .mobile-nav-links {
       list-style: none;
@@ -272,8 +243,6 @@
       .container { padding: 0 20px; }
       .mobile-toggle { display: block; }
       .header-links { display: none; }
-      body.nav-open .mobile-toggle { visibility: hidden; }
-      body.nav-open .header-name { visibility: hidden; }
     }
 
 
@@ -446,10 +415,6 @@
       </nav>
     </div>
     <div class="mobile-nav" id="mobile-nav">
-      <div class="mobile-nav-header">
-        <a href="/" class="mobile-nav-brand">Reuben Stone</a>
-        <button class="mobile-nav-close" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu';document.querySelector('.mobile-toggle').setAttribute('aria-expanded','false')">Close</button>
-      </div>
       <div class="mobile-nav-body">
         <ul class="mobile-nav-links">
           <li><span class="mobile-nav-index">01</span><a href="/">Work</a></li>
