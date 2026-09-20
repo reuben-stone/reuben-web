@@ -105,6 +105,19 @@
       padding: 8px 4px;
     }
     .header-links a:hover { color: var(--text); }
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+    .mobile-toggle:hover { color: var(--text); }
 
     /* ── Hero ────────────────────────────────────────── */
     .hero { padding: 120px 0 100px; }
@@ -213,7 +226,8 @@
     }
     .project-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
     .project-image {
-      margin-top: 32px;
+      margin-top: 24px;
+      margin-bottom: 0;
       border: 1px solid var(--border);
       border-radius: 6px;
       overflow: hidden;
@@ -350,6 +364,24 @@
       .exp-company { min-width: 0; }
       .project-header { flex-direction: column; gap: 4px; }
       .col-2 { grid-template-columns: 1fr; }
+      .mobile-toggle { display: block; }
+      .header-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 20px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 8px 0;
+        gap: 0;
+        min-width: 160px;
+        z-index: 50;
+      }
+      .header-links.open { display: flex; }
+      .header-links a { padding: 10px 20px; }
+      .header .container { position: relative; }
     }
   </style>
 </head>
@@ -361,7 +393,8 @@
     <div class="container">
       <div class="header-name">Reuben Stone</div>
       <nav aria-label="Main navigation">
-        <ul class="header-links">
+        <button class="mobile-toggle" aria-expanded="false" aria-controls="main-nav" onclick="var n=document.getElementById('main-nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o)">Menu</button>
+        <ul class="header-links" id="main-nav">
           <li><a href="#work">Work</a></li>
           <li><a href="/writing/">Writing</a></li>
           <li><a href="#about">About</a></li>

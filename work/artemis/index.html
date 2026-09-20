@@ -195,7 +195,7 @@
 
     /* ── Screenshot ──────────────────────────────────────── */
     .screenshot {
-      margin: 48px 0;
+      margin: 48px 0 20px;
       border: 1px solid var(--border);
       border-radius: 10px;
       overflow: hidden;
@@ -429,6 +429,10 @@
       .comparison { grid-template-columns: 1fr; }
       .cap-strip { grid-template-columns: 1fr 1fr; }
       .nav-links { display: none; }
+      .arch-diagram { overflow-x: auto; padding: 24px 16px; }
+      .arch-diagram .arch-grid-2 { grid-template-columns: 1fr; }
+      .arch-diagram .arch-grid-3 { grid-template-columns: 1fr; }
+      .arch-diagram .arch-grid-4 { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -715,7 +719,7 @@
         </p>
       </div>
 
-      <div style="margin: 48px 0; padding: 40px 32px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; font-family: var(--sans); max-width: 900px;">
+      <div class="arch-diagram" style="margin: 48px 0; padding: 40px 32px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; font-family: var(--sans); max-width: 900px;">
 
         <!-- Row 1: Operator -->
         <div style="text-align: center; margin-bottom: 28px;">
@@ -737,7 +741,7 @@
         <div style="width: 1px; height: 20px; background: var(--border); margin: 0 auto;"></div>
 
         <!-- Row 3: Engine -->
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin: 8px 0;">
+        <div class="arch-grid-2" style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin: 8px 0;">
           <div style="padding: 12px 16px; border: 1px solid #22c55e; border-radius: 6px; background: rgba(34, 197, 94, 0.03);">
             <div style="font-size: 13px; font-weight: 500; color: #4ade80;">Workflow Orchestrator</div>
             <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">state machine / recovery / retry / idempotency</div>
@@ -752,7 +756,7 @@
         <div style="width: 1px; height: 20px; background: var(--border); margin: 0 auto;"></div>
 
         <!-- Row 4: Services -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 8px 0;">
+        <div class="arch-grid-3" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 8px 0;">
           <div style="padding: 12px 16px; border: 1px solid var(--border); border-radius: 6px;">
             <div style="font-size: 12px; font-weight: 500; color: var(--text);">Context Builder</div>
             <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">budgeted / selective / per-step</div>
@@ -771,7 +775,7 @@
         <div style="width: 1px; height: 20px; background: var(--border); margin: 0 auto;"></div>
 
         <!-- Row 5: Capabilities -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin: 8px 0;">
+        <div class="arch-grid-4" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin: 8px 0;">
           <div style="padding: 10px 14px; border: 1px solid #3b82f6; border-radius: 6px; background: rgba(59, 130, 246, 0.03);">
             <div style="font-size: 11px; font-weight: 500; color: #60a5fa;">GitHub</div>
           </div>
@@ -790,7 +794,7 @@
         <div style="width: 1px; height: 20px; background: var(--border); margin: 0 auto;"></div>
 
         <!-- Row 6: Persistence -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 8px 0 0;">
+        <div class="arch-grid-3" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 8px 0 0;">
           <div style="padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg);">
             <div style="font-size: 11px; font-weight: 500; color: var(--text-muted);">SQLite</div>
             <div style="font-size: 10px; color: #555; margin-top: 1px;">workflows / traces / usage</div>

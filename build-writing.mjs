@@ -161,6 +161,19 @@ const SHARED_CSS = `
       padding: 8px 4px;
     }
     .header-links a:hover { color: var(--text); }
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+    .mobile-toggle:hover { color: var(--text); }
 
     /* Footer */
     .footer {
@@ -178,6 +191,24 @@ const SHARED_CSS = `
     }
     @media (max-width: 768px) {
       .container { padding: 0 20px; }
+      .mobile-toggle { display: block; }
+      .header-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 20px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 8px 0;
+        gap: 0;
+        min-width: 160px;
+        z-index: 50;
+      }
+      .header-links.open { display: flex; }
+      .header-links a { padding: 10px 20px; }
+      .header .container { position: relative; }
     }
 `
 
@@ -199,7 +230,8 @@ function nav(activeSection) {
     <div class="container">
       <a href="/" class="header-name">Reuben Stone</a>
       <nav aria-label="Main navigation">
-        <ul class="header-links">
+        <button class="mobile-toggle" aria-expanded="false" aria-controls="main-nav" onclick="var n=document.getElementById('main-nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o)">Menu</button>
+        <ul class="header-links" id="main-nav">
           ${items}
         </ul>
       </nav>
