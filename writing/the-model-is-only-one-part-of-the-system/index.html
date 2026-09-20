@@ -208,7 +208,7 @@
     .mobile-nav-links li {
       display: flex;
       align-items: baseline;
-      gap: 20px;
+      gap: 24px;
       opacity: 0;
       transform: translateY(6px);
       animation: navItemIn 0.22s ease-out forwards;
@@ -221,10 +221,11 @@
     }
     .mobile-nav-index {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-muted);
       letter-spacing: 0.06em;
-      min-width: 24px;
+      min-width: 28px;
+      flex-shrink: 0;
     }
     .mobile-nav-links a {
       font-family: var(--serif);
@@ -271,6 +272,8 @@
       .container { padding: 0 20px; }
       .mobile-toggle { display: block; }
       .header-links { display: none; }
+      body.nav-open .mobile-toggle { visibility: hidden; }
+      body.nav-open .header-name { visibility: hidden; }
     }
 
 
