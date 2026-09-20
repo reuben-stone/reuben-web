@@ -269,6 +269,12 @@ const SHARED_CSS = `
       .container { padding: 0 20px; }
       .mobile-toggle { display: block; }
       .header-links { display: none; }
+      body.nav-open .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
     }
 `
 
