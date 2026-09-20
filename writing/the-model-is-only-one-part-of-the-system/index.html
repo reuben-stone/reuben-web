@@ -307,12 +307,14 @@
 <p>Give a model access to a file system and it can read code. Give it a search tool and it can investigate a project. Give it access to Git and it can inspect changes. Connect a few more services and suddenly it appears to understand a meaningful part of your working environment.</p>
 <p>The first version of Artemis accumulated these capabilities quickly.</p>
 <p>Every new tool made the system more useful, but it also made the environment around the model more complicated.</p>
-<p>What information should it see?</p>
-<p>What should it remember?</p>
-<p>What happens if a tool fails halfway through a task?</p>
-<p>What happens if the application closes?</p>
-<p>If the model attempts an external action and the connection disappears, did that action happen or not? Should it simply try again?</p>
-<p>And, perhaps most importantly, which decisions should the model actually be allowed to make?</p>
+<ul>
+<li>What information should it see?</li>
+<li>What should it remember?</li>
+<li>What happens if a tool fails halfway through a task?</li>
+<li>What happens if the application closes?</li>
+<li>If the model attempts an external action and the connection disappears, did that action happen or not?</li>
+<li>Which decisions should the model actually be allowed to make?</li>
+</ul>
 <p>I gradually realised that I was spending less time thinking about what the model could do and more time thinking about everything surrounding it.</p>
 <p>That became the starting point for Artemis Lite.</p>
 <h2>A smaller system to answer a bigger question</h2>

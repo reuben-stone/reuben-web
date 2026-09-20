@@ -36,17 +36,12 @@ The first version of Artemis accumulated these capabilities quickly.
 
 Every new tool made the system more useful, but it also made the environment around the model more complicated.
 
-What information should it see?
-
-What should it remember?
-
-What happens if a tool fails halfway through a task?
-
-What happens if the application closes?
-
-If the model attempts an external action and the connection disappears, did that action happen or not? Should it simply try again?
-
-And, perhaps most importantly, which decisions should the model actually be allowed to make?
+- What information should it see?
+- What should it remember?
+- What happens if a tool fails halfway through a task?
+- What happens if the application closes?
+- If the model attempts an external action and the connection disappears, did that action happen or not?
+- Which decisions should the model actually be allowed to make?
 
 I gradually realised that I was spending less time thinking about what the model could do and more time thinking about everything surrounding it.
 
