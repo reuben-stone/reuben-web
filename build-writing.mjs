@@ -182,16 +182,21 @@ const SHARED_CSS = `
     .mobile-toggle:hover { color: var(--text); }
     .mobile-nav {
       display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100dvh;
-      background: var(--bg);
-      z-index: 99;
-      flex-direction: column;
     }
-    .mobile-nav.open { display: flex; }
+
+    @media (max-width: 768px) {
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100dvh;
+        background: var(--bg);
+        z-index: 99;
+        flex-direction: column;
+      }
+      .mobile-nav.open { display: flex; }
+    }
     body.nav-open { overflow: hidden; }
     .mobile-nav-body {
       flex: 1;
@@ -302,22 +307,22 @@ function nav(activeSection) {
         </ul>
       </nav>
     </div>
-    <div class="mobile-nav" id="mobile-nav">
-      <div class="mobile-nav-body">
-        <ul class="mobile-nav-links">
-          <li><span class="mobile-nav-index">01</span><a href="/">Work</a></li>
-          <li><span class="mobile-nav-index">02</span><a href="/writing/"${activeSection === 'writing' ? ' style="color: var(--accent);"' : ''}>Writing</a></li>
-          <li><span class="mobile-nav-index">03</span><a href="/#about">About</a></li>
-        </ul>
-        <div class="mobile-nav-bottom">
-          <div class="mobile-nav-external">
-            <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
-            <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn &#8599;</a>
-          </div>
+  </header>
+  <div class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-body">
+      <ul class="mobile-nav-links">
+        <li><span class="mobile-nav-index">01</span><a href="/">Work</a></li>
+        <li><span class="mobile-nav-index">02</span><a href="/writing/"${activeSection === 'writing' ? ' style="color: var(--accent);"' : ''}>Writing</a></li>
+        <li><span class="mobile-nav-index">03</span><a href="/#about">About</a></li>
+      </ul>
+      <div class="mobile-nav-bottom">
+        <div class="mobile-nav-external">
+          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
+          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn &#8599;</a>
         </div>
       </div>
     </div>
-  </header>`
+  </div>`
 }
 
 const FOOTER = `<footer class="footer">
