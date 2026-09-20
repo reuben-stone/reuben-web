@@ -73,12 +73,35 @@ Uses satori + @resvg/resvg-js (no Chromium). Fonts are cached locally in `build/
 
 The title is the primary element - sized for legibility at LinkedIn thumbnail dimensions.
 
+### Frontmatter validation
+
+The build requires these fields for published articles and will skip with a warning if missing:
+- `title`, `question`, `description`, `slug`, `datePublished`, `dateModified`, `topics`
+- `slug` must be lowercase hyphen-separated (`a-z0-9` and `-`)
+- Duplicate slugs are rejected
+- `published` defaults to false - only `published: true` articles are built
+
+### SEO (auto-generated from frontmatter)
+
+Each article page automatically gets:
+- Canonical URL, OG/Twitter meta with image dimensions and alt text
+- `article:published_time`, `article:modified_time`, `article:tag` OG meta
+- Article JSON-LD with `@graph` structure (Article + BreadcrumbList + Person)
+- Canonical Person entity referenced via `@id: https://www.reubenstone.co.uk/#person`
+- Semantic `<time datetime>` tags
+- Visible author attribution ("date · Reuben Stone")
+
+The writing index gets CollectionPage + ItemList JSON-LD.
+
+The homepage has Person + WebSite JSON-LD with the same `@id` references.
+
 ### Important
 
 - Do not modify `writing/` output files by hand - they are regenerated on every build.
 - Do not modify `index.html` or `work/artemis/index.html` via the build scripts - they are hand-authored.
 - The sitemap build preserves all non-writing URLs and regenerates only the writing portion.
 - The build is deterministic and safe to rerun.
+- The editorial roadmap lives at `docs/WRITING-ROADMAP.md` - internal planning only, not published.
 
 ## Design language
 
