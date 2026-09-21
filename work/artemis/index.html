@@ -537,10 +537,12 @@
       .section { padding: 64px 0; }
       .comparison { grid-template-columns: 1fr; }
       .cap-strip { grid-template-columns: 1fr 1fr; }
-      .arch-diagram { overflow-x: auto; padding: 24px 16px; }
+      .arch-diagram { overflow-x: visible; padding: 0 !important; background: none !important; border: none !important; border-radius: 0 !important; margin-left: 0 !important; margin-right: 0 !important; }
       .arch-diagram .arch-grid-2 { grid-template-columns: 1fr; }
       .arch-diagram .arch-grid-3 { grid-template-columns: 1fr; }
-      .arch-diagram .arch-grid-4 { grid-template-columns: 1fr 1fr; }
+      .arch-diagram .arch-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr !important; gap: 6px !important; }
+      .arch-diagram .arch-grid-4 > div { padding: 8px 6px !important; }
+      .arch-diagram .arch-grid-4 > div > div { font-size: 9px !important; }
     }
   </style>
 </head>
