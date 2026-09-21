@@ -37,7 +37,7 @@
         "url": "https://www.reubenstone.co.uk/work/artemis/",
         "image": "https://www.reubenstone.co.uk/work/artemis/og-image.png",
         "datePublished": "2026-09-01",
-        "dateModified": "2026-09-20",
+        "dateModified": "2026-09-21",
         "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.reubenstone.co.uk/work/artemis/" }
       },
       {
@@ -567,6 +567,7 @@
         <li><a href="#architecture">Architecture</a></li>
         <li><a href="#workflow">Workflows</a></li>
         <li><a href="#reliability">Reliability</a></li>
+        <li><a href="#signals">Signals</a></li>
         <li><a href="#lessons">Lessons</a></li>
       </ul>
       <a href="https://github.com/reuben-stone/artemis-lite" class="nav-github" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
@@ -582,7 +583,8 @@
         <li><span class="mobile-nav-index">03</span><a href="#architecture" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Architecture</a></li>
         <li><span class="mobile-nav-index">04</span><a href="#workflow" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Workflows</a></li>
         <li><span class="mobile-nav-index">05</span><a href="#reliability" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Reliability</a></li>
-        <li><span class="mobile-nav-index">06</span><a href="#lessons" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Lessons</a></li>
+        <li><span class="mobile-nav-index">06</span><a href="#signals" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Signals</a></li>
+        <li><span class="mobile-nav-index">07</span><a href="#lessons" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Lessons</a></li>
       </ul>
       <div class="mobile-nav-bottom">
         <div class="mobile-nav-external">
@@ -1314,26 +1316,75 @@
     </div>
   </section>
 
-  <!-- 10 / WHAT NEXT -->
-  <section class="section" id="next">
+  <!-- 10 / AUTONOMOUS MONITORING -->
+  <section class="section" id="signals">
     <div class="container">
-      <div class="section-label">10 / What Next</div>
-      <h2>Can Artemis start the work without me?</h2>
+      <div class="section-label">10 / Autonomous Monitoring</div>
+      <h2>Artemis now starts the work without me.</h2>
       <div class="prose">
         <p>
-          The manually initiated loop now works. Artemis can take production context, create a durable workflow, delegate specialist repository work to Claude Code, observe what happened, verify the outcome and carry proposed engineering work through to a reviewable pull request.
+          The manually initiated loop proved the architecture. The next step was to remove me from the beginning of the process: Artemis should monitor production signals, decide when something is worth acting on, carry the work through autonomously, and leave the result waiting for me to review.
         </p>
         <p>
-          The next experiment is to remove me from the beginning of that process. Artemis should monitor production signals, correlate repeated issues, apply project-level policy, automatically investigate problems worth acting on, and leave useful Results and draft PRs waiting in Morning Review.
+          Artemis now polls Sentry every two minutes across all registered projects. New issues are ingested into a durable signal identity layer. Each external problem gets exactly one record, regardless of how many times it is observed. Repeated observations update event counts and timestamps but never regress the signal&rsquo;s status or discard an existing workflow claim.
         </p>
         <p>
-          The central test becomes: can I leave my projects overnight and wake up to useful engineering work that I would otherwise have had to discover, initiate and supervise myself?
+          When a project&rsquo;s automation policy permits it, eligible signals (error and fatal severity, not already claimed) are atomically transitioned from <em>observed</em> to <em>investigating</em> via a compare-and-set operation. Only one execution path can win the claim. If workflow creation fails after the claim succeeds, the signal transitions to <em>failed</em> rather than silently becoming eligible for fresh work.
         </p>
         <p>
-          After that, the interesting step is to bring these lessons back into the richer product idea that started this project: the original Artemis interface, with the more deliberate system underneath it.
+          The claimed signal then moves through the same durable workflow as a manually initiated task: planning, specialist delegation to Claude Code in an isolated worktree, deterministic verification, and &mdash; if checks pass &mdash; automatic publication as a draft pull request. The delegation step is auto-approved for signal-triggered workflows because the automation policy is the prior consent. The human reviews the result via Morning Review or the PR itself, not by approving each individual delegation.
+        </p>
+      </div>
+
+      <div class="evidence-block">
+        <div class="evidence-title">Signal system design</div>
+        <div class="evidence-row">
+          <span class="evidence-label">Observation dedup</span>
+          <span class="evidence-value">UNIQUE(source, externalId) upsert</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Work claim</span>
+          <span class="evidence-value">Atomic compare-and-set</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Failure mode</span>
+          <span class="evidence-value">Fail-closed (never silently re-eligible)</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Signal lifecycle</span>
+          <span class="evidence-value">observed &rarr; investigating &rarr; investigated &rarr; published</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Polling interval</span>
+          <span class="evidence-value">2 minutes, with overlap guard</span>
+        </div>
+        <div class="evidence-row" style="border-bottom: none;">
+          <span class="evidence-label">Signal tests</span>
+          <span class="evidence-value">40+ (dedup, claiming, lifecycle, policy)</span>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>
+          The first autonomously triggered workflow ran against a real LumiLens production error. The signal collector ingested the Sentry issue, claimed it, created the workflow, delegated investigation to Claude Code, and completed verification &mdash; all without manual intervention. The result and trace were waiting in Morning Review.
         </p>
         <p>
-          Lite is not the destination. It is where I am working out what Artemis 2.0 should actually be.
+          The interesting engineering in this layer was not connecting to Sentry. It was the deduplication invariants, the atomic claiming, and the fail-closed semantics that ensure a production problem can never silently fall through the cracks: either it produces useful work, or it visibly fails in a way that can be inspected and retried.
+        </p>
+      </div>
+
+      <!-- What next -->
+      <div style="margin: 56px 0 0; max-width: 720px;">
+        <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;">What Next</div>
+        <h3 style="font-family: var(--serif); font-size: 24px; font-weight: 400; color: var(--text); line-height: 1.35; margin-bottom: 16px;">Beyond the desktop app.</h3>
+      </div>
+
+      <div class="prose">
+        <p>
+          The signal collector and workflow orchestrator are pure Node.js and SQLite. They do not require the Electron window to be open. The natural next step is to extract the autonomous monitoring into a background service that runs independently of the desktop application, with the Electron client becoming an inspection and review interface rather than the execution host.
+        </p>
+        <p>
+          After that, the interesting step is to bring these lessons back into the richer product idea that started this project: the original Artemis interface, with the more deliberate system underneath it. Lite is not the destination. It is where I am working out what Artemis 2.0 should actually be.
         </p>
       </div>
     </div>
@@ -1356,6 +1407,9 @@
         </p>
         <p>
           Lite also made another boundary clearer. Making a specialist task more bounded and observable does not necessarily mean the surrounding system should implement that specialism itself. Sometimes the better architecture is to retain control of the workflow and delegate the specialist work.
+        </p>
+        <p>
+          The signal system reinforced this further. The hardest part of autonomous monitoring was not fetching data from Sentry. It was ensuring that a production problem could never produce duplicate work, that a failed workflow could never silently become eligible again, and that the system failed visibly rather than quietly dropping signals. Those are database invariants and state machine semantics, not model capabilities.
         </p>
         <p>
           Artemis Lite is my attempt to make those boundaries visible. The model reasons. The application remembers what happened.
