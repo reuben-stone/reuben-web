@@ -1327,7 +1327,7 @@
           The manually initiated loop proved the architecture. The next step was to remove me from the beginning of the process: Artemis should monitor production signals, decide when something is worth acting on, carry the work through autonomously, and leave the result waiting for me to review.
         </p>
         <p>
-          Artemis now polls Sentry every two minutes across all registered projects. New issues are ingested into a durable signal identity layer. Each external problem gets exactly one record, regardless of how many times it is observed. Repeated observations update event counts and timestamps but never regress the signal&rsquo;s status or discard an existing workflow claim.
+          Artemis now polls Sentry every twenty minutes across all registered projects. New issues are ingested into a durable signal identity layer. Each external problem gets exactly one record, regardless of how many times it is observed. Repeated observations update event counts and timestamps but never regress the signal&rsquo;s status or discard an existing workflow claim.
         </p>
         <p>
           When a project&rsquo;s automation policy permits it, eligible signals (error and fatal severity, not already claimed) are atomically transitioned from <em>observed</em> to <em>investigating</em> via a compare-and-set operation. Only one execution path can win the claim. If workflow creation fails after the claim succeeds, the signal transitions to <em>failed</em> rather than silently becoming eligible for fresh work.
@@ -1357,7 +1357,7 @@
         </div>
         <div class="evidence-row">
           <span class="evidence-label">Polling interval</span>
-          <span class="evidence-value">2 minutes, with overlap guard</span>
+          <span class="evidence-value">20 minutes, with overlap guard</span>
         </div>
         <div class="evidence-row" style="border-bottom: none;">
           <span class="evidence-label">Signal tests</span>
