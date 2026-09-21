@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The accessibility issue isn't fixed when the ticket is closed | Reuben Stone</title>
+  <meta name="description" content="How building accessibility software changed the way I think about the distance between an issue tracker and the person behind the issue.">
+  <link rel="canonical" href="https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230e0f11'/><text x='6' y='23' font-family='serif' font-size='22' fill='%238b5cf6'>R</text></svg>">
+  <meta property="og:title" content="The accessibility issue isn't fixed when the ticket is closed | Reuben Stone">
+  <meta property="og:description" content="How building accessibility software changed the way I think about the distance between an issue tracker and the person behind the issue.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/">
+  <meta property="og:image" content="https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="The accessibility issue isn't fixed when the ticket is closed - article by Reuben Stone">
+  <meta property="og:site_name" content="Reuben Stone">
+  <meta property="article:published_time" content="2026-09-21">
+  <meta property="article:modified_time" content="2026-09-21">
+  <meta property="article:author" content="https://www.reubenstone.co.uk/">
+  <meta property="article:tag" content="Accessibility">
+  <meta property="article:tag" content="Product Engineering">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The accessibility issue isn't fixed when the ticket is closed | Reuben Stone">
+  <meta name="twitter:description" content="How building accessibility software changed the way I think about the distance between an issue tracker and the person behind the issue.">
+  <meta name="twitter:image" content="https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/og-image.png">
+  <meta name="twitter:image:alt" content="The accessibility issue isn't fixed when the ticket is closed - article by Reuben Stone">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/#article",
+      "headline": "The accessibility issue isn't fixed when the ticket is closed",
+      "description": "How building accessibility software changed the way I think about the distance between an issue tracker and the person behind the issue.",
+      "url": "https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/",
+      "image": "https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/og-image.png",
+      "datePublished": "2026-09-21",
+      "dateModified": "2026-09-21",
+      "author": {
+        "@id": "https://www.reubenstone.co.uk/#person"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Reuben Stone",
+          "item": "https://www.reubenstone.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Writing",
+          "item": "https://www.reubenstone.co.uk/writing/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "The accessibility issue isn't fixed when the ticket is closed",
+          "item": "https://www.reubenstone.co.uk/writing/the-accessibility-issue-isnt-fixed-when-the-ticket-is-closed/"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://www.reubenstone.co.uk/#person",
+      "name": "Reuben Stone",
+      "url": "https://www.reubenstone.co.uk/"
+    }
+  ]
+}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    
+    :root {
+      --bg: #0e0f11;
+      --bg-raised: #151618;
+      --border: #2a2b30;
+      --border-strong: #3a3b42;
+      --text: #e0ddd5;
+      --text-secondary: #a8a5a0;
+      --text-muted: #8a8780;
+      --accent: #8b5cf6;
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'Inter', -apple-system, system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'SF Mono', monospace;
+      --content-width: 1280px;
+      --reading-width: 680px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: var(--content-width); margin: 0 auto; padding: 0 32px; }
+
+    /* Navigation */
+    .header {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 101;
+      background: var(--bg);
+    }
+    .header .container { display: flex; align-items: center; justify-content: space-between; }
+    .header-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .header-links { display: flex; gap: 20px; list-style: none; }
+    .header-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+      padding: 8px 4px;
+    }
+    .header-links a:hover { color: var(--text); }
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 8px 0;
+      transition: color 0.15s;
+      position: relative;
+      z-index: 101;
+    }
+    .mobile-toggle:hover { color: var(--text); }
+    .mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100dvh;
+        background: var(--bg);
+        z-index: 99;
+        flex-direction: column;
+      }
+      .mobile-nav.open { display: flex; }
+    }
+    body.nav-open { overflow: hidden; }
+    .mobile-nav-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 80px 20px 0;
+    }
+    .mobile-nav-links {
+      list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: -12vh;
+    }
+    .mobile-nav-links li {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: navItemIn 0.22s ease-out forwards;
+    }
+    .mobile-nav-links li:nth-child(1) { animation-delay: 0.04s; }
+    .mobile-nav-links li:nth-child(2) { animation-delay: 0.08s; }
+    .mobile-nav-links li:nth-child(3) { animation-delay: 0.12s; }
+    @keyframes navItemIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .mobile-nav-index {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      min-width: 28px;
+      flex-shrink: 0;
+    }
+    .mobile-nav-links a {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+      padding: 10px 0;
+      transition: color 0.15s;
+    }
+    .mobile-nav-links a:hover { color: var(--accent); }
+    .mobile-nav-bottom {
+      margin-top: auto;
+      padding: 0 20px calc(48px + env(safe-area-inset-bottom));
+    }
+    .mobile-nav-external {
+      display: flex;
+      gap: 24px;
+    }
+    .mobile-nav-external a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .mobile-nav-external a:hover { color: var(--text); }
+
+    /* Footer */
+    .footer {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Focus / motion */
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; animation: none !important; }
+    }
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .mobile-toggle { display: block; }
+      .header-links { display: none; }
+      body.nav-open .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    }
+
+
+    /* Article layout */
+    .article-header { padding: 100px 0 60px; }
+    .article-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .article-eyebrow a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .article-eyebrow a:hover { color: var(--text); }
+    .article-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 600;
+      line-height: 1.2;
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
+    .article-standfirst {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: var(--reading-width);
+      margin-bottom: 24px;
+    }
+    .article-meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* Article body */
+    .article-body {
+      max-width: var(--reading-width);
+      padding-bottom: 80px;
+    }
+    .article-body p {
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+    .article-body h2 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 56px;
+      margin-bottom: 20px;
+    }
+    .article-body h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 40px;
+      margin-bottom: 16px;
+    }
+    .article-body ul, .article-body ol {
+      padding-left: 24px;
+      margin-bottom: 28px;
+      color: var(--text-secondary);
+    }
+    .article-body li {
+      font-size: 17px;
+      line-height: 1.8;
+      margin-bottom: 8px;
+    }
+    .article-body blockquote {
+      border-left: 3px solid var(--border-strong);
+      padding: 4px 0 4px 24px;
+      margin: 40px 0;
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .article-body code {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      background: var(--bg-raised);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: var(--text);
+    }
+    .article-body pre {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin-bottom: 28px;
+    }
+    .article-body pre code {
+      background: none;
+      padding: 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .article-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+    .article-body a {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: var(--accent);
+      transition: color 0.15s;
+    }
+    .article-body a:hover { color: var(--accent); }
+    .article-body img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      margin: 8px 0;
+    }
+
+    /* Article footer */
+    .article-footer {
+      border-top: 1px solid var(--border);
+      padding: 60px 0;
+      max-width: var(--reading-width);
+    }
+    .article-footer-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .article-back {
+      display: inline-block;
+      margin-top: 40px;
+      font-size: 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .article-back:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .article-header { padding: 60px 0 40px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="/" class="header-name">Reuben Stone</a>
+      <nav aria-label="Main navigation">
+        <button class="mobile-toggle" aria-expanded="false" onclick="var n=document.getElementById('mobile-nav');var o=n.classList.toggle('open');document.body.classList.toggle('nav-open',o);this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button>
+        <ul class="header-links">
+          <li><a href="/">Work</a></li>
+          <li><a href="/writing/" style="color: var(--text);">Writing</a></li>
+          <li><a href="/#about">About</a></li>
+          <li><a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-body">
+      <ul class="mobile-nav-links">
+        <li><span class="mobile-nav-index">01</span><a href="/">Work</a></li>
+        <li><span class="mobile-nav-index">02</span><a href="/writing/" style="color: var(--accent);">Writing</a></li>
+        <li><span class="mobile-nav-index">03</span><a href="/#about">About</a></li>
+      </ul>
+      <div class="mobile-nav-bottom">
+        <div class="mobile-nav-external">
+          <a href="mailto:reubenastone@gmail.com">Email</a>
+          <a href="https://github.com/reuben-stone" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
+          <a href="https://linkedin.com/in/reubenstone" target="_blank" rel="noopener noreferrer">LinkedIn &#8599;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <article>
+      <div class="container">
+        <header class="article-header">
+          <div class="article-eyebrow"><a href="/writing/">Writing</a> / Accessibility / Product Engineering</div>
+          <h1 class="article-title">The accessibility issue isn't fixed when the ticket is closed</h1>
+          <p class="article-standfirst">What gets lost when a person's difficulty becomes a data point in a tracking system?</p>
+          <div class="article-meta"><time datetime="2026-09-21">21 September 2026</time> &middot; Reuben Stone</div>
+        </header>
+
+        <div class="article-body">
+          <p>One slightly uncomfortable thing about building accessibility software is how much time you spend turning people&#39;s difficulties into data.</p>
+<p>A contrast problem becomes a ratio. A missing label becomes a rule violation. Something that genuinely prevents a person from completing a task becomes an issue with a severity, a category, and eventually a status of <code>fixed</code>.</p>
+<p>I&#39;ve been building <a href="https://lumi.livana.io">Lumi</a> for a while now, and this is basically what the software does. It takes accessibility problems and represents them in a way that engineering teams can work with. A problem needs a rule to match against. It needs to point to a specific element. It gets a status. It might become a Jira ticket. Eventually somebody changes some code and marks it done.</p>
+<p>That process is necessary. I&#39;m not questioning whether we should do it.</p>
+<p>But spending this much time designing how problems get represented has made me notice the distance between the representation and the thing it&#39;s supposed to represent.</p>
+<h2>What an engineer sees</h2>
+<p>Take a contrast issue. A scanner finds it and reports something like:</p>
+<p><code>Text contrast ratio is 3.2:1. Expected minimum: 4.5:1.</code></p>
+<p>That&#39;s useful. It tells a developer exactly what to fix and gives them a number to hit. It&#39;s the kind of finding that can go straight into a ticket, get assigned, and be resolved in the same sprint.</p>
+<p>But the person using the product didn&#39;t encounter a ratio. Depending on their vision, their screen, the lighting in the room, they encountered text that was difficult to read. Maybe they managed. Maybe they gave up and tried something else. The ratio is a way of describing the problem that makes it actionable for an engineer. It isn&#39;t the problem itself.</p>
+<p>Or take a keyboard issue. A team might see:</p>
+<p><code>Interactive element is not keyboard accessible.</code></p>
+<p>That&#39;s a clear defect. Someone navigating without a mouse reached a point in the interface where they simply couldn&#39;t continue. The audit finding describes a technical gap. The experience was a closed door.</p>
+<p>I keep thinking about this because both descriptions are true at the same time. The engineering representation isn&#39;t wrong. But it&#39;s an abstraction, and abstractions always leave things out. That&#39;s what makes them useful, and it&#39;s also what makes them dangerous if you forget they&#39;re abstractions.</p>
+<h2>I&#39;m part of this</h2>
+<p>I should be clear that I&#39;m not writing this from some position outside the problem.</p>
+<p>I like things becoming measurable. A shrinking issue count feels like progress. A clean verification result feels satisfying. Moving something to <code>fixed</code> feels good. I&#39;ve caught myself looking at Lumi&#39;s output and instinctively reading the numbers as the outcome, rather than a signal about the outcome.</p>
+<p>Sometimes the numbers genuinely do reflect improvement. If a page had twelve contrast failures last month and zero this month, and the fixes were done well, then the experience is probably better for people who need that contrast.</p>
+<p>But &quot;probably better&quot; is doing some work in that sentence. The count went down. Whether the barriers actually went away depends on things the count doesn&#39;t capture.</p>
+<h2>Tickets are good, actually</h2>
+<p>I want to be careful here because I don&#39;t think any of this is an argument against tracking systems, automated scanners, WCAG, or dashboards.</p>
+<p>Standards give teams a shared way of talking about accessibility. Without something like WCAG, every conversation about contrast or keyboard access would start from scratch.</p>
+<p>Automated checks find real problems quickly, repeatedly, across large surfaces. A scanner will catch the same categories of issue at three in the morning across hundreds of pages without getting tired or distracted. That matters.</p>
+<p>Tickets give somebody ownership. An accessibility finding that doesn&#39;t become work rarely becomes a fix.</p>
+<p>Verification provides evidence that a change actually had the intended effect. And tracking regressions matters because products keep changing. The thing you fixed in March can quietly break again in June when someone redesigns the navigation.</p>
+<p>The workflow I&#39;ve become most interested in while building Lumi looks roughly like: find the issue, understand what it means for someone using the product, fix it, verify the fix, and keep it fixed. None of those steps is optional, and the tracking system supports all of them.</p>
+<p>The bit I keep coming back to is that the tracking system is there to support the work. It isn&#39;t the work.</p>
+<h2>Proxies</h2>
+<p>This probably interests me partly because it&#39;s a pattern I recognise from other areas of engineering.</p>
+<p>We work through proxies constantly. Test coverage is not the same thing as confidence in the code. An uptime percentage is not quite the same thing as someone being able to complete what they came to do. A performance score is not exactly the same thing as a site feeling fast to use.</p>
+<p>These proxies are useful precisely because they&#39;re measurable when the underlying thing isn&#39;t. I can&#39;t easily measure how confident I should be in a codebase, but I can measure which code paths are exercised by tests. That&#39;s worth knowing.</p>
+<p>The pattern is the same with accessibility. I can&#39;t directly measure whether a product is accessible, because accessibility isn&#39;t a single binary state. It depends on who is using the product, how, in what circumstances, and with what tools. But I can measure whether specific, known barriers exist. That&#39;s worth measuring.</p>
+<p>The risk in all these cases is treating the proxy as the goal. Not deliberately, usually. It just happens gradually. The metric is right there on the dashboard, and the underlying experience isn&#39;t.</p>
+<h2>What fixed should mean</h2>
+<p>I keep noticing that the status <code>fixed</code> is doing a lot of work in most accessibility workflows.</p>
+<p>An issue gets found. Someone changes some code. The issue gets marked as resolved. That&#39;s the happy path, and it&#39;s how most of the work gets done.</p>
+<p>But <code>fixed</code> can mean different things. It can mean the code changed. It can mean a scanner no longer flags the issue. Or it can mean there&#39;s good reason to believe the barrier that caused the issue is no longer there for the person who would have encountered it.</p>
+<p>Those aren&#39;t always the same thing.</p>
+<p>I don&#39;t think most teams are being careless when they close an accessibility ticket. They&#39;re working within the system they have. The system gives them a finding, they address the finding, they close the ticket. That&#39;s reasonable.</p>
+<p>I&#39;ve just been thinking about what it would take for <code>fixed</code> to carry a bit more weight. Verification helps. Understanding why the issue mattered, not just what the rule said, helps. And building systems that notice when the same problem comes back helps, because it often does.</p>
+<p>None of this is a framework or a methodology. It&#39;s more of a question I keep sitting with while building the software. What would it mean for the tools to keep the person a bit more visible, even while doing the necessary work of turning their experience into something an engineering team can act on?</p>
+<p>I don&#39;t have a complete answer. But I think the question is worth spending time with.</p>
+
+        </div>
+
+        <footer class="article-footer">
+          <div class="article-footer-label">Related work</div>
+          <a href="https://lumi.livana.io" style="display:block;padding:12px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;">
+        <div style="font-size:15px;color:var(--text);margin-bottom:2px;">Lumi</div>
+        <div style="font-size:12px;color:var(--text-muted);">Accessibility Intelligence Platform</div>
+      </a>
+          <a href="/writing/" class="article-back">&larr; All writing</a>
+        </footer>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      &copy; <script>document.write(new Date().getFullYear())</script> Reuben Stone
+    </div>
+  </footer>
+  <script>
+    var mq = window.matchMedia('(min-width: 769px)');
+    mq.addEventListener('change', function(e) {
+      if (e.matches) {
+        document.getElementById('mobile-nav').classList.remove('open');
+        document.body.classList.remove('nav-open');
+        var btn = document.querySelector('.mobile-toggle');
+        if (btn) { btn.textContent = 'Menu'; btn.setAttribute('aria-expanded', 'false'); }
+      }
+    });
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
