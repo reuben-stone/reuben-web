@@ -273,7 +273,7 @@ const SHARED_CSS = `
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      * { transition: none !important; }
+      * { transition: none !important; animation: none !important; }
     }
     @media (max-width: 768px) {
       .container { padding: 0 20px; }
