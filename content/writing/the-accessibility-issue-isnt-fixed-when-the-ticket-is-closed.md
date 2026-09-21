@@ -40,9 +40,9 @@ Or take a keyboard issue. A team might see:
 
 `Interactive element is not keyboard accessible.`
 
-That's a clear defect. Someone navigating without a mouse reached a point in the interface where they simply couldn't continue. The audit finding describes a technical gap. The experience was a closed door.
+That's a clear defect. Someone navigating without a mouse reached a point in the interface where they simply couldn't continue. The audit finding describes a technical gap.
 
-I keep thinking about this because both descriptions are true at the same time. The engineering representation isn't wrong. But it's an abstraction, and abstractions always leave things out. That's what makes them useful, and it's also what makes them dangerous if you forget they're abstractions.
+I keep thinking about this because both descriptions are true at the same time. The engineering representation isn't wrong. But it's an abstraction, and abstractions always leave things out. That's what makes them useful. The problem is forgetting how much they've left out.
 
 ## I'm part of this
 
@@ -88,14 +88,10 @@ I keep noticing that the status `fixed` is doing a lot of work in most accessibi
 
 An issue gets found. Someone changes some code. The issue gets marked as resolved. That's the happy path, and it's how most of the work gets done.
 
-But `fixed` can mean different things. It can mean the code changed. It can mean a scanner no longer flags the issue. Or it can mean there's good reason to believe the barrier that caused the issue is no longer there for the person who would have encountered it.
-
-Those aren't always the same thing.
+But `fixed` can mean different things. It can mean the code changed. It can mean a scanner no longer flags the issue. Or it can mean there's good reason to believe the barrier that caused the issue is no longer there for the person who would have encountered it. Those aren't always the same thing.
 
 I don't think most teams are being careless when they close an accessibility ticket. They're working within the system they have. The system gives them a finding, they address the finding, they close the ticket. That's reasonable.
 
 I've just been thinking about what it would take for `fixed` to carry a bit more weight. Verification helps. Understanding why the issue mattered, not just what the rule said, helps. And building systems that notice when the same problem comes back helps, because it often does.
 
 None of this is a framework or a methodology. It's more of a question I keep sitting with while building the software. What would it mean for the tools to keep the person a bit more visible, even while doing the necessary work of turning their experience into something an engineering team can act on?
-
-I don't have a complete answer. But I think the question is worth spending time with.

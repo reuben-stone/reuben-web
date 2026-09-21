@@ -462,7 +462,7 @@
         <div class="article-body">
           <p>One slightly uncomfortable thing about building accessibility software is how much time you spend turning people&#39;s difficulties into data.</p>
 <p>A contrast problem becomes a ratio. A missing label becomes a rule violation. Something that genuinely prevents a person from completing a task becomes an issue with a severity, a category, and eventually a status of <code>fixed</code>.</p>
-<p>I&#39;ve been building <a href="https://lumi.livana.io">Lumi</a> for a while now, and this is basically what the software does. It takes accessibility problems and represents them in a way that engineering teams can work with. A problem needs a rule to match against. It needs to point to a specific element. It gets a status. It might become a Jira ticket. Eventually somebody changes some code and marks it done.</p>
+<p>I&#39;ve been building <a href="https://lumi.livana.io" target="_blank" rel="noopener noreferrer">Lumi</a> for a while now, and this is basically what the software does. It takes accessibility problems and represents them in a way that engineering teams can work with. A problem needs a rule to match against. It needs to point to a specific element. It gets a status. It might become a Jira ticket. Eventually somebody changes some code and marks it done.</p>
 <p>That process is necessary. I&#39;m not questioning whether we should do it.</p>
 <p>But spending this much time designing how problems get represented has made me notice the distance between the representation and the thing it&#39;s supposed to represent.</p>
 <h2>What an engineer sees</h2>
@@ -472,8 +472,8 @@
 <p>But the person using the product didn&#39;t encounter a ratio. Depending on their vision, their screen, the lighting in the room, they encountered text that was difficult to read. Maybe they managed. Maybe they gave up and tried something else. The ratio is a way of describing the problem that makes it actionable for an engineer. It isn&#39;t the problem itself.</p>
 <p>Or take a keyboard issue. A team might see:</p>
 <p><code>Interactive element is not keyboard accessible.</code></p>
-<p>That&#39;s a clear defect. Someone navigating without a mouse reached a point in the interface where they simply couldn&#39;t continue. The audit finding describes a technical gap. The experience was a closed door.</p>
-<p>I keep thinking about this because both descriptions are true at the same time. The engineering representation isn&#39;t wrong. But it&#39;s an abstraction, and abstractions always leave things out. That&#39;s what makes them useful, and it&#39;s also what makes them dangerous if you forget they&#39;re abstractions.</p>
+<p>That&#39;s a clear defect. Someone navigating without a mouse reached a point in the interface where they simply couldn&#39;t continue. The audit finding describes a technical gap.</p>
+<p>I keep thinking about this because both descriptions are true at the same time. The engineering representation isn&#39;t wrong. But it&#39;s an abstraction, and abstractions always leave things out. That&#39;s what makes them useful. The problem is forgetting how much they&#39;ve left out.</p>
 <h2>I&#39;m part of this</h2>
 <p>I should be clear that I&#39;m not writing this from some position outside the problem.</p>
 <p>I like things becoming measurable. A shrinking issue count feels like progress. A clean verification result feels satisfying. Moving something to <code>fixed</code> feels good. I&#39;ve caught myself looking at Lumi&#39;s output and instinctively reading the numbers as the outcome, rather than a signal about the outcome.</p>
@@ -496,12 +496,10 @@
 <h2>What fixed should mean</h2>
 <p>I keep noticing that the status <code>fixed</code> is doing a lot of work in most accessibility workflows.</p>
 <p>An issue gets found. Someone changes some code. The issue gets marked as resolved. That&#39;s the happy path, and it&#39;s how most of the work gets done.</p>
-<p>But <code>fixed</code> can mean different things. It can mean the code changed. It can mean a scanner no longer flags the issue. Or it can mean there&#39;s good reason to believe the barrier that caused the issue is no longer there for the person who would have encountered it.</p>
-<p>Those aren&#39;t always the same thing.</p>
+<p>But <code>fixed</code> can mean different things. It can mean the code changed. It can mean a scanner no longer flags the issue. Or it can mean there&#39;s good reason to believe the barrier that caused the issue is no longer there for the person who would have encountered it. Those aren&#39;t always the same thing.</p>
 <p>I don&#39;t think most teams are being careless when they close an accessibility ticket. They&#39;re working within the system they have. The system gives them a finding, they address the finding, they close the ticket. That&#39;s reasonable.</p>
 <p>I&#39;ve just been thinking about what it would take for <code>fixed</code> to carry a bit more weight. Verification helps. Understanding why the issue mattered, not just what the rule said, helps. And building systems that notice when the same problem comes back helps, because it often does.</p>
 <p>None of this is a framework or a methodology. It&#39;s more of a question I keep sitting with while building the software. What would it mean for the tools to keep the person a bit more visible, even while doing the necessary work of turning their experience into something an engineering team can act on?</p>
-<p>I don&#39;t have a complete answer. But I think the question is worth spending time with.</p>
 
         </div>
 

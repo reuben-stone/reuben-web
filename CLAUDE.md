@@ -123,6 +123,36 @@ The homepage has Person + WebSite JSON-LD with the same `@id` references.
 - Keep copy natural and understated, not promotional
 - Every section on the homepage has one job - don't repeat positioning across sections
 
+### Writing voice
+
+The voice is a senior product engineer thinking in public, not a content writer explaining a topic. Articles should sound like Reuben sat down after building something and noticed something worth writing about.
+
+**Tone:** observant, technically experienced, plain-spoken, curious, slightly self-questioning. Comfortable saying two apparently conflicting things can both be useful.
+
+**Do:**
+- Use contractions and British English
+- Prefer concrete nouns and verbs ("we changed the code" over "a remediation was implemented")
+- Let thoughts develop rather than announcing the lesson up front
+- Include yourself in the problem being examined
+- Let some paragraphs be one or two sentences, others develop an idea
+- Use hedging phrases naturally ("I think...", "I've noticed...", "Maybe the distinction is...")
+- End quietly rather than with a quotable final sentence
+
+**Don't:**
+- Use em dashes (use commas, full stops, or hyphens)
+- Use canned transitions ("Here's the thing", "The reality is", "At its core", "Ultimately")
+- Use artificial contrasts ("It's not about X. It's about Y.")
+- Manufacture profundity - if a sentence looks designed to become a pull quote, rewrite it plainer
+- Create perfect rhetorical symmetry (three examples because three feels satisfying, every paragraph the same length, every observation resolving cleanly)
+- Isolate dramatic one-sentence paragraphs as punchlines
+- Use unnecessary adjectives (powerful, profound, crucial, transformative, seamless, robust, meaningful, innovative, holistic)
+- Summarise the whole article at the end or build toward a slogan
+- Start with statistics, history, or broad industry statements
+- Speak for disabled people or manufacture emotion about their experiences
+- Introduce products like a launch announcement or use sales language
+
+**References:** The writing brief at `docs/` or `Downloads/` may contain more detailed guidance for specific articles. The existing published articles set the baseline for voice.
+
 ## Git
 
 - Push to `main` triggers Vercel deploy

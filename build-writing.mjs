@@ -15,6 +15,14 @@ import { join } from 'path'
 import matter from 'gray-matter'
 import { marked } from 'marked'
 
+marked.use({
+  hooks: {
+    postprocess(html) {
+      return html.replace(/<a href="(https?:\/\/[^"]+)"/g, '<a href="$1" target="_blank" rel="noopener noreferrer"')
+    }
+  }
+})
+
 const ROOT = new URL('.', import.meta.url).pathname
 const CONTENT_DIR = join(ROOT, 'content', 'writing')
 const OUTPUT_DIR = join(ROOT, 'writing')
