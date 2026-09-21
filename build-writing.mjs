@@ -619,6 +619,7 @@ ${jsonLd}
   </main>
 
   ${FOOTER}
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>`
 }
@@ -804,6 +805,7 @@ ${indexJsonLd}
   </main>
 
   ${FOOTER}
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>`
 }
