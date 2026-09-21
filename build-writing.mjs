@@ -29,6 +29,10 @@ const OUTPUT_DIR = join(ROOT, 'writing')
 const SITEMAP_PATH = join(ROOT, 'sitemap.xml')
 const SITE_URL = 'https://www.reubenstone.co.uk'
 const PERSON_ID = `${SITE_URL}/#person`
+const GA_ID = 'G-T8E0JP74WL'
+const GA_SNIPPET = `<!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');</script>`
 
 // ── Load and parse articles ──────────────────────────────────────
 
@@ -416,6 +420,7 @@ function renderArticle(article) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
+  ${GA_SNIPPET}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${article.title} | Reuben Stone</title>
@@ -628,6 +633,7 @@ ${jsonLd}
 
   ${FOOTER}
   <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/assets/analytics.js"></script>
 </body>
 </html>`
 }
@@ -680,6 +686,7 @@ function renderIndex(articles) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
+  ${GA_SNIPPET}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Writing | Reuben Stone - Senior Product Engineer</title>
@@ -814,6 +821,7 @@ ${indexJsonLd}
 
   ${FOOTER}
   <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/assets/analytics.js"></script>
 </body>
 </html>`
 }
