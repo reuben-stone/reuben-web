@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8E0JP74WL"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T8E0JP74WL');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unilever Information & Analytics Case Study | Reuben Stone</title>
+  <meta name="description" content="A full-stack internal product platform built for Unilever Information & Analytics using Vue.js, Node.js, Express, MySQL, REST APIs, D3.js and Azure.">
+  <link rel="canonical" href="https://www.reubenstone.co.uk/work/unilever-information-analytics/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230e0f11'/><text x='6' y='23' font-family='serif' font-size='22' fill='%238b5cf6'>R</text></svg>">
+  <meta property="og:title" content="Unilever Information & Analytics Case Study | Reuben Stone">
+  <meta property="og:description" content="A full-stack internal product platform built for Unilever Information & Analytics using Vue.js, Node.js, Express, MySQL, REST APIs, D3.js and Azure.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.reubenstone.co.uk/work/unilever-information-analytics/">
+  <meta property="og:image" content="https://www.reubenstone.co.uk/work/unilever-information-analytics/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Unilever Information & Analytics - Full-Stack Engineering Case Study">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unilever Information & Analytics Case Study | Reuben Stone">
+  <meta name="twitter:description" content="A full-stack internal product platform built for Unilever Information & Analytics using Vue.js, Node.js, Express, MySQL, REST APIs, D3.js and Azure.">
+  <meta name="twitter:image" content="https://www.reubenstone.co.uk/work/unilever-information-analytics/og-image.png">
+  <meta name="twitter:image:alt" content="Unilever Information & Analytics - Full-Stack Engineering Case Study">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://www.reubenstone.co.uk/work/unilever-information-analytics/#article",
+        "headline": "Unilever Information & Analytics Case Study",
+        "description": "A full-stack internal product platform built for Unilever Information & Analytics using Vue.js, Node.js, Express, MySQL, REST APIs, D3.js and Azure.",
+        "author": { "@id": "https://www.reubenstone.co.uk/#person" },
+        "url": "https://www.reubenstone.co.uk/work/unilever-information-analytics/",
+        "image": "https://www.reubenstone.co.uk/work/unilever-information-analytics/og-image.png",
+        "datePublished": "2020-03-31",
+        "dateModified": "2026-09-22",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.reubenstone.co.uk/work/unilever-information-analytics/" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.reubenstone.co.uk/#person",
+        "name": "Reuben Stone",
+        "url": "https://www.reubenstone.co.uk/"
+      }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── Tokens ──────────────────────────────────────────── */
+    :root {
+      --bg: #0e0f11;
+      --bg-raised: #151618;
+      --bg-card: #1a1b1e;
+      --border: #2a2b30;
+      --border-strong: #3a3b42;
+      --text: #e0ddd5;
+      --text-secondary: #a8a5a0;
+      --text-muted: #8a8780;
+      --accent: #8b5cf6;
+      --accent-dim: rgba(139, 92, 246, 0.12);
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'Inter', -apple-system, system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'SF Mono', monospace;
+      --content-width: 1280px;
+      --prose-width: 720px;
+    }
+
+    /* ── Reset ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ──────────────────────────────────────────── */
+    .container { max-width: var(--content-width); margin: 0 auto; padding: 0 32px; }
+    .prose { max-width: var(--prose-width); }
+    .prose p { color: var(--text-secondary); margin-bottom: 28px; line-height: 1.75; }
+
+    /* ── Nav ─────────────────────────────────────────────── */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(14, 15, 17, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+    }
+    .nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 8px 0;
+      transition: color 0.15s;
+      position: relative;
+      z-index: 101;
+    }
+    .mobile-toggle:hover { color: var(--text); }
+    .mobile-nav {
+      display: none;
+    }
+    body.nav-open { overflow: hidden; }
+    .mobile-nav-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 80px 20px 0;
+    }
+    .mobile-nav-links {
+      list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: -6vh;
+    }
+    .mobile-nav-links li {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: navItemIn 0.22s ease-out forwards;
+    }
+    .mobile-nav-links li:nth-child(1) { animation-delay: 0.04s; }
+    .mobile-nav-links li:nth-child(2) { animation-delay: 0.08s; }
+    .mobile-nav-links li:nth-child(3) { animation-delay: 0.12s; }
+    .mobile-nav-links li:nth-child(4) { animation-delay: 0.16s; }
+    .mobile-nav-links li:nth-child(5) { animation-delay: 0.20s; }
+    .mobile-nav-links li:nth-child(6) { animation-delay: 0.24s; }
+    .mobile-nav-links li:nth-child(7) { animation-delay: 0.28s; }
+    @keyframes navItemIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .mobile-nav-index {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      min-width: 28px;
+      flex-shrink: 0;
+    }
+    .mobile-nav-links a {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+      padding: 8px 0;
+      transition: color 0.15s;
+    }
+    .mobile-nav-links a:hover { color: var(--accent); }
+    .mobile-nav-bottom {
+      margin-top: auto;
+      padding: 0 20px calc(48px + env(safe-area-inset-bottom));
+    }
+    .mobile-nav-external {
+      display: flex;
+      gap: 24px;
+    }
+    .mobile-nav-external a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .mobile-nav-external a:hover { color: var(--text); }
+    .inline-link {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: var(--accent);
+      transition: color 0.15s, text-decoration-color 0.15s;
+    }
+    .inline-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────── */
+    .hero { padding: 120px 0 80px; }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.15;
+      max-width: 840px;
+      margin-bottom: 28px;
+    }
+    .hero-standfirst {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+      margin-bottom: 32px;
+    }
+
+    /* ── Screenshot ──────────────────────────────────────── */
+    .screenshot {
+      margin: 48px 0 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #0e0f11;
+    }
+    .screenshot img {
+      width: 100%;
+      display: block;
+    }
+    .screenshot-caption {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      line-height: 1.5;
+      font-style: italic;
+      max-width: var(--prose-width);
+    }
+
+    /* ── Screenshot gallery ─────────────────────────────── */
+    .screenshot-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 48px 0 20px;
+    }
+    .screenshot-gallery .screenshot {
+      margin: 0;
+    }
+
+    /* ── Sections ────────────────────────────────────────── */
+    .section { padding: 100px 0; border-top: 1px solid var(--border); }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .section h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 600;
+      line-height: 1.25;
+      max-width: 700px;
+      margin-bottom: 24px;
+    }
+    .section p {
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+      margin-bottom: 28px;
+    }
+
+    /* ── Pull quote ──────────────────────────────────────── */
+    .pull-quote {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-weight: 400;
+      line-height: 1.45;
+      color: var(--text);
+      border-left: 3px solid var(--accent);
+      padding-left: 24px;
+      margin: 48px 0;
+      max-width: 680px;
+    }
+
+    /* ── Application flow diagram ────────────────────────── */
+    .app-flow {
+      margin: 48px 0;
+      max-width: 720px;
+    }
+    .app-flow-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .app-flow-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .app-flow-node {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 14px 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-align: center;
+      flex: 1;
+    }
+    .app-flow-arrow {
+      font-family: var(--mono);
+      font-size: 18px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .app-flow-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .app-flow-stack-item {
+      background: var(--bg-raised);
+      padding: 14px 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    .app-flow-connector {
+      display: flex;
+      justify-content: center;
+      padding: 4px 0;
+    }
+    .app-flow-connector span {
+      font-family: var(--mono);
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+    .app-flow-platform {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    /* ── Evidence block ──────────────────────────────────── */
+    .evidence-block {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px 28px;
+      margin: 40px 0;
+      max-width: 620px;
+    }
+    .evidence-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .evidence-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(42,43,48,0.5);
+      font-size: 13px;
+      gap: 24px;
+    }
+    .evidence-row:last-child { border-bottom: none; }
+    .evidence-label { color: var(--text-muted); white-space: nowrap; }
+    .evidence-value { color: var(--text-secondary); text-align: right; }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .footer {
+      padding: 80px 0 48px;
+      border-top: 1px solid var(--border);
+    }
+    .footer h2 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .footer p {
+      color: var(--text-secondary);
+      max-width: var(--prose-width);
+      margin-bottom: 28px;
+    }
+    .footer-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-secondary {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { border-color: var(--border-strong); color: var(--text); }
+
+    /* ── Lightbox ────────────────────────────────────────── */
+    .lightbox-trigger {
+      position: relative;
+      cursor: pointer;
+    }
+    .lightbox-trigger .expand-icon {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(14, 15, 17, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .lightbox-trigger:hover .expand-icon { opacity: 1; }
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      cursor: zoom-out;
+    }
+    .lightbox-overlay img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 6px;
+    }
+
+    /* ── Focus / motion ──────────────────────────────────── */
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .nav-links { display: none; }
+      .mobile-toggle { display: block; }
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100dvh;
+        background: var(--bg);
+        z-index: 99;
+        flex-direction: column;
+      }
+      .mobile-nav.open { display: flex; }
+      body.nav-open .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: var(--bg);
+        z-index: 100;
+      }
+    }
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .hero { padding: 80px 0 60px; }
+      .section { padding: 64px 0; }
+      .screenshot-gallery { grid-template-columns: 1fr; }
+      .app-flow-row { flex-direction: column; }
+      .app-flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link" style="position:absolute;left:-9999px;top:0;padding:8px 16px;background:var(--accent);color:#fff;font-size:14px;z-index:100;text-decoration:none;">Skip to content</a>
+  <style>.skip-link:focus { left: 8px; top: 8px; }</style>
+
+  <!-- Navigation -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="container">
+      <a href="/" class="nav-brand" style="text-decoration:none;">Reuben Stone</a>
+      <ul class="nav-links">
+        <li><a href="/">&larr; Portfolio</a></li>
+        <li><a href="#brief">Brief</a></li>
+        <li><a href="#product">Product</a></li>
+        <li><a href="#discovery">Discovery</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#cms">CMS</a></li>
+        <li><a href="#documentation">Documentation</a></li>
+        <li><a href="#reflection">Reflection</a></li>
+      </ul>
+      <button class="mobile-toggle" aria-expanded="false" onclick="var n=document.getElementById('mobile-nav');var o=n.classList.toggle('open');document.body.classList.toggle('nav-open',o);this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button>
+    </div>
+  </nav>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-body">
+      <ul class="mobile-nav-links">
+        <li><span class="mobile-nav-index">01</span><a href="#brief" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Brief</a></li>
+        <li><span class="mobile-nav-index">02</span><a href="#product" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Product</a></li>
+        <li><span class="mobile-nav-index">03</span><a href="#discovery" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Discovery</a></li>
+        <li><span class="mobile-nav-index">04</span><a href="#architecture" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Architecture</a></li>
+        <li><span class="mobile-nav-index">05</span><a href="#cms" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">CMS</a></li>
+        <li><span class="mobile-nav-index">06</span><a href="#documentation" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Documentation</a></li>
+        <li><span class="mobile-nav-index">07</span><a href="#reflection" onclick="document.getElementById('mobile-nav').classList.remove('open');document.body.classList.remove('nav-open');document.querySelector('.mobile-toggle').textContent='Menu'">Reflection</a></li>
+      </ul>
+      <div class="mobile-nav-bottom">
+        <div class="mobile-nav-external">
+          <a href="/">Portfolio</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <main id="main">
+  <header class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Unilever Information &amp; Analytics &middot; 2019&ndash;2020</div>
+      <h1>An internal product platform built across the full stack</h1>
+      <div class="prose">
+        <p class="hero-standfirst">
+          I worked with Unilever Information &amp; Analytics to build a bespoke internal product and services catalogue for teams across the global Unilever network.
+        </p>
+        <p class="hero-standfirst">
+          The project went well beyond the frontend. I built the application across Vue, Node.js, Express and MySQL, including the REST API, data-heavy product interfaces and a custom CMS used to manage the content and data behind the platform.
+        </p>
+        <p class="hero-standfirst">
+          It is an older project now, but still a useful example of the kind of work I've done for a long time: taking a product from application architecture through frontend, backend, data integration and the systems needed to operate it.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero image -->
+  <section style="padding-bottom: 100px;">
+    <div class="container">
+      <div class="screenshot">
+        <img src="../../assets/unilever-hero-dashboard.png" alt="Unilever Information & Analytics Product and Service Catalogue dashboard showing product coverage, usage, performance and global automation data." loading="lazy">
+      </div>
+      <p class="screenshot-caption">I&amp;A Product &amp; Service Catalogue dashboard</p>
+    </div>
+  </section>
+
+  <!-- 01 / The Brief -->
+  <section class="section" id="brief">
+    <div class="container">
+      <div class="section-label">01 / The Brief</div>
+      <h2>A catalogue for a large internal product ecosystem</h2>
+      <div class="prose">
+        <p>
+          Unilever's Information &amp; Analytics team had a wide range of products and services available across the organisation. The catalogue brought those into a single application where internal teams could explore what was available, understand where products were used and navigate the data around coverage, usage, performance and KPIs.
+        </p>
+        <p>
+          That meant the application needed to do more than list products. It had to make a large amount of structured information usable, while giving product owners a practical way to maintain the data behind it.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <img src="../../assets/unilever-catalogue-discovery.png" alt="Unilever I&A catalogue screen showing products grouped by analytical type." loading="lazy">
+      </div>
+      <p class="screenshot-caption">Browsing products and services by analytical type</p>
+    </div>
+  </section>
+
+  <!-- 02 / Building the Product -->
+  <section class="section" id="product">
+    <div class="container">
+      <div class="section-label">02 / Building the Product</div>
+      <h2>Turning a lot of information into something navigable</h2>
+      <div class="prose">
+        <p>
+          A large part of the frontend work was about turning dense operational and product data into interfaces that people could actually explore.
+        </p>
+        <p>
+          The application was built in Vue.js, with Vuex handling application state and Axios connecting the frontend to the custom REST API. D3.js was used throughout the product for interactive visualisation, including product coverage, usage, KPIs, performance and the wider product landscape.
+        </p>
+        <p>
+          The challenge wasn't simply rendering charts. Different parts of the application needed to help people move from a high-level view of the I&amp;A catalogue into individual products, business questions and the data associated with them.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <img src="../../assets/unilever-dashboard.png" alt="I&A dashboard combining product coverage, KPI, usage and performance visualisations." loading="lazy">
+      </div>
+      <p class="screenshot-caption">Dashboard combining product coverage, usage and performance data</p>
+
+      <div class="lightbox-trigger screenshot" style="margin-top: 48px; cursor: pointer;" data-lightbox="../../assets/unilever-product-landscape.png" data-alt="Interactive Unilever Information and Analytics product landscape visualisation." role="button" tabindex="0" aria-label="View product landscape screenshot full size">
+        <img src="../../assets/unilever-product-landscape.png" alt="Interactive Unilever Information and Analytics product landscape visualisation." loading="lazy">
+        <span class="expand-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+      </div>
+      <p class="screenshot-caption">Interactive product landscape for exploring relationships across the catalogue</p>
+    </div>
+  </section>
+
+  <!-- 03 / Product Discovery -->
+  <section class="section" id="discovery">
+    <div class="container">
+      <div class="section-label">03 / Product Discovery</div>
+      <h2>Different ways into the same product ecosystem</h2>
+      <div class="prose">
+        <p>
+          The catalogue supported several ways of finding and understanding products rather than forcing everything through a single directory.
+        </p>
+        <p>
+          Users could explore the wider product landscape, follow business questions towards relevant products, inspect product-level performance and KPIs, and move through supporting content such as videos and glossary information.
+        </p>
+        <p>
+          That variety is visible in the interface: the product needed conventional application views alongside much more bespoke data visualisation.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <img src="../../assets/unilever-question-tree.png" alt="I&A Question Tree guiding a user from a business question to a recommended analytics product." loading="lazy">
+      </div>
+      <p class="screenshot-caption">Business-question navigation leading users towards relevant products</p>
+
+      <div class="screenshot" style="margin-top: 48px;">
+        <img src="../../assets/unilever-product-view.png" alt="Individual I&A product page showing usage, performance, organisational coverage and geographic data." loading="lazy">
+      </div>
+      <p class="screenshot-caption">Individual product view bringing usage, performance and coverage into one interface</p>
+
+      <div class="screenshot-gallery" style="margin-top: 48px; align-items: stretch;">
+        <div class="screenshot" style="display: flex; margin: 0;">
+          <img src="../../assets/unilever-kpi-popup.png" alt="Product KPI popup showing detailed performance metrics for an individual product." loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div class="screenshot" style="display: flex; margin: 0;">
+          <img src="../../assets/unilever-product-leaderboard.png" alt="Product leaderboard ranking products by performance across the I&A catalogue." loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+      </div>
+      <p class="screenshot-caption">Additional KPI and product-performance views</p>
+    </div>
+  </section>
+
+  <!-- 04 / Architecture -->
+  <section class="section" id="architecture">
+    <div class="container">
+      <div class="section-label">04 / Architecture</div>
+      <h2>The frontend was only one part of it</h2>
+      <div class="prose">
+        <p>
+          The application was backed by a custom Node.js and Express system with MySQL as the data layer. I created the REST endpoints consumed by the Vue application and built the CMS used to manage the information surfaced throughout the product.
+        </p>
+        <p>
+          This meant working across the boundaries between the user-facing application and the systems behind it: deciding how data needed to be exposed to the frontend, implementing the endpoints, building the CMS views that maintained it and then consuming that data back in the product.
+        </p>
+        <p>
+          The application and CMS were hosted using Azure web services.
+        </p>
+      </div>
+
+      <div class="app-flow">
+        <div class="app-flow-title">Simplified application flow</div>
+        <div class="app-flow-stack">
+          <div class="app-flow-stack-item">Custom CMS <span style="color: var(--text-muted); font-size: 12px;">&mdash; Vue.js + Node/Express</span></div>
+          <div class="app-flow-stack-item">MySQL Data Layer</div>
+          <div class="app-flow-stack-item">Custom REST API <span style="color: var(--text-muted); font-size: 12px;">&mdash; Node/Express</span></div>
+          <div class="app-flow-stack-item">Vue Application <span style="color: var(--text-muted); font-size: 12px;">&mdash; Vue.js + Vuex + Axios</span></div>
+          <div class="app-flow-stack-item">D3.js Data Visualisation</div>
+        </div>
+        <div class="app-flow-platform">Hosted on Azure Web Services</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 / CMS -->
+  <section class="section" id="cms">
+    <div class="container">
+      <div class="section-label">05 / CMS &amp; Administration</div>
+      <h2>Building the system behind the product</h2>
+      <div class="prose">
+        <p>
+          The catalogue needed to be maintainable by the people responsible for the products and services inside it, so I also built a custom CMS rather than treating administration as a separate project.
+        </p>
+        <p>
+          The CMS used Vue.js, Node.js, Express and MySQL and provided different levels of security and functionality for product owners across the different brand markets. Each view and component was built for the application, alongside the custom API endpoints consumed by the frontend.
+        </p>
+        <p>
+          Matomo was used for dashboard tracking, with generated reports pulled back into the CMS portal. The rest of the forms and management components were custom-built for the product.
+        </p>
+      </div>
+
+      <div class="screenshot">
+        <img src="../../assets/unilever-cms-dashboard.png" alt="Custom CMS dashboard for managing the I&A Product and Service Catalogue." loading="lazy">
+      </div>
+      <p class="screenshot-caption">CMS dashboard for managing the catalogue</p>
+
+      <div class="screenshot-gallery" style="margin-top: 48px;">
+        <div class="screenshot">
+          <img src="../../assets/unilever-cms-product-details.png" alt="CMS product details view showing editable fields for an individual catalogue entry." loading="lazy">
+        </div>
+        <div class="screenshot">
+          <img src="../../assets/unilever-cms-product-kpis.png" alt="CMS product KPI management view for editing performance metrics." loading="lazy">
+        </div>
+      </div>
+      <p class="screenshot-caption">Product details and KPI management within the CMS</p>
+    </div>
+  </section>
+
+  <!-- 06 / Documentation -->
+  <section class="section" id="documentation">
+    <div class="container">
+      <div class="section-label">06 / Documentation</div>
+      <h2>Documenting the system, not just shipping it</h2>
+      <div class="prose">
+        <p>
+          The project also included developer and user documentation for the application and API.
+        </p>
+        <p>
+          I documented the application overview, local/project setup, architecture and API endpoints so that the system could be understood and worked on beyond the initial build. For a product spanning a frontend application, backend, database, API and CMS, that documentation was part of making the work maintainable rather than an afterthought.
+        </p>
+      </div>
+
+      <div class="screenshot-gallery">
+        <div class="screenshot">
+          <img src="../../assets/unilever-docs-overview.png" alt="Developer documentation showing the application overview and architecture." loading="lazy">
+        </div>
+        <div class="screenshot">
+          <img src="../../assets/unilever-docs-endpoints.png" alt="API endpoint documentation listing available routes and descriptions." loading="lazy">
+        </div>
+      </div>
+      <p class="screenshot-caption">Application overview and API endpoint documentation</p>
+    </div>
+  </section>
+
+  <!-- 07 / Reflection -->
+  <section class="section" id="reflection">
+    <div class="container">
+      <div class="section-label">07 / Reflection</div>
+      <h2>An early example of the way I still like to work</h2>
+      <div class="prose">
+        <p>
+          This project predates most of the React, TypeScript and AI work on my current portfolio, but the underlying way of working is familiar.
+        </p>
+        <p>
+          It meant understanding the product, building the user-facing application, creating the services and API behind it, shaping the data flow, building the tools needed to operate it and documenting the system for the people who came after me.
+        </p>
+        <p>
+          The technology has moved on. The part I still value is being able to follow a product problem across those boundaries rather than treating frontend, backend and operations as completely separate concerns.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Metadata -->
+  <footer class="footer" id="metadata">
+    <div class="container">
+      <div class="evidence-block" style="max-width: 480px;">
+        <div class="evidence-title">Project</div>
+        <div class="evidence-row">
+          <span class="evidence-label">Client</span>
+          <span class="evidence-value">Unilever Information &amp; Analytics</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Role</span>
+          <span class="evidence-value">Full-Stack Developer</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Period</span>
+          <span class="evidence-value">2019&ndash;2020</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Product</span>
+          <span class="evidence-value">Internal Product &amp; Services Catalogue</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Frontend</span>
+          <span class="evidence-value">Vue.js, Vuex, D3.js, Axios</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Backend</span>
+          <span class="evidence-value">Node.js, Express, REST API</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Data</span>
+          <span class="evidence-value">MySQL</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-label">Platform</span>
+          <span class="evidence-value">Azure, Matomo</span>
+        </div>
+      </div>
+
+      <div class="footer-links" style="margin-top: 40px;">
+        <a href="/work/artemis/" class="btn-secondary">Next: Artemis case study &rarr;</a>
+        <a href="/" class="btn-secondary">&larr; Back to portfolio</a>
+      </div>
+
+      <p style="margin-top: 48px; font-size: 13px; color: var(--text-muted);">
+        Reuben Alexander Stone &middot; Product Engineer &middot; <script>document.write(new Date().getFullYear())</script>
+      </p>
+    </div>
+  </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Lightbox
+      document.querySelectorAll('.lightbox-trigger').forEach(function(trigger) {
+        function openLightbox() {
+          var src = trigger.getAttribute('data-lightbox');
+          var alt = trigger.getAttribute('data-alt') || '';
+          var overlay = document.createElement('div');
+          overlay.className = 'lightbox-overlay';
+          overlay.innerHTML = '<img src="' + src + '" alt="' + alt + '">';
+          overlay.addEventListener('click', function() { overlay.remove(); });
+          document.addEventListener('keydown', function handler(e) {
+            if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', handler); }
+          });
+          document.body.appendChild(overlay);
+        }
+        trigger.addEventListener('click', openLightbox);
+        trigger.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(); } });
+      });
+
+      // Clear mobile nav state on desktop resize
+      var mql = window.matchMedia('(min-width: 1101px)');
+      mql.addEventListener('change', function(e) {
+        if (e.matches) {
+          document.getElementById('mobile-nav').classList.remove('open');
+          document.body.classList.remove('nav-open');
+          var btn = document.querySelector('.mobile-toggle');
+          if (btn) { btn.textContent = 'Menu'; btn.setAttribute('aria-expanded', 'false'); }
+        }
+      });
+    });
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/assets/analytics.js"></script>
+</body>
+</html>
