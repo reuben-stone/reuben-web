@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Artemis — AI Reliability Interview Notes</title>
+<style>
+:root{--bg:#0d0d10;--panel:#151519;--panel2:#1b1b21;--text:#f1efe9;--muted:#aaa6b0;--line:#2b2931;--accent:#a78bfa;--accent2:#d7ccff;--good:#a7d7b5;--code:#111116}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+a{color:inherit}.shell{max-width:1180px;margin:auto;padding:42px 28px 90px}.eyebrow{font:600 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(44px,7vw,82px);line-height:.98;letter-spacing:-.045em;max-width:950px;margin:18px 0 24px}.lede{font-size:20px;color:#cbc7cf;max-width:800px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 46px}.pill{border:1px solid var(--line);background:var(--panel);padding:7px 11px;border-radius:999px;font-size:13px;color:#d5d1da}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:46px}.nav{position:sticky;top:24px;align-self:start;border-top:1px solid var(--line);padding-top:16px}.nav a{display:block;text-decoration:none;color:var(--muted);padding:7px 0;font-size:14px}.nav a:hover{color:var(--text)}
+section{padding:0 0 56px;margin:0 0 54px;border-bottom:1px solid var(--line)}h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:38px;letter-spacing:-.025em;margin:0 0 16px}h3{font-size:18px;margin:28px 0 8px}.num{font:500 13px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);display:block;margin-bottom:9px}p{max-width:820px;color:#d2ced6}.callout{border-left:2px solid var(--accent);padding:14px 20px;margin:24px 0;background:linear-gradient(90deg,rgba(167,139,250,.09),transparent);font-family:Georgia,"Times New Roman",serif;font-size:21px;max-width:850px}.principle{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:22px 0;max-width:880px}.principle strong{color:var(--accent2)}
+ul{padding-left:22px;max-width:820px;color:#d2ced6}li{margin:6px 0}pre{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:20px;overflow:auto;color:#e4dfff;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;max-width:880px}.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px;max-width:900px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}.card h3{margin:0 0 8px;color:var(--accent2)}.card p{margin:0;color:var(--muted);font-size:15px}.big{font-family:Georgia,"Times New Roman",serif;font-size:29px;line-height:1.3;color:var(--text);max-width:900px}.footer{color:var(--muted);font-size:13px;padding-top:12px}.mark{color:var(--good)}
+@media(max-width:800px){.shell{padding:28px 20px 60px}.grid{grid-template-columns:1fr}.nav{position:relative;top:0}.compare{grid-template-columns:1fr}h1{font-size:50px}}
+@media print{body{background:#fff;color:#111}.nav{display:none}.grid{display:block}.shell{max-width:none}.card,.principle,pre{background:#f6f6f6;border-color:#ddd}p,li,.lede,.card p{color:#333}section{border-color:#ddd}}
+</style>
+</head>
+<body>
+<main class="shell">
+<div class="eyebrow">AI reliability training · Artemis</div>
+<h1>Engineering dependable AI systems</h1>
+<p class="lede">A practical interview refresher on prompts, rules, tests, evals, guardrails and closing the loop on mistakes — grounded in the engineering decisions behind Artemis.</p>
+<div class="meta"><span class="pill">AI-assisted engineering</span><span class="pill">Deterministic shell / probabilistic core</span><span class="pill">Reliability patterns</span></div>
+
+<div class="grid">
+<nav class="nav">
+<a href="#model">Mental model</a><a href="#prompts">01 · Prompts</a><a href="#rules">02 · Rules</a><a href="#tests">03 · Tests</a><a href="#evals">04 · Evals</a><a href="#guardrails">05 · Guardrails</a><a href="#loop">06 · Closing the loop</a><a href="#distinction">Interview distinction</a><a href="#next">Next study area</a><a href="#flashcards">Flashcards</a>
+</nav>
+<div>
+<section id="model"><span class="num">MENTAL MODEL</span><h2>The reliability stack</h2><pre>Prompt → Rules → Tests → Evals → Guardrails → Feedback loop</pre><p>These mechanisms overlap, but they solve different reliability problems. The interview goal is not simply to define them. It is to explain how they show up in a real system you have built.</p><div class="principle"><strong>Core Artemis principle:</strong> deterministic shell, probabilistic core. Use models where ambiguity and reasoning are valuable. Use ordinary software for state, approvals, deduplication, recovery, consequential boundaries and verification evidence.</div></section>
+
+<section id="prompts"><span class="num">01</span><h2>Prompts</h2><p>A prompt gives the model its task, context and constraints. In an agentic system, the deeper engineering question is not just how the instruction is worded, but <strong>what evidence and state should enter the context at this step?</strong></p><p>Artemis moved away from the implicit pattern of “here is everything we know; figure it out” toward bounded, structured context: workflow objective, repository evidence, previous tool results, current state, available tools and constraints.</p><h3>Concrete Artemis connection</h3><ul><li><strong>ContextPacket</strong> makes context selection explicit.</li><li>A token budget makes context a finite engineering resource.</li><li>Repository and tool evidence are selected for the current task rather than blindly accumulated.</li></ul><div class="callout">“I've become less interested in endlessly tweaking prompt wording and more interested in controlling what evidence and state the model actually receives. In Artemis, context selection is part of the architecture.”</div></section>
+
+<section id="rules"><span class="num">02</span><h2>Rules</h2><p>Prompts describe what we want the model to do. Rules define what the surrounding application will actually permit.</p><ul><li>Explicit workflow states and allowed transitions</li><li>Defined tool boundaries</li><li>Bounded retries</li><li>Idempotent consequential operations</li><li>Approval boundaries where required</li><li>Investigation and verification as distinct stages</li><li>A coding agent cannot make its own claim of success become system truth</li></ul><div class="compare"><div class="card"><h3>Prompt</h3><p>“Please don't perform X unless these conditions are met.”</p></div><div class="card"><h3>Rule in code</h3><p>“The system cannot perform X from this state.”</p></div></div><div class="callout">If something must be dependable, prefer enforcing it in software over asking the model to remember it.</div></section>
+
+<section id="tests"><span class="num">03</span><h2>Tests</h2><p>Tests cover deterministic software behaviour. Artemis contains plenty of AI, but that does not mean every reliability question is an AI-evaluation problem.</p><pre>RUNNING → WAITING_FOR_APPROVAL → EXECUTING → VERIFYING</pre><p>You can test whether invalid state transitions are rejected without asking a model. The same applies to persistence, context selection, retry behaviour and idempotency.</p><pre>workflowId:stepId:toolName</pre><p>That idempotency key can be tested to ensure a retry does not accidentally execute the same consequential tool twice.</p><div class="callout">“Don't use an AI eval to test something ordinary software testing can establish deterministically.”</div></section>
+
+<section id="evals"><span class="num">04</span><h2>Evals</h2><p>Evals ask whether probabilistic AI behaviour is actually performing the behaviour we care about. A useful basic shape is:</p><pre>Representative dataset → System run → Scoring criteria → Result → Regression comparison</pre><p>For a set of real or representative Artemis production issues, useful evaluation questions might include:</p><ul><li>Did it identify the relevant repository?</li><li>Did it gather useful evidence?</li><li>Did it choose an appropriate next action?</li><li>Did it correctly decide whether to delegate?</li><li>Did it avoid claiming success without evidence?</li><li>Did it produce a useful investigation summary?</li></ul><p>Real dogfooding failures are valuable because they can become regression cases. A production investigation that exposes the limits of your system's investigation loop is not merely a bug story; it is the seed of an eval case.</p><div class="principle"><strong>Important:</strong> unlike many unit tests, an eval may not have one exact expected string. It needs an explicit definition of what “good” means and a repeatable way to measure it.</div></section>
+
+<section id="guardrails"><span class="num">05</span><h2>Guardrails</h2><p>Guardrails control the consequences of model failure. The strongest ones live outside the model rather than relying on a prompt saying “be careful.”</p><pre>Model proposes action
+        ↓
+Application checks state / policy
+        ↓
+Tool executes
+        ↓
+Result is recorded
+        ↓
+Independent verification
+        ↓
+Workflow advances</pre><p>Artemis examples include bounded retries, idempotency, approval gates, restricted tool boundaries, draft PRs as a human-review boundary and independent verification before a workflow can advance.</p><div class="callout">“Guardrails should limit the consequences of model failure, not merely reduce the probability that the model makes a mistake.”</div></section>
+
+<section id="loop"><span class="num">06</span><h2>Closing the loop on mistakes</h2><p>A weak AI-development loop fixes individual failures. A stronger system turns failures into durable evidence and prevents regression.</p><pre>Production failure
+       ↓
+Capture the case
+       ↓
+Understand the failure mode
+       ↓
+Add it to the evaluation dataset
+       ↓
+Change prompt / context / rule / tool / architecture
+       ↓
+Run eval suite
+       ↓
+Measure improvement
+       ↓
+Prevent regression</pre><p>Artemis already gives you a strong example. When its investigation of a real production issue struggled, the answer was not simply a larger prompt. The realisation was that the system was gradually rebuilding a coding agent, and the correct response was to change the architectural boundary.</p><p>Artemis now owns the durable workflow, context, delegation and independent verification. A specialist coding agent can own repository-level investigation and execution, then disappear. The surrounding system cannot.</p><div class="callout">Closing the loop can produce a prompt change, but sometimes the correct result is a rule, a new eval, a tool boundary or an architectural change.</div></section>
+
+<section id="distinction"><span class="num">INTERVIEW SHORTCUT</span><h2>Tests vs evals vs guardrails</h2><div class="compare"><div class="card"><h3>Tests</h3><p><span class="mark">Did the software behave correctly?</span><br>Deterministic application behaviour.</p></div><div class="card"><h3>Evals</h3><p><span class="mark">Did the AI behaviour perform well enough?</span><br>Probabilistic behaviour against representative cases.</p></div><div class="card"><h3>Guardrails</h3><p><span class="mark">What happens when the AI is wrong?</span><br>Bound authority and consequences.</p></div><div class="card"><h3>Feedback loop</h3><p><span class="mark">How does a failure improve the system?</span><br>Capture, evaluate, change and prevent regression.</p></div></div><p class="big">The model can reason. The application still owns truth, state, authority and evidence.</p></section>
+
+<section id="next"><span class="num">NEXT</span><h2>Evals in depth</h2><p>The next useful study block is the least traditional part of this stack: designing a proper eval framework. Areas to cover include representative datasets, offline vs online evaluation, deterministic graders, model-as-judge, scoring rubrics, regression suites, tracing and how those ideas map specifically onto Artemis.</p><p>Use the flashcards below to practise answering these concepts conversationally rather than as definitions.</p></section>
+<section id="flashcards"><span class="num">TRAINING GROUND</span><h2>Flashcards</h2><p>Click a card to reveal the answer. Use the controls to shuffle or filter by category.</p>
+
+<div class="fc-controls">
+<button class="fc-btn active" data-filter="all">All</button>
+<button class="fc-btn" data-filter="concept">Concepts</button>
+<button class="fc-btn" data-filter="artemis">Artemis</button>
+<button class="fc-btn" data-filter="scenario">Scenarios</button>
+<button class="fc-btn" data-filter="curveball">Curveballs</button>
+<button class="fc-btn fc-shuffle">Shuffle</button>
+</div>
+
+<div class="fc-grid" id="fc-grid"></div>
+
+<div class="fc-score">
+<span id="fc-progress">0 / 0 revealed</span>
+<button class="fc-btn fc-reset">Reset all</button>
+</div>
+</section>
+
+<div class="footer">Artemis AI reliability training ground · September 2026</div>
+</div></div>
+</main>
+
+<style>
+/* ── Flashcard styles ──────────────────────────────── */
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 24px}
+.fc-btn{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:999px;font:500 13px/1 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer;transition:all .2s}
+.fc-btn:hover,.fc-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fc-shuffle,.fc-reset{background:transparent;border-color:var(--accent);color:var(--accent)}
+.fc-shuffle:hover,.fc-reset:hover{background:var(--accent);color:#fff}
+
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:24px}
+
+.fc-card{perspective:800px;min-height:220px;cursor:pointer}
+.fc-card-inner{position:relative;width:100%;height:100%;min-height:220px;transition:transform .5s;transform-style:preserve-3d}
+.fc-card.flipped .fc-card-inner{transform:rotateY(180deg)}
+
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:center}
+.fc-front{background:var(--panel)}
+.fc-back{background:var(--panel2);transform:rotateY(180deg)}
+
+.fc-tag{font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.fc-question{font-family:Georgia,"Times New Roman",serif;font-size:18px;line-height:1.4;color:var(--text)}
+.fc-answer{font-size:15px;line-height:1.6;color:#d2ced6}
+.fc-answer strong{color:var(--accent2)}
+
+.fc-card.flipped .fc-front{pointer-events:none}
+.fc-card:not(.flipped) .fc-back{pointer-events:none}
+
+.fc-score{display:flex;align-items:center;gap:16px;color:var(--muted);font-size:14px;margin-bottom:20px}
+
+.fc-card.hidden{display:none}
+
+@media(max-width:800px){.fc-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function(){
+const cards = [
+  // ── Concepts ──
+  {cat:"concept",q:"What is the difference between a test and an eval?",a:"A <strong>test</strong> covers deterministic software behaviour (state transitions, persistence, idempotency). An <strong>eval</strong> measures whether probabilistic AI behaviour performs well enough against representative cases. Don't use an eval when a unit test will do."},
+  {cat:"concept",q:"What does 'deterministic shell, probabilistic core' mean?",a:"Use models where ambiguity and reasoning add value. Use ordinary software for everything that must be dependable: <strong>state, approvals, deduplication, recovery, consequential boundaries and verification evidence</strong>."},
+  {cat:"concept",q:"Why do guardrails live outside the model?",a:"Guardrails should <strong>limit the consequences</strong> of model failure, not merely reduce the probability of a mistake. A prompt saying 'be careful' is not a guardrail. A state machine that prevents an invalid transition is."},
+  {cat:"concept",q:"What is the difference between a prompt and a rule?",a:"A prompt describes what you <strong>want</strong> the model to do. A rule defines what the surrounding application will actually <strong>permit</strong>. If something must be dependable, enforce it in software rather than asking the model to remember it."},
+  {cat:"concept",q:"What makes a good eval scoring criterion?",a:"Unlike unit tests, evals rarely have one exact expected string. You need an <strong>explicit definition of what 'good' means</strong> and a repeatable way to measure it - whether that's a deterministic grader, a rubric, or a model-as-judge approach."},
+  {cat:"concept",q:"What is the feedback loop in AI reliability?",a:"Capture a production failure → understand the failure mode → add it to the evaluation dataset → change prompt/context/rule/tool/architecture → run the eval suite → measure improvement → <strong>prevent regression</strong>. The output isn't always a prompt tweak."},
+  {cat:"concept",q:"When should you use a deterministic grader vs model-as-judge?",a:"Use <strong>deterministic graders</strong> when correctness can be checked programmatically (e.g. did it pick the right repo, did the output match a pattern). Use <strong>model-as-judge</strong> when quality is subjective or the output space is too large to enumerate."},
+  {cat:"concept",q:"What is the difference between offline and online evaluation?",a:"<strong>Offline evals</strong> run against a fixed dataset before deployment - regression checks, scoring rubrics, representative cases. <strong>Online evals</strong> measure live system performance - monitoring real outputs, flagging anomalies, capturing failures for the feedback loop."},
+
+  // ── Artemis-specific ──
+  {cat:"artemis",q:"What is a ContextPacket and why does it matter?",a:"A ContextPacket makes <strong>context selection explicit</strong>. Instead of dumping everything into the prompt, the system selects the workflow objective, repository evidence, previous tool results, current state and constraints - treating the token budget as a finite engineering resource."},
+  {cat:"artemis",q:"How does Artemis prevent a tool from executing twice on retry?",a:"Each consequential tool call gets an <strong>idempotency key</strong> in the format <code>workflowId:stepId:toolName</code>. On retry, the system checks whether that key has already been executed. This is testable with ordinary software tests, not evals."},
+  {cat:"artemis",q:"How does Artemis handle the boundary between investigation and execution?",a:"Investigation and execution are <strong>distinct workflow stages</strong> with explicit state transitions. The system cannot jump from investigating to executing without passing through the required states and approval gates."},
+  {cat:"artemis",q:"Why did Artemis move away from 'give the model everything'?",a:"The early pattern of 'here is everything we know, figure it out' was replaced with <strong>bounded, structured context</strong>. Context selection became part of the architecture: choosing what evidence enters the model at each step rather than blindly accumulating it."},
+  {cat:"artemis",q:"How does Artemis prevent a coding agent from claiming its own success?",a:"A coding agent cannot make its own claim of success become system truth. Artemis uses <strong>independent verification</strong> as a separate workflow stage - the surrounding system verifies the outcome before the workflow advances."},
+  {cat:"artemis",q:"What are Artemis's approval gates?",a:"Approval gates are <strong>explicit boundaries</strong> where the workflow pauses and waits for human review before proceeding. The state machine enforces this: <code>RUNNING → WAITING_FOR_APPROVAL → EXECUTING → VERIFYING</code>. The system cannot skip the approval state."},
+  {cat:"artemis",q:"How did a real production failure change Artemis's architecture?",a:"When a production investigation struggled, the answer wasn't a bigger prompt. The team realised they were gradually rebuilding a coding agent. The fix was <strong>architectural</strong>: Artemis owns the durable workflow, context and verification. A specialist coding agent handles repository work and then disappears."},
+  {cat:"artemis",q:"What does Artemis use draft PRs for?",a:"Draft PRs serve as a <strong>human-review boundary</strong> - a guardrail that ensures a human sees and approves proposed code changes before they're merged. It's a consequence-limiting mechanism, not a prompt instruction."},
+
+  // ── Scenarios ──
+  {cat:"scenario",q:"The model confidently claims a fix worked, but verification fails. What happens next?",a:"The workflow cannot advance because <strong>independent verification</strong> is a required stage. The model's self-assessment doesn't count. The system records the failure, may retry within bounded limits, and the failure becomes a candidate for the eval dataset."},
+  {cat:"scenario",q:"You notice the same investigation failure recurring across different issues. How do you respond?",a:"Capture the pattern → add representative cases to the eval dataset → determine whether the fix is a <strong>prompt change, a rule, a tool boundary, or an architectural change</strong> → run the eval suite → confirm improvement → prevent regression. Don't just patch the prompt."},
+  {cat:"scenario",q:"Your AI system's context window keeps growing as you add more information. What's the risk?",a:"Unbounded context means the model receives <strong>noise alongside signal</strong>. Performance degrades as the model has to reason through irrelevant information. The fix is treating context as a finite resource with explicit selection, not an infinite dumping ground."},
+  {cat:"scenario",q:"A retry inadvertently applies a database migration twice. How would you prevent this?",a:"Use <strong>idempotency keys</strong> for all consequential operations. Each tool execution is keyed to its workflow step, so a retry checks whether the operation already completed. This is enforced in code, not by asking the model to remember."},
+  {cat:"scenario",q:"Your eval suite passes, but users report the system is behaving worse. What's likely happening?",a:"The eval dataset probably <strong>doesn't represent real usage</strong>. You need to capture the new failure cases, add them to the dataset, and ensure your scoring criteria match what users actually care about. Offline evals must stay aligned with online reality."},
+
+  // ── Curveballs ──
+  {cat:"curveball",q:"Why not just use a bigger context window instead of selective context?",a:"A bigger window doesn't solve the <strong>signal-to-noise problem</strong>. Models perform better with focused, relevant context than with everything available. Selective context is an architectural decision about what the model needs to know at each step, not a token limitation workaround."},
+  {cat:"curveball",q:"When would you choose a prompt change over an architectural change?",a:"Prompt changes suit problems where the model has the right information but <strong>misinterprets intent or emphasis</strong>. Architectural changes suit problems where the model structurally <strong>cannot succeed</strong> - wrong information, missing boundaries, or tasks it shouldn't own at all."},
+  {cat:"curveball",q:"If guardrails make things slower, how do you justify them?",a:"The cost of a guardrail is a small amount of latency. The cost of an unguarded failure is <strong>a wrong action in production</strong> with real consequences. Speed without reliability is not a feature. Frame it as: guardrails make the system fast enough to trust, not just fast."},
+  {cat:"curveball",q:"Isn't 'deterministic shell, probabilistic core' just not trusting AI?",a:"It's about <strong>appropriate trust</strong>. Models are excellent at reasoning under ambiguity. They're unreliable at maintaining state, enforcing invariants, and verifying their own outputs. Using each tool where it's strongest is good engineering, not distrust."},
+  {cat:"curveball",q:"How do you know when your AI system is 'reliable enough'?",a:"When your eval suite covers representative production cases, your guardrails bound the consequences of failure, and your feedback loop <strong>consistently turns new failures into prevented regressions</strong>. Reliability isn't a threshold - it's a rate of improvement."},
+  {cat:"curveball",q:"What's the risk of over-engineering guardrails?",a:"Too many approval gates and checks can make the system <strong>so slow it's not useful</strong>, or so rigid it can't handle legitimate edge cases. The goal is bounding consequences of failure at meaningful boundaries, not adding friction at every step."}
+];
+
+const grid = document.getElementById('fc-grid');
+const progress = document.getElementById('fc-progress');
+let order = cards.map((_,i)=>i);
+let filter = 'all';
+
+function render(){
+  grid.innerHTML='';
+  let visible=0, revealed=0;
+  order.forEach(i=>{
+    const c=cards[i];
+    if(filter!=='all'&&c.cat!==filter) return;
+    visible++;
+    const el=document.createElement('div');
+    el.className='fc-card';
+    el.dataset.idx=i;
+    el.innerHTML=`<div class="fc-card-inner"><div class="fc-face fc-front"><span class="fc-tag">${c.cat}</span><div class="fc-question">${c.q}</div></div><div class="fc-face fc-back"><span class="fc-tag">Answer</span><div class="fc-answer">${c.a}</div></div></div>`;
+    el.addEventListener('click',()=>{el.classList.toggle('flipped');updateProgress()});
+    grid.appendChild(el);
+  });
+  updateProgress();
+}
+
+function updateProgress(){
+  const all=grid.querySelectorAll('.fc-card');
+  const flipped=grid.querySelectorAll('.fc-card.flipped');
+  progress.textContent=`${flipped.length} / ${all.length} revealed`;
+}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+
+document.querySelectorAll('.fc-btn[data-filter]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fc-btn[data-filter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    filter=btn.dataset.filter;
+    render();
+  });
+});
+
+document.querySelector('.fc-shuffle').addEventListener('click',()=>{shuffle(order);render()});
+document.querySelector('.fc-reset').addEventListener('click',()=>{render()});
+
+render();
+})();
+</script>
+</body></html>
