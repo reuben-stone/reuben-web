@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Evals in Depth — AI Engineering Training</title>
+<style>
+:root{--bg:#0d0d10;--panel:#151519;--panel2:#1b1b21;--text:#f1efe9;--muted:#aaa6b0;--line:#2b2931;--accent:#a78bfa;--accent2:#d7ccff;--good:#a7d7b5;--code:#111116}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+a{color:inherit}.shell{max-width:1180px;margin:auto;padding:42px 28px 90px}.eyebrow{font:600 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(44px,7vw,82px);line-height:.98;letter-spacing:-.045em;max-width:950px;margin:18px 0 24px}.lede{font-size:20px;color:#cbc7cf;max-width:800px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 46px}.pill{border:1px solid var(--line);background:var(--panel);padding:7px 11px;border-radius:999px;font-size:13px;color:#d5d1da}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:46px}.nav{position:sticky;top:24px;align-self:start;border-top:1px solid var(--line);padding-top:16px}.nav a{display:block;text-decoration:none;color:var(--muted);padding:7px 0;font-size:14px}.nav a:hover{color:var(--text)}
+section{padding:0 0 56px;margin:0 0 54px;border-bottom:1px solid var(--line)}h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:38px;letter-spacing:-.025em;margin:0 0 16px}h3{font-size:18px;margin:28px 0 8px}.num{font:500 13px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);display:block;margin-bottom:9px}p{max-width:820px;color:#d2ced6}.callout{border-left:2px solid var(--accent);padding:14px 20px;margin:24px 0;background:linear-gradient(90deg,rgba(167,139,250,.09),transparent);font-family:Georgia,"Times New Roman",serif;font-size:21px;max-width:850px}.principle{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:22px 0;max-width:880px}.principle strong{color:var(--accent2)}
+ul{padding-left:22px;max-width:820px;color:#d2ced6}li{margin:6px 0}pre{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:20px;overflow:auto;color:#e4dfff;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;max-width:880px}.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px;max-width:900px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}.card h3{margin:0 0 8px;color:var(--accent2)}.card p{margin:0;color:var(--muted);font-size:15px}.big{font-family:Georgia,"Times New Roman",serif;font-size:29px;line-height:1.3;color:var(--text);max-width:900px}.footer{color:var(--muted);font-size:13px;padding-top:12px}.mark{color:var(--good)}
+@media(max-width:800px){.shell{padding:28px 20px 60px}.grid{grid-template-columns:1fr}.nav{position:relative;top:0}.compare{grid-template-columns:1fr}h1{font-size:50px}}
+@media print{body{background:#fff;color:#111}.nav{display:none}.grid{display:block}.shell{max-width:none}.card,.principle,pre{background:#f6f6f6;border-color:#ddd}p,li,.lede,.card p{color:#333}section{border-color:#ddd}}
+</style>
+</head>
+<body>
+<main class="shell">
+<div class="eyebrow"><a href="/training/" style="text-decoration:none;color:var(--muted)">&larr; All modules</a> &nbsp;&middot;&nbsp; AI Engineering Training &middot; Module 02</div>
+<h1>Evals in depth</h1>
+<p class="lede">Designing evaluation frameworks that measure what matters - representative datasets, scoring criteria, regression suites and knowing when to use a deterministic grader vs model-as-judge.</p>
+<div class="meta"><span class="pill">Evaluation design</span><span class="pill">Scoring criteria</span><span class="pill">Regression prevention</span></div>
+
+<div class="grid">
+<nav class="nav">
+<a href="#measure">01 · What evals actually measure</a><a href="#datasets">02 · Representative datasets</a><a href="#scoring">03 · Scoring approaches</a><a href="#offline-online">04 · Offline vs online evaluation</a><a href="#regression">05 · Regression prevention</a><a href="#distinction">06 · Interview distinction</a><a href="#flashcards">Flashcards</a>
+</nav>
+<div>
+<section id="measure"><span class="num">01</span><h2>What evals actually measure</h2><p>Evals measure whether probabilistic AI behaviour performs well enough, not whether it is "correct." A unit test has a right answer. An eval needs an explicit definition of what "good" means for this specific behaviour, and a repeatable way to measure it.</p><p>The key question is always: <strong>what does "good" mean for this specific behaviour?</strong> That question is harder than it sounds, because "good" changes depending on the task, the stakes, and the user.</p><h3>Artemis connection</h3><ul><li>Did the system identify the right repository?</li><li>Did it gather useful evidence?</li><li>Did it choose an appropriate next action?</li><li>Did it avoid false success claims?</li></ul><div class="callout">Before you can evaluate anything, you have to decide what "good" means clearly enough that you can measure it.</div></section>
+
+<section id="datasets"><span class="num">02</span><h2>Representative datasets</h2><p>An eval dataset must cover the distribution of real usage, not just happy paths. If your dataset only contains cases the system handles well, your eval suite is measuring self-congratulation, not quality.</p><p>Sources for good eval cases: production logs, dogfooding failures, edge cases, and deliberately adversarial examples. The best cases are real failures that exposed genuine system limitations.</p><p>Small, curated datasets beat large noisy ones for focused evaluation. You want each case to test something specific, not a thousand cases that all test the same behaviour.</p><h3>Artemis connection</h3><p>Real production failures - like investigation loops that struggled to converge on a diagnosis - become regression cases. A production issue that exposed the limits of the system's reasoning is not just a bug story. It is the seed of an eval case.</p><div class="principle"><strong>Dataset principle:</strong> quality and coverage matter more than volume. Start with 20-50 focused cases that cover the important behavioural modes. Grow by adding production failures, not by generating synthetic data.</div></section>
+
+<section id="scoring"><span class="num">03</span><h2>Scoring approaches</h2><h3>Deterministic graders</h3><p>Pattern matching, field extraction, boolean checks. Use when correctness is programmatically verifiable. Did it pick repository X? Does the output contain field Y? Is the format valid JSON?</p><h3>Model-as-judge</h3><p>Use when output quality is subjective or the output space is too large to enumerate. A model evaluates the output against criteria you define. Requires its own calibration - the judge model has biases too.</p><h3>Rubric-based scoring</h3><p>Define dimensions (relevance, completeness, safety) with explicit levels for each. More structured than binary pass/fail, more reproducible than vibes. Calibrate by measuring agreement between the rubric and human judgement.</p><h3>Human evaluation</h3><p>The gold standard but expensive. Use for calibrating automated approaches, for high-stakes decisions, and when you suspect your automated scoring has drifted from real quality standards.</p><h3>Artemis connection</h3><p>"Did it pick the right repository" is deterministic - a grader can check that. "Did it produce a useful investigation summary" needs a rubric or model-as-judge, because usefulness is not a boolean.</p><div class="callout">Match your scoring approach to the nature of the output. Deterministic checks for verifiable facts. Rubrics or model-as-judge for qualitative judgement.</div></section>
+
+<section id="offline-online"><span class="num">04</span><h2>Offline vs online evaluation</h2><div class="compare"><div class="card"><h3>Offline</h3><p><span class="mark">Fixed dataset, pre-deployment</span><br>Regression checking, repeatable scoring, controlled comparison across prompt iterations.</p></div><div class="card"><h3>Online</h3><p><span class="mark">Live system, post-deployment</span><br>Production output sampling, user feedback signals, distribution shift detection.</p></div></div><p>Both are necessary. Offline evals catch regressions before they reach users. Online monitoring catches when real production usage drifts from the eval dataset - which it always eventually does.</p><h3>Artemis connection</h3><p>Offline evals catch prompt and context regressions before deploy. Online monitoring catches when real production issues drift from the eval dataset - new issue types, new repositories, new failure modes that the offline suite hasn't seen yet.</p><div class="principle"><strong>Key insight:</strong> if your offline evals pass but users report degraded quality, your eval dataset probably doesn't represent current usage. Online monitoring is how you detect that gap.</div></section>
+
+<section id="regression"><span class="num">05</span><h2>Regression prevention</h2><p>Every production failure should become an eval case. An eval suite that only grows is fine - the cost is compute time, not engineering time. The alternative is fixing the same class of failure twice.</p><p>Version your eval datasets alongside your prompts. A prompt change can improve one behaviour while regressing another. Without versioned datasets you cannot reproduce or compare results across prompt iterations.</p><pre>Production failure
+       &darr;
+Capture input state + system behaviour
+       &darr;
+Define correct behaviour
+       &darr;
+Add to regression suite
+       &darr;
+Run after every prompt / context change
+       &darr;
+Prevent recurrence</pre><h3>Artemis connection</h3><p>Closing the feedback loop means failures become durable regression tests, not just one-off fixes. When an investigation loop struggles, the captured case prevents future prompt or context changes from reintroducing that failure mode.</p><div class="callout">The goal is not a perfect eval suite. The goal is a suite where production failures stop being novel and start being regressions you already catch.</div></section>
+
+<section id="distinction"><span class="num">INTERVIEW DISTINCTION</span><h2>Choosing the right evaluation approach</h2><div class="compare"><div class="card"><h3>Deterministic grader</h3><p><span class="mark">Can a program check this?</span><br>Use for field extraction, format checks, factual lookups.</p></div><div class="card"><h3>Model-as-judge</h3><p><span class="mark">Is this qualitatively good?</span><br>Use for summaries, reasoning quality, open-ended outputs.</p></div><div class="card"><h3>Rubric scoring</h3><p><span class="mark">What dimensions matter?</span><br>Define explicit levels per dimension, calibrate with human agreement.</p></div><div class="card"><h3>Regression suite</h3><p><span class="mark">Did we break what worked?</span><br>Run on every change, grow from production failures.</p></div></div><div class="callout">The hardest part of evals is not building the framework. It is defining what "good" means clearly enough that you can measure it.</div></section>
+
+<section id="flashcards"><span class="num">TRAINING GROUND</span><h2>Flashcards</h2><p>Click a card to reveal the answer. Use the controls to shuffle or filter by category.</p>
+
+<div class="fc-controls">
+<button class="fc-btn active" data-filter="all">All</button>
+<button class="fc-btn" data-filter="concept">Concepts</button>
+<button class="fc-btn" data-filter="dataset">Datasets</button>
+<button class="fc-btn" data-filter="scoring">Scoring</button>
+<button class="fc-btn" data-filter="artemis">Artemis</button>
+<button class="fc-btn fc-shuffle">Shuffle</button>
+</div>
+
+<div class="fc-grid" id="fc-grid"></div>
+
+<div class="fc-score">
+<span id="fc-progress">0 / 0 revealed</span>
+<button class="fc-btn fc-reset">Reset all</button>
+</div>
+</section>
+
+<div class="footer">AI Engineering Training Ground &middot; Module 02 &middot; September 2026</div>
+</div></div>
+</main>
+
+<style>
+/* ── Flashcard styles ──────────────────────────────── */
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 24px}
+.fc-btn{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:999px;font:500 13px/1 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer;transition:all .2s}
+.fc-btn:hover,.fc-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fc-shuffle,.fc-reset{background:transparent;border-color:var(--accent);color:var(--accent)}
+.fc-shuffle:hover,.fc-reset:hover{background:var(--accent);color:#fff}
+
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:24px}
+
+.fc-card{perspective:800px;min-height:220px;cursor:pointer}
+.fc-card-inner{position:relative;width:100%;height:100%;min-height:220px;transition:transform .5s;transform-style:preserve-3d}
+.fc-card.flipped .fc-card-inner{transform:rotateY(180deg)}
+
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:center}
+.fc-front{background:var(--panel)}
+.fc-back{background:var(--panel2);transform:rotateY(180deg)}
+
+.fc-tag{font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.fc-question{font-family:Georgia,"Times New Roman",serif;font-size:18px;line-height:1.4;color:var(--text)}
+.fc-answer{font-size:15px;line-height:1.6;color:#d2ced6}
+.fc-answer strong{color:var(--accent2)}
+
+.fc-card.flipped .fc-front{pointer-events:none}
+.fc-card:not(.flipped) .fc-back{pointer-events:none}
+
+.fc-score{display:flex;align-items:center;gap:16px;color:var(--muted);font-size:14px;margin-bottom:20px}
+
+.fc-card.hidden{display:none}
+
+@media(max-width:800px){.fc-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function(){
+const cards = [
+  // ── Concepts ──
+  {cat:"concept",q:"What is the difference between a test and an eval?",a:"Tests check deterministic software behaviour. Evals measure whether probabilistic AI behaviour performs <strong>well enough</strong>. The key distinction: evals need an explicit definition of 'good', not just pass/fail."},
+  {cat:"concept",q:"When should you use a deterministic grader vs model-as-judge?",a:"<strong>Deterministic graders</strong> when correctness is programmatically verifiable (did it pick repo X, does the output contain field Y). <strong>Model-as-judge</strong> when quality is subjective or the output space is too large to enumerate."},
+  {cat:"concept",q:"What makes a representative eval dataset?",a:"It covers the distribution of real usage, not just happy paths. Includes production failures, edge cases, and adversarial examples. <strong>Small and curated beats large and noisy</strong> for focused evaluation."},
+  {cat:"concept",q:"What is the difference between offline and online evaluation?",a:"<strong>Offline</strong> runs against a fixed dataset pre-deployment for regression checking. <strong>Online</strong> monitors live production outputs and catches distribution shift. You need both."},
+  {cat:"concept",q:"Why version eval datasets alongside prompts?",a:"A prompt change can improve one behaviour while regressing another. Without versioned datasets you <strong>can't reproduce or compare results</strong> across prompt iterations."},
+  {cat:"concept",q:"What is rubric-based scoring?",a:"Define explicit quality dimensions (relevance, completeness, safety) with clear levels for each. Calibrate by measuring agreement between the rubric and human judgement. <strong>More structured than binary pass/fail</strong>, more reproducible than vibes."},
+
+  // ── Datasets ──
+  {cat:"dataset",q:"Where do good eval cases come from?",a:"Production failures, dogfooding sessions, edge cases from logs, and deliberately adversarial examples. The best cases are <strong>real failures that exposed genuine system limitations</strong>."},
+  {cat:"dataset",q:"How do you handle eval dataset drift?",a:"Periodically compare your offline dataset against sampled production inputs. If the distribution has shifted, your evals are <strong>testing yesterday's problems</strong>. Add new representative cases and retire ones that no longer reflect real usage."},
+  {cat:"dataset",q:"Your eval suite passes but users report degraded quality. What's wrong?",a:"The eval dataset probably <strong>doesn't represent current usage</strong>. Capture the new failure patterns, add them to the dataset, and check whether your scoring criteria match what users actually care about."},
+  {cat:"dataset",q:"How large should an eval dataset be?",a:"Large enough to cover the important behavioural modes, small enough to <strong>run on every change</strong>. Start with 20-50 focused cases. Grow by adding production failures. Quality and coverage matter more than volume."},
+
+  // ── Scoring ──
+  {cat:"scoring",q:"How do you calibrate a model-as-judge?",a:"Run it against cases where you have human scores. Measure agreement. Adjust the judging prompt until agreement is high. <strong>Re-calibrate periodically</strong> as the judge model or your quality standards change."},
+  {cat:"scoring",q:"What are the risks of using model-as-judge?",a:"The judge model has its own biases - it may prefer verbose outputs, penalise hedging, or miss domain-specific errors. It needs <strong>calibration against human judgement</strong> and periodic re-validation."},
+  {cat:"scoring",q:"How do you define scoring dimensions for a rubric?",a:"Start from what users actually complain about or praise. Each dimension should be <strong>independently measurable</strong> with clear level definitions. Avoid overlapping dimensions that score the same underlying quality twice."},
+  {cat:"scoring",q:"When is human evaluation worth the cost?",a:"For <strong>calibrating automated approaches</strong>, for high-stakes decisions where getting it wrong has real consequences, and when you suspect your automated scoring has drifted from real quality standards."},
+  {cat:"scoring",q:"A deterministic grader passes but the output is clearly bad. What happened?",a:"The grader is checking the wrong thing - probably format or field presence rather than semantic quality. You need to add a <strong>qualitative scoring layer</strong> (rubric or model-as-judge) for the dimensions the grader can't capture."},
+
+  // ── Artemis ──
+  {cat:"artemis",q:"How would you eval whether Artemis chose the right investigation action?",a:"Define a dataset of real investigation scenarios with known-good next actions. Score with a <strong>deterministic check</strong> (did it pick from the valid action set) plus a <strong>model-as-judge</strong> assessment of action appropriateness given the evidence."},
+  {cat:"artemis",q:"How would you eval Artemis's investigation summaries?",a:"Use <strong>rubric-based scoring</strong> across dimensions: did it reference the right evidence, is the diagnosis consistent with the evidence, did it avoid false certainty. Calibrate the rubric against human engineer assessments of real summaries."},
+  {cat:"artemis",q:"How does a production failure become an Artemis eval case?",a:"Capture the input state, the system's behaviour, and what went wrong. Define what the correct behaviour should have been. <strong>Add it to the regression suite.</strong> Run it after every prompt or context change to prevent recurrence."},
+  {cat:"artemis",q:"What's the difference between evaluating Artemis's investigation vs its code changes?",a:"Investigation quality is subjective and needs <strong>model-as-judge or rubrics</strong>. Code change correctness has a deterministic ground truth: does the code compile, do the tests pass, does it address the issue. Different eval approaches for different output types."},
+  {cat:"artemis",q:"How would you know if Artemis's eval suite is actually useful?",a:"Track whether production failures are <strong>novel</strong> (not covered by existing cases) or <strong>regressions</strong> (should have been caught). A useful eval suite has a low regression rate and a steadily growing dataset of real failure modes."}
+];
+
+const grid = document.getElementById('fc-grid');
+const progress = document.getElementById('fc-progress');
+let order = cards.map((_,i)=>i);
+let filter = 'all';
+
+function render(){
+  grid.innerHTML='';
+  let visible=0, revealed=0;
+  order.forEach(i=>{
+    const c=cards[i];
+    if(filter!=='all'&&c.cat!==filter) return;
+    visible++;
+    const el=document.createElement('div');
+    el.className='fc-card';
+    el.dataset.idx=i;
+    el.innerHTML=`<div class="fc-card-inner"><div class="fc-face fc-front"><span class="fc-tag">${c.cat}</span><div class="fc-question">${c.q}</div></div><div class="fc-face fc-back"><span class="fc-tag">Answer</span><div class="fc-answer">${c.a}</div></div></div>`;
+    el.addEventListener('click',()=>{el.classList.toggle('flipped');updateProgress()});
+    grid.appendChild(el);
+  });
+  updateProgress();
+}
+
+function updateProgress(){
+  const all=grid.querySelectorAll('.fc-card');
+  const flipped=grid.querySelectorAll('.fc-card.flipped');
+  progress.textContent=`${flipped.length} / ${all.length} revealed`;
+}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+
+document.querySelectorAll('.fc-btn[data-filter]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fc-btn[data-filter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    filter=btn.dataset.filter;
+    render();
+  });
+});
+
+document.querySelector('.fc-shuffle').addEventListener('click',()=>{shuffle(order);render()});
+document.querySelector('.fc-reset').addEventListener('click',()=>{render()});
+
+render();
+})();
+</script>
+</body></html>

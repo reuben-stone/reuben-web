@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Agent & Workflow Architecture — AI Engineering Training</title>
+<style>
+:root{--bg:#0d0d10;--panel:#151519;--panel2:#1b1b21;--text:#f1efe9;--muted:#aaa6b0;--line:#2b2931;--accent:#a78bfa;--accent2:#d7ccff;--good:#a7d7b5;--code:#111116}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+a{color:inherit}.shell{max-width:1180px;margin:auto;padding:42px 28px 90px}.eyebrow{font:600 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(44px,7vw,82px);line-height:.98;letter-spacing:-.045em;max-width:950px;margin:18px 0 24px}.lede{font-size:20px;color:#cbc7cf;max-width:800px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 46px}.pill{border:1px solid var(--line);background:var(--panel);padding:7px 11px;border-radius:999px;font-size:13px;color:#d5d1da}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:46px}.nav{position:sticky;top:24px;align-self:start;border-top:1px solid var(--line);padding-top:16px}.nav a{display:block;text-decoration:none;color:var(--muted);padding:7px 0;font-size:14px}.nav a:hover{color:var(--text)}
+section{padding:0 0 56px;margin:0 0 54px;border-bottom:1px solid var(--line)}h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:38px;letter-spacing:-.025em;margin:0 0 16px}h3{font-size:18px;margin:28px 0 8px}.num{font:500 13px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);display:block;margin-bottom:9px}p{max-width:820px;color:#d2ced6}.callout{border-left:2px solid var(--accent);padding:14px 20px;margin:24px 0;background:linear-gradient(90deg,rgba(167,139,250,.09),transparent);font-family:Georgia,"Times New Roman",serif;font-size:21px;max-width:850px}.principle{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:22px 0;max-width:880px}.principle strong{color:var(--accent2)}
+ul{padding-left:22px;max-width:820px;color:#d2ced6}li{margin:6px 0}pre{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:20px;overflow:auto;color:#e4dfff;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;max-width:880px}.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px;max-width:900px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}.card h3{margin:0 0 8px;color:var(--accent2)}.card p{margin:0;color:var(--muted);font-size:15px}.big{font-family:Georgia,"Times New Roman",serif;font-size:29px;line-height:1.3;color:var(--text);max-width:900px}.footer{color:var(--muted);font-size:13px;padding-top:12px}.mark{color:var(--good)}
+@media(max-width:800px){.shell{padding:28px 20px 60px}.grid{grid-template-columns:1fr}.nav{position:relative;top:0}.compare{grid-template-columns:1fr}h1{font-size:50px}}
+@media print{body{background:#fff;color:#111}.nav{display:none}.grid{display:block}.shell{max-width:none}.card,.principle,pre{background:#f6f6f6;border-color:#ddd}p,li,.lede,.card p{color:#333}section{border-color:#ddd}}
+</style>
+</head>
+<body>
+<main class="shell">
+<div class="eyebrow"><a href="/training/" style="text-decoration:none;color:var(--muted)">&larr; All modules</a> &nbsp;&middot;&nbsp; AI ENGINEERING TRAINING &middot; MODULE 05</div>
+<h1>Agent &amp; workflow architecture</h1>
+<p class="lede">Multi-step orchestration - state machines, delegation boundaries, durable execution, and deciding what the agent owns vs what the application owns.</p>
+<div class="meta"><span class="pill">State machines</span><span class="pill">Delegation patterns</span><span class="pill">Durable execution</span></div>
+
+<div class="grid">
+<nav class="nav">
+<a href="#agent">01 · What is an agent?</a><a href="#state-machines">02 · State machines</a><a href="#delegation">03 · Delegation patterns</a><a href="#durable">04 · Durable execution</a><a href="#when">05 · Agents vs deterministic code</a><a href="#distinction">06 · Interview distinction</a><a href="#flashcards">Flashcards</a>
+</nav>
+<div>
+<section id="agent"><span class="num">01</span><h2>What is an agent, architecturally?</h2><p>An agent is a model in a loop: observe state, reason, act, observe result, repeat.</p><p>The interesting engineering is not the loop itself but the boundaries: what can the agent observe, what actions are available, when does it stop, who verifies its work.</p><p>Most "agent" failures are boundary failures - the agent had too much authority, too little information, or no verification.</p><div class="principle"><strong>Artemis connection:</strong> Artemis wraps the agent loop in a durable workflow with explicit states, bounded tools, and independent verification. The agent reasons; the application enforces.</div></section>
+
+<section id="state-machines"><span class="num">02</span><h2>State machines for workflow orchestration</h2><p>Explicit states and transitions make workflows debuggable, recoverable, and auditable.</p><p>Each state defines: what information is available, what actions are permitted, what transitions are valid.</p><p>Invalid transitions are rejected by the application, not negotiated with the model.</p><p>State machines make it possible to resume after crashes - you know exactly where to pick up.</p><div class="principle"><strong>Artemis connection:</strong> <code>RUNNING &rarr; WAITING_FOR_APPROVAL &rarr; EXECUTING &rarr; VERIFYING</code>. Each state has defined tool boundaries and transition rules enforced in code.</div></section>
+
+<section id="delegation"><span class="num">03</span><h2>Delegation patterns</h2><p><strong>Single agent:</strong> one model handles everything. Simple but fragile for complex tasks.</p><p><strong>Orchestrator + specialists:</strong> a coordinator delegates subtasks to focused agents with scoped contexts.</p><p>The key decision: what does each agent own, and what goes back to the orchestrator?</p><p>Specialist agents should be stateless and disposable - do the task, return results, disappear.</p><p>The orchestrator owns the durable workflow. Specialists own temporary execution.</p><div class="principle"><strong>Artemis connection:</strong> Artemis owns the durable workflow, context, delegation and independent verification. A specialist coding agent owns repository-level investigation and execution, then disappears. The surrounding system cannot disappear.</div></section>
+
+<section id="durable"><span class="num">04</span><h2>Durable execution</h2><p>Workflows that survive crashes, restarts, and partial failures.</p><p>State is persisted at each transition, not just held in memory.</p><p>Idempotent operations prevent duplicate side effects on retry.</p><p>Bounded retries prevent infinite loops - fail explicitly rather than silently retrying.</p><div class="principle"><strong>Artemis connection:</strong> Workflow state is durable. Each tool execution is idempotent (<code>workflowId:stepId:toolName</code> keys). Retries are bounded. The system can crash and resume from the last persisted state.</div></section>
+
+<section id="when"><span class="num">05</span><h2>When agents vs deterministic code</h2><p>Use agents where ambiguity and reasoning add value: investigation, evidence gathering, synthesis, decision-making under uncertainty.</p><p>Use deterministic code where correctness matters: state management, approval flows, deduplication, verification evidence, consequential boundaries.</p><p>The mistake is using an agent for everything or using deterministic code for everything.</p><div class="principle"><strong>Artemis connection:</strong> This is "deterministic shell, probabilistic core" applied to architecture. The model investigates and reasons. The application manages state, enforces rules, and verifies outcomes.</div></section>
+
+<section id="distinction"><span class="num">INTERVIEW SHORTCUT</span><h2>Interview distinction</h2><div class="compare"><div class="card"><h3>Agent loop</h3><p><span class="mark">Observe, reason, act, repeat</span><br>The reasoning core. Valuable for ambiguity and judgment.</p></div><div class="card"><h3>State machine</h3><p><span class="mark">Explicit states and valid transitions</span><br>The orchestration layer. Debuggable, recoverable, auditable.</p></div><div class="card"><h3>Delegation</h3><p><span class="mark">Who owns what?</span><br>Orchestrator owns durability. Specialists own temporary execution.</p></div><div class="card"><h3>Durable execution</h3><p><span class="mark">Survives failure</span><br>Persisted state, idempotent operations, bounded retries.</p></div></div><div class="callout">The model can reason. The application still owns truth, state, authority and evidence.</div></section>
+
+<section id="flashcards"><span class="num">TRAINING GROUND</span><h2>Flashcards</h2><p>Click a card to reveal the answer. Use the controls to shuffle or filter by category.</p>
+
+<div class="fc-controls">
+<button class="fc-btn active" data-filter="all">All</button>
+<button class="fc-btn" data-filter="concept">Concepts</button>
+<button class="fc-btn" data-filter="artemis">Artemis</button>
+<button class="fc-btn" data-filter="scenario">Scenarios</button>
+<button class="fc-btn fc-shuffle">Shuffle</button>
+</div>
+
+<div class="fc-grid" id="fc-grid"></div>
+
+<div class="fc-score">
+<span id="fc-progress">0 / 0 revealed</span>
+<button class="fc-btn fc-reset">Reset all</button>
+</div>
+</section>
+
+<div class="footer">AI Engineering Training Ground &middot; Module 05 &middot; September 2026</div>
+</div></div>
+</main>
+
+<style>
+/* ── Flashcard styles ──────────────────────────────── */
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 24px}
+.fc-btn{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:999px;font:500 13px/1 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer;transition:all .2s}
+.fc-btn:hover,.fc-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fc-shuffle,.fc-reset{background:transparent;border-color:var(--accent);color:var(--accent)}
+.fc-shuffle:hover,.fc-reset:hover{background:var(--accent);color:#fff}
+
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:24px}
+
+.fc-card{perspective:800px;min-height:220px;cursor:pointer}
+.fc-card-inner{position:relative;width:100%;height:100%;min-height:220px;transition:transform .5s;transform-style:preserve-3d}
+.fc-card.flipped .fc-card-inner{transform:rotateY(180deg)}
+
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:center}
+.fc-front{background:var(--panel)}
+.fc-back{background:var(--panel2);transform:rotateY(180deg)}
+
+.fc-tag{font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.fc-question{font-family:Georgia,"Times New Roman",serif;font-size:18px;line-height:1.4;color:var(--text)}
+.fc-answer{font-size:15px;line-height:1.6;color:#d2ced6}
+.fc-answer strong{color:var(--accent2)}
+
+.fc-card.flipped .fc-front{pointer-events:none}
+.fc-card:not(.flipped) .fc-back{pointer-events:none}
+
+.fc-score{display:flex;align-items:center;gap:16px;color:var(--muted);font-size:14px;margin-bottom:20px}
+
+.fc-card.hidden{display:none}
+
+@media(max-width:800px){.fc-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function(){
+const cards = [
+  // ── Concepts ──
+  {cat:"concept",q:"What is an agent, architecturally?",a:"A model in a loop: observe state, reason, act, observe result, repeat. The engineering challenge is not the loop but the <strong>boundaries</strong> - what the agent can see, do, and when it stops."},
+  {cat:"concept",q:"Why use a state machine instead of letting the agent manage its own workflow?",a:"State machines make workflows <strong>debuggable</strong> (you can see exactly where it is), <strong>recoverable</strong> (resume from persisted state after crashes), and <strong>auditable</strong> (every transition is logged). Agents managing their own flow can get stuck, skip steps, or lose track of progress."},
+  {cat:"concept",q:"What is the difference between an orchestrator and a specialist agent?",a:"The orchestrator owns the <strong>durable workflow</strong> - state, transitions, delegation decisions. Specialist agents handle specific subtasks with scoped contexts, return results, and disappear. The orchestrator persists. Specialists are disposable."},
+  {cat:"concept",q:"What makes execution 'durable'?",a:"State is persisted at each transition, operations are <strong>idempotent</strong> so retries are safe, and the system can resume from the last checkpoint after a crash. Nothing is held only in memory."},
+  {cat:"concept",q:"When should you use an agent vs deterministic code?",a:"Agents for ambiguity, investigation, reasoning under uncertainty. Deterministic code for <strong>state management, approval flows, deduplication, consequential boundaries</strong>. The mistake is applying either approach to everything."},
+  {cat:"concept",q:"What is the most common 'agent failure'?",a:"<strong>Boundary failures.</strong> The agent had too much authority (could take actions it shouldn't), too little information (made decisions without relevant context), or no verification (its claims of success were trusted without checking)."},
+
+  // ── Scenarios ──
+  {cat:"scenario",q:"Your agent completes a complex task but the result is wrong. There's no way to tell where it went wrong. What's missing?",a:"Explicit workflow states. Without state transitions you can't see what the agent observed, decided, or did at each step. A <strong>state machine</strong> gives you an audit trail and the ability to inspect any point in the workflow."},
+  {cat:"scenario",q:"Your agent crashes mid-workflow. When it restarts, it starts over from scratch. How do you fix this?",a:"<strong>Persist state at each transition.</strong> On restart, load the last persisted state and resume from there. This requires state to be external to the agent process - database, queue, or durable workflow engine."},
+  {cat:"scenario",q:"A specialist agent produces a result that contradicts the orchestrator's evidence. Who wins?",a:"The orchestrator should <strong>verify the result independently</strong> rather than blindly accepting it. The specialist's output is input to the orchestrator's verification step, not system truth. Design for this conflict rather than assuming agreement."},
+  {cat:"scenario",q:"Your multi-agent system is getting slower as you add more agents. What's the likely cause?",a:"<strong>Over-delegation.</strong> Each delegation adds latency (context preparation, model call, result processing). Not every subtask needs its own agent. Consolidate where a single agent with appropriate context can handle multiple related steps."},
+  {cat:"scenario",q:"An agent in your system keeps retrying a failed operation indefinitely. What's wrong?",a:"Missing <strong>retry bounds</strong>. Every retry loop should have a maximum count and a failure escalation path. Unbounded retries waste resources and can amplify failures. Fail explicitly and let the orchestrator decide how to handle it."},
+  {cat:"scenario",q:"You're building a system where three agents need to coordinate. How do you avoid them stepping on each other?",a:"Don't let agents coordinate directly. Use the <strong>orchestrator as a coordination layer</strong> - it assigns tasks, receives results, manages shared state, and resolves conflicts. Direct agent-to-agent communication is fragile and hard to debug."},
+
+  // ── Artemis-specific ──
+  {cat:"artemis",q:"How does Artemis implement the 'deterministic shell, probabilistic core' principle?",a:"The model handles investigation and reasoning (<strong>probabilistic core</strong>). The application manages workflow state, enforces transition rules, controls tool availability, and runs independent verification (<strong>deterministic shell</strong>). Each does what it's best at."},
+  {cat:"artemis",q:"What are the workflow states in Artemis and why do they matter?",a:"<code>RUNNING &rarr; WAITING_FOR_APPROVAL &rarr; EXECUTING &rarr; VERIFYING</code>. Each state defines what tools are available and what transitions are valid. The model <strong>cannot skip approval or bypass verification</strong> because the state machine enforces the sequence."},
+  {cat:"artemis",q:"How does Artemis handle delegation to specialist agents?",a:"Artemis owns the durable workflow and delegates repository-level investigation to a <strong>specialist coding agent</strong>. The specialist gets scoped context, does its work, and returns results. Artemis verifies the results independently. The specialist is stateless and disposable."},
+  {cat:"artemis",q:"Why can't the coding agent in Artemis claim its own success?",a:"<strong>Independent verification</strong> is a separate workflow stage. The coding agent returns its results, but the workflow only advances when verification (a distinct step with its own evidence gathering) confirms the outcome. Self-reported success is not system truth."},
+  {cat:"artemis",q:"How does Artemis recover from crashes?",a:"Workflow state is persisted at each transition. On restart, the system loads the last persisted state and resumes from that point. <strong>Idempotent tool calls</strong> (keyed by <code>workflowId:stepId:toolName</code>) ensure retried operations don't duplicate side effects."},
+  {cat:"artemis",q:"What is the idempotency key pattern in Artemis?",a:"<code>workflowId:stepId:toolName</code> uniquely identifies each consequential operation. Before executing, the system checks if this key has already completed. On retry, the operation is recognised and skipped. This is <strong>enforced in code</strong> and tested with ordinary software tests."},
+  {cat:"artemis",q:"How did a production failure change Artemis's agent architecture?",a:"When the investigation loop struggled with a production issue, the fix wasn't a better prompt. The realisation was that the system was gradually rebuilding a coding agent. The <strong>architectural change</strong>: let a specialist agent own repository investigation and execution, while Artemis owns the durable workflow and verification."},
+  {cat:"artemis",q:"What would happen if Artemis let the model manage its own workflow state?",a:"The model could skip states, invent transitions, lose track of progress, or claim completion prematurely. State management requires <strong>deterministic guarantees</strong> that models can't provide. Explicit state machines are debuggable, recoverable, and auditable in ways model-managed state is not."}
+];
+
+const grid = document.getElementById('fc-grid');
+const progress = document.getElementById('fc-progress');
+let order = cards.map((_,i)=>i);
+let filter = 'all';
+
+function render(){
+  grid.innerHTML='';
+  let visible=0, revealed=0;
+  order.forEach(i=>{
+    const c=cards[i];
+    if(filter!=='all'&&c.cat!==filter) return;
+    visible++;
+    const el=document.createElement('div');
+    el.className='fc-card';
+    el.dataset.idx=i;
+    el.innerHTML=`<div class="fc-card-inner"><div class="fc-face fc-front"><span class="fc-tag">${c.cat}</span><div class="fc-question">${c.q}</div></div><div class="fc-face fc-back"><span class="fc-tag">Answer</span><div class="fc-answer">${c.a}</div></div></div>`;
+    el.addEventListener('click',()=>{el.classList.toggle('flipped');updateProgress()});
+    grid.appendChild(el);
+  });
+  updateProgress();
+}
+
+function updateProgress(){
+  const all=grid.querySelectorAll('.fc-card');
+  const flipped=grid.querySelectorAll('.fc-card.flipped');
+  progress.textContent=`${flipped.length} / ${all.length} revealed`;
+}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+
+document.querySelectorAll('.fc-btn[data-filter]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fc-btn[data-filter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    filter=btn.dataset.filter;
+    render();
+  });
+});
+
+document.querySelector('.fc-shuffle').addEventListener('click',()=>{shuffle(order);render()});
+document.querySelector('.fc-reset').addEventListener('click',()=>{render()});
+
+render();
+})();
+</script>
+</body></html>

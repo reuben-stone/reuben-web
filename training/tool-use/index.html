@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tool Use & Structured Outputs — AI Engineering Training</title>
+<style>
+:root{--bg:#0d0d10;--panel:#151519;--panel2:#1b1b21;--text:#f1efe9;--muted:#aaa6b0;--line:#2b2931;--accent:#a78bfa;--accent2:#d7ccff;--good:#a7d7b5;--code:#111116}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+a{color:inherit}.shell{max-width:1180px;margin:auto;padding:42px 28px 90px}.eyebrow{font:600 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(44px,7vw,82px);line-height:.98;letter-spacing:-.045em;max-width:950px;margin:18px 0 24px}.lede{font-size:20px;color:#cbc7cf;max-width:800px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 46px}.pill{border:1px solid var(--line);background:var(--panel);padding:7px 11px;border-radius:999px;font-size:13px;color:#d5d1da}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:46px}.nav{position:sticky;top:24px;align-self:start;border-top:1px solid var(--line);padding-top:16px}.nav a{display:block;text-decoration:none;color:var(--muted);padding:7px 0;font-size:14px}.nav a:hover{color:var(--text)}
+section{padding:0 0 56px;margin:0 0 54px;border-bottom:1px solid var(--line)}h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:38px;letter-spacing:-.025em;margin:0 0 16px}h3{font-size:18px;margin:28px 0 8px}.num{font:500 13px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);display:block;margin-bottom:9px}p{max-width:820px;color:#d2ced6}.callout{border-left:2px solid var(--accent);padding:14px 20px;margin:24px 0;background:linear-gradient(90deg,rgba(167,139,250,.09),transparent);font-family:Georgia,"Times New Roman",serif;font-size:21px;max-width:850px}.principle{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:22px 0;max-width:880px}.principle strong{color:var(--accent2)}
+ul{padding-left:22px;max-width:820px;color:#d2ced6}li{margin:6px 0}pre{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:20px;overflow:auto;color:#e4dfff;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;max-width:880px}.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px;max-width:900px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}.card h3{margin:0 0 8px;color:var(--accent2)}.card p{margin:0;color:var(--muted);font-size:15px}.big{font-family:Georgia,"Times New Roman",serif;font-size:29px;line-height:1.3;color:var(--text);max-width:900px}.footer{color:var(--muted);font-size:13px;padding-top:12px}.mark{color:var(--good)}
+@media(max-width:800px){.shell{padding:28px 20px 60px}.grid{grid-template-columns:1fr}.nav{position:relative;top:0}.compare{grid-template-columns:1fr}h1{font-size:50px}}
+@media print{body{background:#fff;color:#111}.nav{display:none}.grid{display:block}.shell{max-width:none}.card,.principle,pre{background:#f6f6f6;border-color:#ddd}p,li,.lede,.card p{color:#333}section{border-color:#ddd}}
+</style>
+</head>
+<body>
+<main class="shell">
+<div class="eyebrow"><a href="/training/" style="text-decoration:none;color:var(--muted)">&larr; All modules</a> &nbsp;&middot;&nbsp; AI Engineering Training &middot; Module 04</div>
+<h1>Tool use &amp; structured outputs</h1>
+<p class="lede">Designing tool interfaces the model can use reliably, structured generation that applications can consume, and the validation boundaries between probabilistic outputs and deterministic systems.</p>
+<div class="meta"><span class="pill">Tool design</span><span class="pill">Structured outputs</span><span class="pill">Validation boundaries</span></div>
+
+<div class="grid">
+<nav class="nav">
+<a href="#why">01 · Why tool use matters</a><a href="#interfaces">02 · Designing tool interfaces</a><a href="#structured">03 · Structured outputs</a><a href="#validation">04 · Validation boundaries</a><a href="#patterns">05 · Function calling patterns</a><a href="#distinction">06 · Interview distinction</a><a href="#flashcards">Flashcards</a>
+</nav>
+<div>
+<section id="why"><span class="num">01</span><h2>Why tool use matters</h2><p>Tool use is how models take actions in the real world - the bridge between reasoning and consequences. Without tools, a model can only produce text. With tools, it can query databases, call APIs, modify files and trigger workflows.</p><p>The model proposes, the application disposes. Tool calls are requests, not commands. The model generates a structured request to call a tool. The application decides whether to honour that request, validates the parameters, executes the tool, and returns the result.</p><p>Tool design quality directly affects model reliability. Unclear interfaces produce unreliable calls. If the model can't tell what a tool does, what parameters it needs, or what it returns, it will guess - and guessing means errors.</p><div class="principle"><strong>Artemis connection:</strong> the model proposes tool calls, the application checks state and policy, executes the tool, records the result, then independently verifies before the workflow advances. The model never has direct authority over consequential actions.</div></section>
+
+<section id="interfaces"><span class="num">02</span><h2>Designing tool interfaces</h2><p>Good tool interfaces have a clear name, typed parameters, and explicit descriptions of what each parameter does and what the tool returns. The model reads these descriptions as part of its context - they are effectively prompt content.</p><p>Fewer, focused tools beat many overlapping tools. A smaller action space means the model is less likely to pick the wrong tool or confuse similar tools. Each tool's purpose is clearer when it doesn't overlap with three others.</p><p>Tool descriptions are part of the prompt - they consume tokens and affect model behaviour. Verbose or ambiguous descriptions degrade performance. Treat them as carefully as any other prompt text.</p><p>Error responses should be informative enough for the model to adjust, not just "failed". A good error tells the model what went wrong and what it can try instead.</p><div class="principle"><strong>Artemis connection:</strong> available tools are scoped to the current workflow state. The model only sees tools valid for the current step, reducing invalid calls and keeping the action space focused.</div></section>
+
+<section id="structured"><span class="num">03</span><h2>Structured outputs</h2><p>JSON mode and structured output mode constrain the model to produce valid structure. The API guarantees that the output matches a given schema - valid JSON, correct types, required fields present.</p><p>Schema design matters: clear field names, explicit types, enums for constrained choices. A well-designed schema communicates intent the same way a good type system does.</p><div class="callout">Structured outputs guarantee valid structure, not valid content. The model can produce a perfectly formatted JSON object that is completely wrong.</div><p>The structure is guaranteed by the API, but the content is still probabilistic. A valid JSON object can contain wrong information, nonsensical values, or hallucinated references. Structural validity is necessary but not sufficient.</p><p>Use structured outputs when downstream code needs to parse the result. Use freeform text when the output is for humans. This is a pragmatic boundary, not a quality judgement.</p><div class="principle"><strong>Artemis connection:</strong> tool call arguments are structured. Investigation summaries and evidence are structured data, not freeform strings the application has to parse. This lets the application programmatically check completeness and extract key fields.</div></section>
+
+<section id="validation"><span class="num">04</span><h2>Validation boundaries</h2><p>The boundary between model output and application action is where validation lives. This is the most important architectural seam in any tool-using system.</p><h3>Three layers of validation</h3><ul><li><strong>Validate structure</strong> - is this valid JSON, do required fields exist, are types correct? Usually handled by structured output mode.</li><li><strong>Validate semantics</strong> - is this a valid state transition, does this tool exist, are parameters in range? This is application responsibility.</li><li><strong>Validate consequences</strong> - should this action be allowed given current state and policy? This is guardrail territory.</li></ul><div class="principle"><strong>Artemis connection:</strong> the application checks state and policy before executing a tool call. The model cannot bypass state machine rules by generating a creative tool call. A request for an action not permitted in the current state is rejected with an informative error, regardless of how the model framed it.</div></section>
+
+<section id="patterns"><span class="num">05</span><h2>Function calling patterns</h2><ul><li><strong>Single tool call:</strong> model calls one tool, gets result, reasons about next step. The simplest pattern and often sufficient.</li><li><strong>Parallel tool calls:</strong> model requests multiple independent operations simultaneously. Useful when operations don't depend on each other.</li><li><strong>Sequential chains:</strong> output of one tool feeds into the next. The model orchestrates the sequence, deciding what to call based on previous results.</li><li><strong>Forced tool use:</strong> require the model to call a specific tool rather than responding with text. Use it when a workflow step must produce structured output or take a specific action.</li></ul><p>The application decides which pattern is available, not the model. This is a design decision about how much autonomy the model has at each step.</p><div class="principle"><strong>Artemis connection:</strong> workflow steps define which tools are available and whether the model can chain calls or must stop for verification. The application controls the pattern, not the model.</div></section>
+
+<section id="distinction"><span class="num">INTERVIEW SHORTCUT</span><h2>Interview distinction</h2><div class="compare"><div class="card"><h3>Tool interface</h3><p><span class="mark">How does the model interact with the world?</span><br>Clear contracts, scoped availability, informative errors.</p></div><div class="card"><h3>Structured output</h3><p><span class="mark">How does the model produce parseable results?</span><br>Schema-constrained generation, valid structure with probabilistic content.</p></div></div><div class="compare" style="margin-top:14px"><div class="card"><h3>Validation boundary</h3><p><span class="mark">Where does the application enforce rules?</span><br>Between model output and action execution - structure, semantics, and consequences.</p></div><div class="card"><h3>&nbsp;</h3><p>&nbsp;</p></div></div><p class="big">Structured outputs guarantee valid structure, not valid content. The model can reason. The application still validates.</p></section>
+
+<section id="flashcards"><span class="num">TRAINING GROUND</span><h2>Flashcards</h2><p>Click a card to reveal the answer. Use the controls to shuffle or filter by category.</p>
+
+<div class="fc-controls">
+<button class="fc-btn active" data-filter="all">All</button>
+<button class="fc-btn" data-filter="concept">Concepts</button>
+<button class="fc-btn" data-filter="scenario">Scenarios</button>
+<button class="fc-btn" data-filter="artemis">Artemis</button>
+<button class="fc-btn fc-shuffle">Shuffle</button>
+</div>
+
+<div class="fc-grid" id="fc-grid"></div>
+
+<div class="fc-score">
+<span id="fc-progress">0 / 0 revealed</span>
+<button class="fc-btn fc-reset">Reset all</button>
+</div>
+</section>
+
+<div class="footer">AI Engineering Training Ground &middot; Module 04 &middot; September 2026</div>
+</div></div>
+</main>
+
+<style>
+/* ── Flashcard styles ──────────────────────────────── */
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 24px}
+.fc-btn{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:999px;font:500 13px/1 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer;transition:all .2s}
+.fc-btn:hover,.fc-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fc-shuffle,.fc-reset{background:transparent;border-color:var(--accent);color:var(--accent)}
+.fc-shuffle:hover,.fc-reset:hover{background:var(--accent);color:#fff}
+
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:24px}
+
+.fc-card{perspective:800px;min-height:220px;cursor:pointer}
+.fc-card-inner{position:relative;width:100%;height:100%;min-height:220px;transition:transform .5s;transform-style:preserve-3d}
+.fc-card.flipped .fc-card-inner{transform:rotateY(180deg)}
+
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:center}
+.fc-front{background:var(--panel)}
+.fc-back{background:var(--panel2);transform:rotateY(180deg)}
+
+.fc-tag{font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.fc-question{font-family:Georgia,"Times New Roman",serif;font-size:18px;line-height:1.4;color:var(--text)}
+.fc-answer{font-size:15px;line-height:1.6;color:#d2ced6}
+.fc-answer strong{color:var(--accent2)}
+
+.fc-card.flipped .fc-front{pointer-events:none}
+.fc-card:not(.flipped) .fc-back{pointer-events:none}
+
+.fc-score{display:flex;align-items:center;gap:16px;color:var(--muted);font-size:14px;margin-bottom:20px}
+
+.fc-card.hidden{display:none}
+
+@media(max-width:800px){.fc-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function(){
+const cards = [
+  // ── Concepts ──
+  {cat:"concept",q:"What is the difference between a tool call and a tool execution?",a:"A <strong>tool call</strong> is the model's request. <strong>Tool execution</strong> is the application's decision to act on it. The application can validate, reject, modify, or defer the call. The model proposes, the application disposes."},
+  {cat:"concept",q:"Why do fewer tools improve reliability?",a:"Fewer tools mean a <strong>smaller action space</strong>. The model is less likely to pick the wrong tool or confuse similar tools. Each tool's purpose is clearer. The cost is less flexibility, but most workflows benefit from focused tool sets."},
+  {cat:"concept",q:"What does 'structured outputs guarantee structure, not content' mean?",a:"The API ensures the output matches the schema - valid JSON, correct types, required fields. But the <strong>values in those fields are still model-generated</strong> and can be wrong. You still need semantic validation."},
+  {cat:"concept",q:"When should you use structured outputs vs freeform text?",a:"<strong>Structured outputs</strong> when downstream code needs to parse the result - tool arguments, data extraction, classification. <strong>Freeform text</strong> when the output is for human consumption - explanations, summaries, creative content."},
+  {cat:"concept",q:"What makes a good tool error response?",a:"Informative enough for the model to adjust its approach. <strong>'Permission denied: workflow is in VERIFYING state, only verify_result is available'</strong> beats 'Error 403'. The model needs to understand what went wrong to try something different."},
+  {cat:"concept",q:"What is forced tool use and when is it appropriate?",a:"Requiring the model to call a <strong>specific tool</strong> rather than responding with text. Use it when a workflow step must produce structured output or take a specific action. The model can't skip the step by generating a text response instead."},
+
+  // ── Scenarios ──
+  {cat:"scenario",q:"The model keeps calling a tool with invalid parameters. How do you fix this?",a:"Check the <strong>tool description and parameter types</strong>. Unclear descriptions or ambiguous parameter names are usually the cause. Improve the interface, add explicit constraints to parameter descriptions, and ensure error messages explain what's wrong."},
+  {cat:"scenario",q:"Your system has 30 tools and the model picks the wrong one 20% of the time. What do you do?",a:"<strong>Reduce the tool set.</strong> Scope available tools to the current workflow state so the model only sees relevant options. If tools are genuinely needed, improve naming to make distinctions clearer."},
+  {cat:"scenario",q:"The model produces valid JSON but the values are nonsensical. Where's the bug?",a:"Not a structural problem - structured output mode is working. You need <strong>semantic validation</strong>: check that values are within expected ranges, that referenced entities exist, that the response is consistent with the input. The schema guarantees shape, not meaning."},
+  {cat:"scenario",q:"A tool call succeeds but the model doesn't use the result properly in its next step. What's wrong?",a:"The tool's <strong>return value may be poorly structured or unclear</strong>. The model needs to understand what the result means. Improve the tool's response format and description of what it returns."},
+  {cat:"scenario",q:"You want the model to call two tools in sequence, but it sometimes skips the second. How do you handle this?",a:"Don't rely on the model remembering to chain calls. Make it a <strong>workflow constraint</strong>: the application checks that both tools were called before advancing the state. Or use forced tool use for the second call."},
+  {cat:"scenario",q:"The model generates a tool call for a tool that doesn't exist. What's happening?",a:"The model is <strong>hallucinating tool names</strong>, usually because the tool set is large or names are generic. Scope available tools to the current step, use distinctive names, and validate all tool calls against the registered set before execution."},
+
+  // ── Artemis ──
+  {cat:"artemis",q:"How does Artemis scope tool availability?",a:"Tools are scoped to the <strong>current workflow state</strong>. The model only sees tools that are valid for the current step. In VERIFYING state, only verification tools are available. This prevents invalid operations and reduces the action space."},
+  {cat:"artemis",q:"What happens between a tool call and tool execution in Artemis?",a:"The application checks <strong>state and policy</strong> - is this tool valid in the current state, are the parameters acceptable, has this operation already been executed (idempotency check). Only then does execution proceed."},
+  {cat:"artemis",q:"How does Artemis handle tool call results?",a:"Results are recorded as <strong>structured data</strong>, fed back into the context for the model's next step, and used for independent verification. The result becomes evidence, not just a side effect."},
+  {cat:"artemis",q:"Why does Artemis use structured data for investigation summaries?",a:"So the application can <strong>programmatically check completeness</strong>, extract key fields, and feed structured evidence into verification. Freeform text would require another model call to parse, adding cost and unreliability."},
+  {cat:"artemis",q:"How do idempotency keys interact with tool execution in Artemis?",a:"Each consequential tool call gets a key (<code>workflowId:stepId:toolName</code>). Before execution, the system checks whether this key has already completed. On retry, the same tool call is <strong>recognised and skipped</strong> rather than executed again."},
+  {cat:"artemis",q:"How does Artemis prevent the model from bypassing workflow rules via tool calls?",a:"The application <strong>validates every tool call</strong> against the current workflow state before execution. A tool call requesting an action not permitted in the current state is rejected with an informative error, regardless of how the model framed the request."}
+];
+
+const grid = document.getElementById('fc-grid');
+const progress = document.getElementById('fc-progress');
+let order = cards.map((_,i)=>i);
+let filter = 'all';
+
+function render(){
+  grid.innerHTML='';
+  let visible=0, revealed=0;
+  order.forEach(i=>{
+    const c=cards[i];
+    if(filter!=='all'&&c.cat!==filter) return;
+    visible++;
+    const el=document.createElement('div');
+    el.className='fc-card';
+    el.dataset.idx=i;
+    el.innerHTML=`<div class="fc-card-inner"><div class="fc-face fc-front"><span class="fc-tag">${c.cat}</span><div class="fc-question">${c.q}</div></div><div class="fc-face fc-back"><span class="fc-tag">Answer</span><div class="fc-answer">${c.a}</div></div></div>`;
+    el.addEventListener('click',()=>{el.classList.toggle('flipped');updateProgress()});
+    grid.appendChild(el);
+  });
+  updateProgress();
+}
+
+function updateProgress(){
+  const all=grid.querySelectorAll('.fc-card');
+  const flipped=grid.querySelectorAll('.fc-card.flipped');
+  progress.textContent=`${flipped.length} / ${all.length} revealed`;
+}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+
+document.querySelectorAll('.fc-btn[data-filter]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fc-btn[data-filter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    filter=btn.dataset.filter;
+    render();
+  });
+});
+
+document.querySelector('.fc-shuffle').addEventListener('click',()=>{shuffle(order);render()});
+document.querySelector('.fc-reset').addEventListener('click',()=>{render()});
+
+render();
+})();
+</script>
+</body></html>

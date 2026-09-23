@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI Engineering Training Ground</title>
+<style>
+:root{--bg:#0d0d10;--panel:#151519;--panel2:#1b1b21;--text:#f1efe9;--muted:#aaa6b0;--line:#2b2931;--accent:#a78bfa;--accent2:#d7ccff}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+a{color:inherit;text-decoration:none}
+.shell{max-width:1080px;margin:auto;padding:42px 28px 60px}
+.back{display:inline-block;font:500 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);margin-bottom:38px;transition:color .15s}.back:hover{color:var(--text)}.back span{margin-right:6px}
+.eyebrow{font:600 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(40px,6.5vw,72px);line-height:.98;letter-spacing:-.04em;margin-bottom:22px}
+.lede{font-size:18px;color:#cbc7cf;max-width:720px;line-height:1.7;margin-bottom:56px}
+h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:28px;letter-spacing:-.02em;margin-bottom:28px;color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-bottom:64px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px 26px 24px;display:flex;flex-direction:column;transition:border-color .2s,background .2s}
+a.card:hover{border-color:var(--accent);background:var(--panel2)}
+.card-num{font:600 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);margin-bottom:12px}
+.card-title{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:22px;letter-spacing:-.02em;margin-bottom:10px}
+.card-desc{font-size:15px;color:var(--muted);line-height:1.6;margin-bottom:16px;flex:1}
+.card-topics{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.card-topics li{font-size:12px;color:#d5d1da;background:var(--panel2);border:1px solid var(--line);padding:4px 10px;border-radius:999px}
+.card.soon{opacity:.4;cursor:default}
+.card.soon .card-title{color:var(--muted)}
+.card.soon .card-num{color:var(--muted)}
+footer{border-top:1px solid var(--line);padding-top:24px;margin-top:20px;color:var(--muted);font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+@media(max-width:700px){.shell{padding:28px 20px 48px}.grid{grid-template-columns:1fr}h1{font-size:42px}}
+</style>
+</head>
+<body>
+<main class="shell">
+
+<a href="/" class="back"><span>&larr;</span> Home</a>
+
+<div class="eyebrow">Interview Prep</div>
+<h1>AI Engineering Training Ground</h1>
+<p class="lede">Concise theory, concrete Artemis connections, interview distinctions and flashcard drills.</p>
+
+<h2>Modules</h2>
+<div class="grid">
+
+<a href="/training/ai-principles/" class="card">
+<span class="card-num">01</span>
+<div class="card-title">AI Reliability Principles</div>
+<p class="card-desc">The reliability stack - prompts, rules, tests, evals, guardrails and closing the feedback loop.</p>
+<ul class="card-topics">
+<li>Deterministic shell / probabilistic core</li>
+<li>Context as architecture</li>
+<li>Tests vs evals vs guardrails</li>
+<li>Feedback loops</li>
+</ul>
+</a>
+
+<a href="/training/evals/" class="card">
+<span class="card-num">02</span>
+<div class="card-title">Evals in Depth</div>
+<p class="card-desc">Designing evaluation frameworks - datasets, graders, rubrics, regression suites and model-as-judge.</p>
+<ul class="card-topics">
+<li>Representative datasets</li>
+<li>Scoring criteria</li>
+<li>Offline vs online evaluation</li>
+<li>Regression prevention</li>
+</ul>
+</a>
+
+<a href="/training/context-engineering/" class="card">
+<span class="card-num">03</span>
+<div class="card-title">Context Engineering &amp; Memory</div>
+<p class="card-desc">Controlling what the model sees - context selection, token budgets, memory patterns and retrieval.</p>
+<ul class="card-topics">
+<li>Context windows vs selective context</li>
+<li>Token budget engineering</li>
+<li>Conversation memory patterns</li>
+<li>When to retrieve vs include</li>
+</ul>
+</a>
+
+<a href="/training/tool-use/" class="card">
+<span class="card-num">04</span>
+<div class="card-title">Tool Use &amp; Structured Outputs</div>
+<p class="card-desc">Designing tool interfaces, structured generation, function calling patterns and output validation.</p>
+<ul class="card-topics">
+<li>Tool design principles</li>
+<li>Structured outputs &amp; JSON mode</li>
+<li>Function calling patterns</li>
+<li>Validation boundaries</li>
+</ul>
+</a>
+
+<a href="/training/agent-architecture/" class="card">
+<span class="card-num">05</span>
+<div class="card-title">Agent &amp; Workflow Architecture</div>
+<p class="card-desc">Multi-step orchestration - state machines, delegation, recovery, and the boundaries between agents and applications.</p>
+<ul class="card-topics">
+<li>State machine design</li>
+<li>Agent delegation patterns</li>
+<li>Durable execution</li>
+<li>When agents vs deterministic code</li>
+</ul>
+</a>
+
+<a href="/training/failure-recovery/" class="card">
+<span class="card-num">06</span>
+<div class="card-title">Failure Recovery &amp; Idempotency</div>
+<p class="card-desc">Designing AI systems that fail gracefully - bounded retries, idempotent operations, crash recovery and graceful degradation.</p>
+<ul class="card-topics">
+<li>Idempotency patterns</li>
+<li>Bounded retries</li>
+<li>Crash recovery</li>
+<li>Graceful degradation</li>
+</ul>
+</a>
+
+</div>
+
+<h2>Coming soon</h2>
+<div class="grid">
+
+<div class="card soon">
+<span class="card-num">07</span>
+<div class="card-title">RAG &amp; Retrieval Patterns</div>
+</div>
+
+<div class="card soon">
+<span class="card-num">08</span>
+<div class="card-title">Observability &amp; Tracing</div>
+</div>
+
+<div class="card soon">
+<span class="card-num">09</span>
+<div class="card-title">Latency &amp; Cost Optimisation</div>
+</div>
+
+<div class="card soon">
+<span class="card-num">10</span>
+<div class="card-title">Human-in-the-Loop &amp; Product UX</div>
+</div>
+
+<div class="card soon">
+<span class="card-num">11</span>
+<div class="card-title">Security &amp; Trust Boundaries</div>
+</div>
+
+</div>
+
+<footer>AI Engineering Training Ground &middot; September 2026</footer>
+
+</main>
+</body>
+</html>
