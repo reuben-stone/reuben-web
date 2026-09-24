@@ -115,7 +115,9 @@ function formatDateShort(dateStr) {
 
 // ── Shared HTML fragments ────────────────────────────────────────
 
-const FAVICON = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230e0f11'/><text x='6' y='23' font-family='serif' font-size='22' fill='%238b5cf6'>R</text></svg>`
+const FAVICON_LINKS = `<link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">`
 
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -316,7 +318,7 @@ function nav(activeSection) {
 
   return `<header class="header">
     <div class="container">
-      <a href="/" class="header-name">Reuben Stone</a>
+      <a href="/" class="header-name" style="text-decoration:none;"><img src="/assets/rs-mark.png" alt="Reuben Stone" height="36" style="display:block;height:36px;width:auto;"></a>
       <nav aria-label="Main navigation">
         <button class="mobile-toggle" aria-expanded="false" onclick="var n=document.getElementById('mobile-nav');var o=n.classList.toggle('open');document.body.classList.toggle('nav-open',o);this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button>
         <ul class="header-links">
@@ -426,7 +428,7 @@ function renderArticle(article) {
   <title>${article.title} | Reuben Stone</title>
   <meta name="description" content="${article.description}">
   <link rel="canonical" href="${canonicalUrl}">
-  <link rel="icon" href="${FAVICON}">
+  ${FAVICON_LINKS}
   <meta property="og:title" content="${article.title} | Reuben Stone">
   <meta property="og:description" content="${article.description}">
   <meta property="og:type" content="article">
@@ -692,7 +694,7 @@ function renderIndex(articles) {
   <title>Writing | Reuben Stone - Senior Product Engineer</title>
   <meta name="description" content="Notes on building software, products and AI systems. Occasional writing about the engineering problems that emerge while building real products.">
   <link rel="canonical" href="${SITE_URL}/writing/">
-  <link rel="icon" href="${FAVICON}">
+  ${FAVICON_LINKS}
   <meta property="og:title" content="Writing | Reuben Stone">
   <meta property="og:description" content="Notes on building software, products and AI systems.">
   <meta property="og:type" content="website">
