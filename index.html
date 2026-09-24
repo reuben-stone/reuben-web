@@ -9,7 +9,9 @@
   <title>Reuben Stone - Senior Product Engineer</title>
   <meta name="description" content="Reuben Stone - Senior Product Engineer specialising in product architecture, React, TypeScript, AI systems and interactive web experiences. Portfolio and engineering case studies.">
   <link rel="canonical" href="https://www.reubenstone.co.uk/">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230e0f11'/><text x='6' y='23' font-family='serif' font-size='22' fill='%238b5cf6'>R</text></svg>">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta property="og:title" content="Reuben Stone - Senior Product Engineer">
   <meta property="og:description" content="Reuben Stone - Senior Product Engineer specialising in product architecture, React, TypeScript, AI systems and interactive web experiences. Portfolio and engineering case studies.">
   <meta property="og:type" content="website">
@@ -335,6 +337,13 @@
       background: var(--bg-raised);
     }
 
+    /* ── Personal products ───────────────────────────── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
     /* ── Experience ──────────────────────────────────── */
     .exp-row {
       display: flex;
@@ -516,6 +525,7 @@
       .exp-company { min-width: 0; }
       .project-header { flex-direction: column; gap: 4px; }
       .col-2 { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: 1fr; }
       .mobile-toggle { display: block; }
       .header-links { display: none; }
       body.nav-open .header {
@@ -533,7 +543,7 @@
 
   <header class="header">
     <div class="container">
-      <a href="/" class="header-name" onclick="window.scrollTo(0,0);history.replaceState(null,'','/');return false;" style="text-decoration:none;">Reuben Stone</a>
+      <a href="/" class="header-name" onclick="window.scrollTo(0,0);history.replaceState(null,'','/');return false;" style="text-decoration:none;"><img src="assets/rs-mark.png" alt="Reuben Stone" height="24" style="display:block;height:24px;width:auto;"></a>
       <nav aria-label="Main navigation">
         <button class="mobile-toggle" aria-expanded="false" onclick="var n=document.getElementById('mobile-nav');var o=n.classList.toggle('open');document.body.classList.toggle('nav-open',o);this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button>
         <ul class="header-links">
@@ -594,29 +604,10 @@
       <div class="container">
         <h2 class="section-label">Selected Work</h2>
 
-        <!-- 01 Artemis -->
+        <!-- 01 GenAI Mindset / TST -->
         <div class="project">
           <div class="project-header">
             <span class="project-index">01</span>
-            <span class="project-year">2026</span>
-          </div>
-          <h3 class="project-title">Artemis</h3>
-          <p class="project-desc">
-            A desktop AI operations system for tending a portfolio of software repositories. Artemis can monitor multiple projects, dispatch engineering work into isolated worktrees, and return gated pull requests for review. The case study explores how I evolved its architecture around explicit workflow state, selective context, recovery and measurable reliability.
-          </p>
-          <div class="project-meta">
-            AI Systems / Electron / TypeScript / React / SQLite / Workflow Architecture
-          </div>
-          <a href="/work/artemis/" class="project-link">Read the engineering case study &rarr;</a>
-          <div class="project-image">
-            <img src="assets/artemis-01-workspace.png" alt="Artemis desktop application" width="1440" height="900" loading="lazy" style="width:100%;height:auto;display:block;">
-          </div>
-        </div>
-
-        <!-- 02 GenAI Mindset / TST -->
-        <div class="project">
-          <div class="project-header">
-            <span class="project-index">02</span>
             <span class="project-year">2026</span>
           </div>
           <h3 class="project-title">GenAI Mindset / TST</h3>
@@ -635,10 +626,10 @@
           </div>
         </div>
 
-        <!-- 03 Powster / Universal -->
+        <!-- 02 Powster / Universal -->
         <div class="project">
           <div class="project-header">
-            <span class="project-index">03</span>
+            <span class="project-index">02</span>
             <span class="project-year">2024 &ndash; 2026</span>
           </div>
           <h3 class="project-title">Powster / Universal Pictures</h3>
@@ -667,10 +658,10 @@
           </div>
         </div>
 
-        <!-- 04 Lumi / Livana -->
+        <!-- 03 Lumi / Livana -->
         <div class="project">
           <div class="project-header">
-            <span class="project-index">04</span>
+            <span class="project-index">03</span>
             <span class="project-year">2026</span>
           </div>
           <h3 class="project-title">Lumi / Livana</h3>
@@ -696,10 +687,10 @@
           </div>
         </div>
 
-        <!-- 05 Unilever I&A -->
+        <!-- 04 Unilever I&A -->
         <div class="project">
           <div class="project-header">
-            <span class="project-index">05</span>
+            <span class="project-index">04</span>
             <span class="project-year">2019 &ndash; 2020</span>
           </div>
           <h3 class="project-title">Unilever Information &amp; Analytics</h3>
@@ -722,6 +713,66 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- Personal Products -->
+    <section class="section" id="products">
+      <div class="container">
+        <h2 class="section-label">Personal Products</h2>
+        <div class="products-grid">
+          <div>
+            <div class="project-header">
+              <span class="project-index">01</span>
+              <span class="project-year">2026</span>
+            </div>
+            <h3 class="project-title">Artemis</h3>
+            <p class="project-desc">A desktop AI operations system for tending a portfolio of software repositories. Artemis monitors multiple projects, dispatches engineering work into isolated worktrees, and returns gated pull requests for review.</p>
+            <div class="project-meta">AI Systems / Electron / TypeScript / React / SQLite / Workflow Architecture</div>
+            <div style="display: flex; gap: 16px; margin-top: 16px; margin-bottom: 24px;">
+              <a href="/work/artemis/" class="project-link">Read the case study &rarr;</a>
+              <a href="https://github.com/reuben-stone/artemis" class="project-link" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
+            </div>
+            <div class="lightbox-trigger" style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-top: 0;" data-lightbox="assets/artemis-01-workspace.png" data-alt="Artemis desktop application workspace view" role="button" tabindex="0" aria-label="View Artemis screenshot full size">
+              <img src="assets/artemis-01-workspace.png" alt="Artemis desktop application workspace view" width="1440" height="900" loading="lazy" style="width:100%;height:auto;display:block;">
+              <span class="expand-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            </div>
+          </div>
+          <div>
+            <div class="project-header">
+              <span class="project-index">02</span>
+              <span class="project-year">2026</span>
+            </div>
+            <h3 class="project-title">Scope Negotiator</h3>
+            <p class="project-desc">AI-assisted product scoping system that turns ambitious product ideas and feature requests into credible, human-approved scope based on real delivery constraints.</p>
+            <div class="project-meta">Next.js / TypeScript / AI / Turso</div>
+            <div style="display: flex; gap: 16px; margin-top: 16px; margin-bottom: 24px;">
+              <a href="https://www.scopenegotiator.com/" class="project-link" target="_blank" rel="noopener noreferrer">View product &#8599;</a>
+              <a href="https://github.com/reuben-stone/scope-negotiator" class="project-link" target="_blank" rel="noopener noreferrer">GitHub &#8599;</a>
+            </div>
+            <div class="lightbox-trigger" style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-top: 0;" data-lightbox="assets/scope-negotiator.png" data-alt="Scope Negotiator application showing the negotiate stage with scope items classified as Ship, Negotiate and Cut" role="button" tabindex="0" aria-label="View Scope Negotiator screenshot full size">
+              <img src="assets/scope-negotiator.png" alt="Scope Negotiator application showing the negotiate stage with scope items classified as Ship, Negotiate and Cut" width="2796" height="1428" loading="lazy" style="width:100%;height:auto;display:block;">
+              <span class="expand-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            </div>
+          </div>
+          <div>
+            <div class="project-header">
+              <span class="project-index">03</span>
+              <span class="project-year">2026</span>
+            </div>
+            <h3 class="project-title">Stride Striking</h3>
+            <p class="project-desc">Mobile training app designed to help martial artists structure striking sessions, practise combinations and develop speed, timing and technique through focused, guided workouts.</p>
+            <div class="project-meta">React / TypeScript / Capacitor / iOS</div>
+            <div style="display: flex; gap: 16px; margin-top: 16px; margin-bottom: 24px;">
+              <a href="https://www.stridestriking.com/" class="project-link" target="_blank" rel="noopener noreferrer">View product &#8599;</a>
+              <a href="https://apps.apple.com/us/app/stride-striking/id6759168866" class="project-link" target="_blank" rel="noopener noreferrer">App Store &#8599;</a>
+            </div>
+            <div class="lightbox-trigger" style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-top: 0;" data-lightbox="assets/stride-striking.png" data-alt="Stride Striking website showing the app in action with a guided striking round displaying combination and timer" role="button" tabindex="0" aria-label="View Stride Striking screenshot full size">
+              <img src="assets/stride-striking.png" alt="Stride Striking website showing the app in action with a guided striking round displaying combination and timer" width="2752" height="1434" loading="lazy" style="width:100%;height:auto;display:block;">
+              <span class="expand-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

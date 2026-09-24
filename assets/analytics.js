@@ -49,6 +49,9 @@
     else if (/focusfeatures\.com/.test(href)) label = 'focus_features';
     else if (/tsttalent\.com/.test(href)) label = 'tst_genai';
     else if (/wearetst\.com/.test(href)) label = 'tst_about';
+    else if (/scopenegotiator\.com/.test(href)) label = 'scope_negotiator';
+    else if (/stridestriking\.com/.test(href)) label = 'stride_striking';
+    else if (/apps\.apple\.com/.test(href)) label = 'app_store';
 
     a.addEventListener('click', function () {
       track('outbound_click', {
