@@ -153,7 +153,7 @@ const SHARED_CSS = `
 
     /* Navigation */
     .header {
-      padding: 24px 0;
+      padding: 16px 0;
       border-bottom: 1px solid var(--border);
       position: relative;
       z-index: 101;
